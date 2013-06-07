@@ -2,7 +2,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QMenuBar>
-#include "mainframe.h"
+#include "Mainframe.h"
 
 namespace
 {
@@ -56,8 +56,7 @@ MainFrame::MainFrame(QWidget *parent)
 	AddNewUser("Sidorov Petia");
 	AddNewUser("Anuta Maluta");
 
-	setWindowTitle("LChat");
-	setDisabled(true);
+	//setDisabled(true);
 	resize(MAINFRAME_WIDTH, MAINFRAME_HEIGH);
 }
 
@@ -77,6 +76,9 @@ void MainFrame::SetupUI()
 	QHBoxLayout* mainLayout = CreateMainLayout(usersWidget, msgWidget);
 	mainWidget->setLayout(mainLayout);
 	this->setCentralWidget(mainWidget);
+
+	setWindowTitle("LChat");
+	setWindowIcon(QIcon("chat_icon.png"));
 }
 
 void MainFrame::CreateMenuBar()
@@ -188,7 +190,7 @@ QListWidgetItem* MainFrame::AddNewUser(const std::string& name)
 
 QListWidgetItem* MainFrame::AddUserListItem(const std::string& userName)
 {
-	QListWidgetItem* userItem = new QListWidgetItem(QIcon("user.png"),userName.c_str());
+	QListWidgetItem* userItem = new QListWidgetItem(QIcon("user_ico.png"),userName.c_str());
 	userItem->setSizeHint(QSize(25, 25));
 	
 	m_userListWidget->addItem(userItem);

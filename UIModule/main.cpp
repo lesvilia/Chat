@@ -1,5 +1,5 @@
 #include <QtWidgets/QApplication>
-#include "mainframe.h"
+#include "Sources/Mainframe.h"
 
 
 int main(int argc, char *argv[])

@@ -8,7 +8,7 @@
 #include <QtWidgets/QTextEdit>
 #include <QtWidgets/QStackedWidget>
 #include <QtWidgets/QPushButton>
-
+#include "LoginManager.h"
 
 class MainFrame : public QMainWindow
 {
@@ -41,8 +41,9 @@ private:
 	QListWidget*		m_userListWidget;
 	QStackedWidget*		m_msgBoxStack;
 	QListWidgetItem*	m_currentItem;
-	std::map<QListWidgetItem*, int> m_userListItems; 
-
+	std::map<QListWidgetItem*, int> m_userListItems;
+	
+	login::LoginManager m_loginmanager;
 };
 
 #endif // MAINFRAME_H
