@@ -71,9 +71,10 @@ namespace ui
 	{
 
 	}
+
 	void MainFrame::ShowLoginDlg()
 	{
-		controls::LoginDialog dialog(this, login::LoginManager::Instance());
+		controls::LoginDialog dialog(this, NULL);
 		dialog.exec();
 	}
 
@@ -139,7 +140,9 @@ namespace ui
 		QWidget* verticalWidget = new QWidget();
 		QVBoxLayout* verticalLayout = new QVBoxLayout();
 		m_userListWidget = new QListWidget();
-	
+		connect(m_userListWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
+			this, SLOT(ListItemChanged(QListWidgetItem*, QListWidgetItem*)));
+
 		QLabel* label = new QLabel(USERS_LABEL_TEXT);
 		label->setAlignment(Qt::AlignCenter);
 		label->setMaximumHeight(20);
@@ -195,8 +198,6 @@ namespace ui
 		QListWidgetItem* userItem = AddUserListItem(name);
 		int viewID = AddUserMsgView();
 		m_userListItems[userItem] = viewID;
-		connect(m_userListWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
-				this, SLOT(ListItemChanged(QListWidgetItem*, QListWidgetItem*)));
 		return userItem;
 	}
 
@@ -247,7 +248,6 @@ namespace ui
 
 	void MainFrame::ResizeMessagesView()
 	{
-
 		QSplitter* wdgSplitter = static_cast<QSplitter*>(SearchMsgView(m_currentItem));
 		if (wdgSplitter)
 		{
