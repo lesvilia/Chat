@@ -60,11 +60,7 @@ namespace login
 
 	bool LoginManager::ValidUserData(UserDataPtr userdata)
 	{
-		if(!userdata->name.empty() && !userdata->password.empty())
-		{
-			return true;
-		}
-		return false;
+		return !userdata->name.empty() && !userdata->password.empty();
 	}
 
 	void LoginManager::GetUserData(CRegKey& userKey)
