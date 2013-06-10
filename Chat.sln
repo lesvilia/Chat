@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MsgModule", "MsgModule\MsgModule.vcxproj", "{4721D053-398F-4103-8DDE-EE9F1C2CAF49}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UIModule", "UIModule\UIModule.vcxproj", "{25723668-C78B-454C-B2A0-206390537E3F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4721D053-398F-4103-8DDE-EE9F1C2CAF49} = {4721D053-398F-4103-8DDE-EE9F1C2CAF49}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,14 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;cxx;c;def</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h</Extensions>
-    </Filter>
     <Filter Include="Generated Files">
       <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
       <Extensions>moc;h;cpp</Extensions>
@@ -27,22 +19,56 @@
     <Filter Include="Resources">
       <UniqueIdentifier>{43b0441c-7355-427d-ad92-15d7d5b46ffb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MainFrame">
+      <UniqueIdentifier>{1cb334bf-bde6-43ec-b1f1-08638ae51c1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainFrame\src">
+      <UniqueIdentifier>{6b040aca-e584-4948-a5d8-17f9559b680f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoginManager">
+      <UniqueIdentifier>{2fbbf84e-db2f-43aa-91bb-c5cbd1d5e97b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoginManager\src">
+      <UniqueIdentifier>{008ae6d3-cc24-49c7-b501-ccf5d3b26fb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UIControls">
+      <UniqueIdentifier>{8726cba8-16c6-43fe-a3f6-22e62215076a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UIControls\RegistrationDialog">
+      <UniqueIdentifier>{6aaf29a0-1069-404b-85b4-b3f9115f6ed1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UIControls\LoginDialog">
+      <UniqueIdentifier>{4b9f067c-3d61-4a31-be1f-d7a6f1563fe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UIControls\LoginDialog\src">
+      <UniqueIdentifier>{e92de347-0aef-41a6-89fc-43db4358d89f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UIControls\RegistrationDialog\src">
+      <UniqueIdentifier>{644cc9c5-ec49-42a4-9479-ec58fa2e4096}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_Mainframe.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_Mainframe.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\LoginManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Mainframe.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>MainFrame\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\LoginManager.cpp">
+      <Filter>LoginManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Sources\LoginDialog.cpp">
+      <Filter>UIControls\LoginDialog\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\RegistrationDialog.cpp">
+      <Filter>UIControls\RegistrationDialog\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\LoginManagerImpl.cpp">
+      <Filter>LoginManager\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -54,13 +80,25 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sources\LoginManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <CustomBuild Include="Sources\Mainframe.h">
+      <Filter>MainFrame</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="Sources\Mainframe.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
+    <ClInclude Include="Sources\LoginManager.h">
+      <Filter>LoginManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\LoginHandlers.h">
+      <Filter>LoginManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\LoginDialog.h">
+      <Filter>UIControls\LoginDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\RegistrationDialog.h">
+      <Filter>UIControls\RegistrationDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\LoginManagerImpl.h">
+      <Filter>LoginManager\src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,87 +1,61 @@
 #include "LoginManager.h"
-#include <string>
-#include <vector>
-
+#include "LoginManagerImpl.h"
 
 namespace login
 {
-	namespace
+	UserData::UserData()
 	{
-		const std::wstring USERS_KEYS_PATH(L"Software\\LChat\\Users");
-		const std::wstring USER_NAME(L"Name");
-		const std::wstring USER_PASSWORD(L"Password");
-		const DWORD MAX_STRING_LENGTH = 128;
+	}
 
-		std::wstring GetStringValue(CRegKey& key, const std::wstring& valueName)
-		{
-			ULONG nChars = 0;
-			if (ERROR_SUCCESS == key.QueryStringValue(valueName.c_str(), NULL, &nChars))
-			{
-				std::vector<wchar_t> buff(nChars, '\0');
-				if (ERROR_SUCCESS == key.QueryStringValue(valueName.c_str(), &buff[0], &nChars))
-				{
-					return std::wstring(&buff[0]);
-				}
-			}
-			return std::wstring();
-		}
+	UserData::UserData(const std::wstring& n, const std::wstring& p) 
+		: name(n)
+		, password(p)
+	{
+	}
+
+	bool UserData::Empty() const
+	{
+		return name.empty() && password.empty();  
+	}
+
+
+	LoginManager* LoginManager::Instance()
+	{
+		static LoginManager manager;
+		return &manager;
 	}
 
 	LoginManager::LoginManager()
+		: m_impl(new impl::LoginManagerImpl())
 	{
-		Init();
 	}
 
-	void LoginManager::Init()
+	LoginManager::~LoginManager()
 	{
-		CRegKey key;
-		if(ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, USERS_KEYS_PATH.c_str(), KEY_READ))
-		{
-			DWORD index = 0;
-			DWORD nameLength = MAX_STRING_LENGTH;
-			LONG nRet = 0;
-			std::vector<wchar_t> buff(MAX_STRING_LENGTH, '\0');
-			while ((nRet = key.EnumKey(index, &buff[0], &nameLength)) != ERROR_NO_MORE_ITEMS)
-			{
-				if(nRet == ERROR_SUCCESS)
-				{
-					CRegKey userKey;
-					std::wstring userPath(&buff[0]);
-					if (ERROR_SUCCESS == userKey.Open(key, userPath.c_str(), KEY_READ))
-					{
-						GetUserData(userKey);
-					}
-				}
-				++index;
-				nameLength = MAX_STRING_LENGTH;
-			}
-		}
 	}
 
-	bool LoginManager::ValidUserData(UserDataPtr userdata)
+	void LoginManager::Login(ILoginUIHandler* handler)
 	{
-		return !userdata->name.empty() && !userdata->password.empty();
+		m_impl->Login(handler);
 	}
 
-	void LoginManager::GetUserData(CRegKey& userKey)
+	void LoginManager::AddNewUserData(const UserDataPtr& data)
 	{
-		UserDataPtr user(std::make_shared<UserData>
-			(GetStringValue(userKey, USER_NAME)
-			, GetStringValue(userKey, USER_PASSWORD)));
-
-		if (ValidUserData(user))
-		{
-			m_users.insert(std::make_pair(user->name, user));
-		}
+		m_impl->AddNewUserData(data);
 	}
 
-	void LoginManager::ShowLoginDlg(QWidget* parent)
+	bool LoginManager::IsValidRegistrationData(const UserDataPtr& data)
 	{
-
+		return m_impl->IsValidRegistrationData(data);
 	}
 
-	void LoginManager::ShowRegistrationDlg(QWidget* parent)
+	bool LoginManager::IsValidLoginData(const UserDataPtr& data)
 	{
+		return m_impl->IsValidLoginData(data);
+	}
 
+	unsigned LoginManager::GetUserDataError(const UserDataPtr& data)
+	{
+		return m_impl->GetUserDataError(data);
 	}
 }

@@ -1,37 +1,42 @@
 #pragma once
-#include <QtWidgets/QWidget>
-#include <atlbase.h>
 #include <memory>
 #include "boost/noncopyable.hpp"
-#include <map>
+#include "LoginHandlers.h"
 
 namespace login
 {
+	namespace impl
+	{
+		class LoginManagerImpl;
+	}
+
 	struct UserData
 	{
-		UserData() { }
-		UserData(const std::wstring& n, const std::wstring& p) 
-			: name(n)
-			, password(p) { }
+		UserData();
+		UserData(const std::wstring& n, const std::wstring& p); 
+		bool Empty() const;
+
 		std::wstring name;
 		std::wstring password;
 	};
 
-	typedef std::shared_ptr<UserData> UserDataPtr;
-
 	class LoginManager
-		: private boost::noncopyable
+		: public ILoginHandler
+		, private boost::noncopyable
 	{
 	public:
-		LoginManager();
-		void ShowLoginDlg(QWidget* parent = nullptr);
-		void ShowRegistrationDlg(QWidget* parent = nullptr);
+		static LoginManager* Instance();
+		virtual void Login(ILoginUIHandler* handler);
+		virtual void AddNewUserData(const UserDataPtr& data);
+		virtual bool IsValidRegistrationData(const UserDataPtr& data);
+		virtual bool IsValidLoginData(const UserDataPtr& data);
+		virtual unsigned GetUserDataError(const UserDataPtr& data);
 
 	private:
-		void Init();
-		void GetUserData(CRegKey& userKey);
-		bool ValidUserData(UserDataPtr userdata);
+		LoginManager();
+		~LoginManager();
+		
 	private:
-		std::map<std::wstring, UserDataPtr> m_users;
+		std::unique_ptr<impl::LoginManagerImpl> m_impl;
 	};
 }
