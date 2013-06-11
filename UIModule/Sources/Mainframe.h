@@ -6,21 +6,22 @@
 #include <QTextEdit>
 #include <QStackedWidget>
 #include <QPushButton>
+#include <QLabel>
 #include "LoginHandlers.h"
 
 namespace ui
 {
 	class MainFrame 
 		: public QMainWindow
-		, public login::ILoginUIHandler
+		, public login::ILoginStateObserver
 	{
 		Q_OBJECT
 
 	public:
 		MainFrame(QWidget* parent = 0);
 		~MainFrame();
-		virtual void ShowRegistrationDlg();
-		virtual void ShowLoginDlg();
+		void show();
+		virtual void OnlineStateChanged();
 
 	private:
 		void SetupUI();
@@ -34,6 +35,7 @@ namespace ui
 		QListWidgetItem* AddUserListItem(const std::string& userName);
 		QWidget* SearchMsgView(QListWidgetItem* item) const;
 		void AddMessageToView(const QString& msg, QTextEdit* view);
+		void Login();
 
 	private slots:
 		void ListItemChanged(QListWidgetItem* currentItem, QListWidgetItem* prevItem);
@@ -44,6 +46,7 @@ namespace ui
 		QListWidget*		m_userListWidget;
 		QStackedWidget*		m_msgBoxStack;
 		QListWidgetItem*	m_currentItem;
+		QLabel*				m_stateLabel;
 		std::map<QListWidgetItem*, int> m_userListItems;
 	};
 }

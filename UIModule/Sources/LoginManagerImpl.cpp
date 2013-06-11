@@ -1,5 +1,7 @@
 #include "LoginManagerImpl.h"
 #include "LoginManager.h"
+#include "LoginDialog.h"
+#include "RegistrationDialog.h"
 #include <string>
 #include <vector>
 
@@ -9,9 +11,9 @@ namespace login
 	{
 		namespace
 		{
-			const std::wstring USERS_KEYS_PATH(L"Software\\LChat\\Users");
-			const std::wstring USER_NAME(L"Name");
-			const std::wstring USER_PASSWORD(L"Password");
+			const wchar_t USERS_KEYS_PATH[] = L"Software\\LChat\\Users";
+			const wchar_t USER_NAME[] = L"Name";
+			const wchar_t USER_PASSWORD[] = L"Password";
 			const DWORD MAX_STRING_LENGTH = 128;
 
 			std::wstring GetStringValue(CRegKey& key, const std::wstring& valueName)
@@ -29,19 +31,23 @@ namespace login
 			}
 		}
 
-		LoginManagerImpl::LoginManagerImpl()
+		LoginManagerImpl::LoginManagerImpl(ILoginHandler* handler)
+			: m_handler(handler)
+			, m_isOnline(false)
+			, m_currentUser(nullptr)
 		{
 			Init();
 		}
 
 		LoginManagerImpl::~LoginManagerImpl()
 		{
+			SaveUsersData();
 		}
 
 		void LoginManagerImpl::Init()
 		{
 			CRegKey key;
-			if(ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, USERS_KEYS_PATH.c_str(), KEY_READ))
+			if(ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, USERS_KEYS_PATH, KEY_READ))
 			{
 				DWORD index = 0;
 				DWORD nameLength = MAX_STRING_LENGTH;
@@ -76,19 +82,112 @@ namespace login
 			}
 		}
 
-		void LoginManagerImpl::Login(ILoginUIHandler* handler)
+		void LoginManagerImpl::SaveUsersData()
 		{
-			if (handler)
+			CRegKey key;
+			if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, USERS_KEYS_PATH, KEY_WRITE))
 			{
-				if (m_users.empty())	//no registration users
+				std::for_each(m_users.begin(), m_users.end(),
+				[&key](const std::pair<std::wstring, UserDataPtr>& it)
 				{
-					handler->ShowRegistrationDlg();
-				}
-				else
+					CRegKey newKey;
+					UserDataPtr data(it.second);
+					if (ERROR_SUCCESS == newKey.Create(key, data->name.c_str()))
+					{
+						newKey.SetStringValue(USER_NAME, data->name.c_str());
+						newKey.SetStringValue(USER_PASSWORD, data->password.c_str());
+					}
+				});				
+			}
+		}
+
+		void LoginManagerImpl::ShowRegistrationDlg(QWidget* parent)
+		{
+			ui::controls::RegistrationDialog dlg(parent, m_handler);
+			if (dlg.exec() == QDialog::Accepted)
+			{
+				SetLoginState(true);
+				m_currentUser = dlg.GetUserData();
+			}
+			else
+			{
+				if (dlg.NeedLogin())
 				{
-					handler->ShowLoginDlg();
+					ShowLoginDlg(parent);
 				}
 			}
+		}
+
+		void LoginManagerImpl::ShowLoginDlg(QWidget* parent)
+		{
+			ui::controls::LoginDialog dlg(parent, m_handler);
+			if (dlg.exec() == QDialog::Accepted)
+			{
+				SetLoginState(true);
+				m_currentUser = dlg.GetUserData();
+			}
+			else
+			{
+				if (dlg.NeedRegistration())
+				{
+					ShowRegistrationDlg(parent);
+				}
+			}
+		}
+
+		void LoginManagerImpl::Login(QWidget* parent)
+		{
+			if (m_users.empty())	//no registration users
+			{
+				ShowRegistrationDlg(parent);
+			}
+			else
+			{
+				ShowLoginDlg(parent);
+			}
+		}
+
+		void LoginManagerImpl::Logout()
+		{
+			SetLoginState(false);
+		}
+
+		bool LoginManagerImpl::IsOnline() const
+		{
+				boost::mutex::scoped_lock lock(m_mutex);
+				return m_isOnline;
+		}
+
+		void LoginManagerImpl::SetLoginState(bool online)
+		{
+			{
+				boost::mutex::scoped_lock lock(m_mutex);
+				m_isOnline = online;
+			}
+
+			NotifyObservers();
+		}
+
+		void LoginManagerImpl::NotifyObservers()
+		{
+			std::for_each(m_obsrevers.begin(), m_obsrevers.end(),
+			[](ILoginStateObserver* observer)
+			{
+				if (observer)
+				{
+					observer->OnlineStateChanged();
+				}
+			});
+		}
+
+		void LoginManagerImpl::Subscrabe(ILoginStateObserver* observer)
+		{
+			m_obsrevers.push_back(observer);
+		}
+
+		UserDataPtr LoginManagerImpl::GetCurrentUser() const
+		{
+			return m_currentUser;
 		}
 
 		void LoginManagerImpl::AddNewUserData(const UserDataPtr& data)

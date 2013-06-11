@@ -16,22 +16,20 @@ namespace login
 		USER_NOT_FOUND		= 4
 	};
 
-	class ILoginUIHandler
-	{
-	public:
-		virtual ~ILoginUIHandler() {}
-		virtual void ShowRegistrationDlg() = 0;
-		virtual void ShowLoginDlg() = 0;
-	};
-
 	class ILoginHandler
 	{
 	public:
 		virtual ~ILoginHandler() {}
-		virtual void Login(ILoginUIHandler* handler) = 0;
 		virtual void AddNewUserData(const UserDataPtr& data) = 0;
 		virtual bool IsValidRegistrationData(const UserDataPtr& data) = 0;
 		virtual bool IsValidLoginData(const UserDataPtr& data) = 0;
 		virtual unsigned GetUserDataError(const UserDataPtr& data) = 0;
+	};
+
+	class ILoginStateObserver
+	{
+	public:
+		virtual ~ILoginStateObserver() {}
+		virtual void OnlineStateChanged() = 0;
 	};
 }

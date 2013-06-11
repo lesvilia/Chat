@@ -25,8 +25,9 @@ namespace login
 		return &manager;
 	}
 
+	
 	LoginManager::LoginManager()
-		: m_impl(new impl::LoginManagerImpl())
+		: m_impl(new impl::LoginManagerImpl(this))
 	{
 	}
 
@@ -34,9 +35,29 @@ namespace login
 	{
 	}
 
-	void LoginManager::Login(ILoginUIHandler* handler)
+	void LoginManager::Login(QWidget* parent)
 	{
-		m_impl->Login(handler);
+		m_impl->Login(parent);
+	}
+
+	void LoginManager::Logout()
+	{
+		m_impl->Logout();
+	}
+
+	bool LoginManager::IsOnline() const
+	{
+		return m_impl->IsOnline();
+	}
+	
+	void LoginManager::Subscrabe(ILoginStateObserver* observer)
+	{
+		m_impl->Subscrabe(observer);
+	}
+
+	UserDataPtr LoginManager::GetCurrentUser() const
+	{
+		return m_impl->GetCurrentUser();
 	}
 
 	void LoginManager::AddNewUserData(const UserDataPtr& data)

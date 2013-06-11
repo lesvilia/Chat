@@ -3,6 +3,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QMenuBar>
+#include <QEvent>
 #include "LoginDialog.h"
 #include "LoginManager.h"
 
@@ -28,6 +29,8 @@ namespace
 			"QSplitter::handle { background: #CAFF70; }"
 		);
 	
+	const char ONLINE_STATE[] = "Online";
+	const char OFLINE_STATE[] = "Ofline";
 
 	const char BUTTON_TEXT[] = "Send Message";
 	const unsigned MIN_BUTTON_WIDTH = 90;
@@ -52,6 +55,7 @@ namespace ui
 		, m_userListWidget(nullptr)
 		, m_msgBoxStack(nullptr)
 		, m_currentItem(nullptr)
+		, m_stateLabel(nullptr)
 	{
 		SetupUI();
 
@@ -59,23 +63,45 @@ namespace ui
 		AddNewUser("Petrov Vasia");
 		AddNewUser("Sidorov Petia");
 		AddNewUser("Anuta Maluta");
-
 		resize(MAINFRAME_WIDTH, MAINFRAME_HEIGH);
+		//connect(this, SIGNAL());
 	}
 
 	MainFrame::~MainFrame()
 	{
 	}
 
-	void MainFrame::ShowRegistrationDlg()
+	void MainFrame::Login()
 	{
-
+		login::LoginManager::Instance()->Login(this);
 	}
 
-	void MainFrame::ShowLoginDlg()
+	void MainFrame::show()
 	{
-		controls::LoginDialog dialog(this, NULL);
-		dialog.exec();
+		QMainWindow::show();
+		Login();
+	}
+
+	void MainFrame::OnlineStateChanged()
+	{
+		/*login::UserDataPtr user(login::LoginManager::Instance()->GetCurrentUser());
+		if(user)
+		{
+			QString msgState("You name: ");
+			msgState.append(user->name.c_str());
+					"You name:"
+					user->name.c_str()
+
+				);
+			if(login::LoginManager::Instance()->IsOnline())
+			{
+				m_stateLabel->setText(ONLINE_STATE);
+			}
+			else
+			{
+				m_stateLabel->setText(OFLINE_STATE);
+			}
+		}*/
 	}
 
 	void MainFrame::SetupUI()
@@ -117,19 +143,23 @@ namespace ui
 
 		m_msgBoxStack = new QStackedWidget();
 
-		QBoxLayout* hButtonWidget = new QBoxLayout(QBoxLayout::RightToLeft);
+		QBoxLayout* msgBotomWidget = new QBoxLayout(QBoxLayout::RightToLeft);
 		QPushButton* sendMsgButton = new QPushButton(BUTTON_TEXT);
 		connect(sendMsgButton, SIGNAL(clicked(bool)), SLOT(SendMessage()));
-
 		sendMsgButton->setMinimumWidth(MIN_BUTTON_WIDTH);
-		hButtonWidget->addWidget(sendMsgButton);
-		hButtonWidget->addStretch(1);	
+
+		m_stateLabel = new QLabel();
+		m_stateLabel->setText(OFLINE_STATE);
+
+		msgBotomWidget->addWidget(sendMsgButton);
+		msgBotomWidget->addStretch(1);
+		msgBotomWidget->addWidget(m_stateLabel);
 
 		verticalLayout->setMargin(0);
 		verticalLayout->setSpacing(5);
 		verticalLayout->addWidget(label);
 		verticalLayout->addWidget(m_msgBoxStack);
-		verticalLayout->addLayout(hButtonWidget);
+		verticalLayout->addLayout(msgBotomWidget);
 		verticalWidget->setLayout(verticalLayout);
 	
 		return verticalWidget;

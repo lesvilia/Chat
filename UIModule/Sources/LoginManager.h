@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <QWidget>
 #include "boost/noncopyable.hpp"
 #include "LoginHandlers.h"
 
@@ -26,7 +27,13 @@ namespace login
 	{
 	public:
 		static LoginManager* Instance();
-		virtual void Login(ILoginUIHandler* handler);
+		void Login(QWidget* parent);
+		void Logout();
+		bool IsOnline() const;
+		void Subscrabe(ILoginStateObserver* observer);
+		UserDataPtr GetCurrentUser() const;
+
+		//ILoginHandler interface
 		virtual void AddNewUserData(const UserDataPtr& data);
 		virtual bool IsValidRegistrationData(const UserDataPtr& data);
 		virtual bool IsValidLoginData(const UserDataPtr& data);
