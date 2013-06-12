@@ -1,66 +1,32 @@
 #include "Mainframe.h"
+#include "LoginDialog.h"
+#include "LoginManager.h"
+#include "Settings.h"
 #include <QSplitter>
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QMenuBar>
 #include <QEvent>
-#include "LoginDialog.h"
-#include "LoginManager.h"
+#include <QMessageBox>
 
 namespace
 {
-	const QString MAIN_MENU_BAR_STYLE
-		(
-			"QMenuBar { min-height: 17px; background-color: #9ACD32; }"
-			"QMenuBar::item { background-color: #9ACD32; }"
-			"QMenuBar::item:selected { background: #ffd700; }"
-			"QMenuBar::item:pressed { background: #ffd700; }"
-		);
-
-	const QString MENU_STYLE 
-		(
-			"QMenu { background-color: #9ACD32; }"
-			"QMenu::item:selected {	background: #ffd700; color: black; }"
-		);
-
-	const QString MAIN_WIDGET_STYLE
-		(
-			"QWidget#main_widget { background: #CAFF70; }"
-			"QSplitter::handle { background: #CAFF70; }"
-		);
-	
-	const QString STATE_LABEL_STYLE
-		(
-			"QLabel { background-color: #9ACD32; }"
-		);
-
-	const char ONLINE_STATE[] = "Online";
-	const char OFLINE_STATE[] = "Ofline";
-
-	const char BUTTON_TEXT[] = "Send Message";
-	const unsigned MIN_BUTTON_WIDTH = 90;
-	
-	const char USERS_LABEL_TEXT[] = "<h4>Online Users</h4>";
-	const char MESSAGES_LABEL_TEXT[] = "<h4>Posted Messages</h4>";
-
-	const unsigned MAINFRAME_WIDTH = 800;
-	const unsigned MAINFRAME_HEIGH = 600;
-
-	const unsigned LEFT_PART_WIDTH = MAINFRAME_WIDTH / 3;
-	const unsigned RIGHT_PART_WIDTH = MAINFRAME_WIDTH - LEFT_PART_WIDTH;
-
-	const unsigned BOTTOM_PART_HEIGH = MAINFRAME_HEIGH / 3;
-	const unsigned TOP_PART_HEIGH = MAINFRAME_HEIGH - BOTTOM_PART_HEIGH;
-
 	QString	WStrToQStr(const std::wstring& str)
 	{
 		return (QString((const QChar*)str.c_str(), str.length()));
+	}
+
+	QString SetBoldStyle(const QString& str)
+	{
+		return QString("<font style='font-weight: bold;'>" + str + "</font>");
 	}
 }
 
 namespace ui
 {
 	using namespace login;
+	using namespace settings::mainframe::sizes;
+	using namespace settings::mainframe::strings;
 
 	MainFrame::MainFrame(QWidget *parent)
 		: QMainWindow(parent)
@@ -83,16 +49,6 @@ namespace ui
 	{
 	}
 
-	void MainFrame::LogIn()
-	{
-		LoginManager::Instance()->LogIn(this);
-	}
-
-	void MainFrame::LogOut()
-	{
-		LoginManager::Instance()->LogOut();
-	}
-
 	void MainFrame::show()
 	{
 		QMainWindow::show();
@@ -113,12 +69,10 @@ namespace ui
 			QString newUser(WStrToQStr(user->name));
 			if (m_currentUserName != newUser)
 			{
-				m_currentUserName = newUser;
-				QString stateMessage("<font style='font-weight: bold;'>" + m_currentUserName + "</font>");
-				stateMessage.append("  ");
-				stateMessage.append(ONLINE_STATE);
-				m_stateLabel->setText(stateMessage);
 				Reset();
+				m_currentUserName = newUser;
+				QString stateMessage(tr(STATE_LABEL_FORMAT).arg(SetBoldStyle(m_currentUserName), ONLINE_STATE));
+				m_stateLabel->setText(stateMessage);
 			}
 		}
 		else
@@ -132,7 +86,7 @@ namespace ui
 	void MainFrame::SetupUI()
 	{
 		QWidget* mainWidget = new QWidget();
-		mainWidget->setObjectName("main_widget");
+		mainWidget->setObjectName(MAIN_WIDGET_NAME);
 		mainWidget->setStyleSheet(MAIN_WIDGET_STYLE);
 		CreateMenuBar();
 		QWidget* msgWidget = CreateMessagesWidget();
@@ -141,8 +95,8 @@ namespace ui
 		mainWidget->setLayout(mainLayout);
 		this->setCentralWidget(mainWidget);
 
-		setWindowTitle("LChat");
-		setWindowIcon(QIcon("chat_icon.png"));
+		setWindowTitle(MAIN_TITLE);
+		setWindowIcon(QIcon(MAIN_ICON_PATH));
 	}
 
 	void MainFrame::CreateMenuBar()
@@ -153,7 +107,7 @@ namespace ui
 		menu->addAction("Sign_In", this, SLOT(LogIn()));
 		menu->addAction("Sign_Out", this, SLOT(LogOut()));
 		menu->addAction("Exit", this, SLOT(close()));
-		menuBar()->addAction("About");
+		menuBar()->addAction("About", this, SLOT(About()));
 	}
 
 	QWidget* MainFrame::CreateMessagesWidget()
@@ -259,7 +213,7 @@ namespace ui
 
 	QListWidgetItem* MainFrame::AddUserListItem(const std::string& userName)
 	{
-		QListWidgetItem* userItem = new QListWidgetItem(QIcon("user_ico.png"),userName.c_str());
+		QListWidgetItem* userItem = new QListWidgetItem(QIcon(USER_ICON_PATH), userName.c_str());
 		userItem->setSizeHint(QSize(25, 25));
 	
 		m_userListWidget->addItem(userItem);
@@ -283,11 +237,8 @@ namespace ui
 	{
 		if (!msg.isEmpty())
 		{
-			QString userName("<font style='font-weight: bold;'>" + userName + "</font>");
-			
-			view->append(userName);
+			QString msg(tr(MSG_FORMAT).arg(SetBoldStyle(userName), msg));
 			view->append(msg);
-			view->append("");
 		}
 	}
 
@@ -343,8 +294,30 @@ namespace ui
 				QTextEdit* msgView = static_cast<QTextEdit*>(wdgSplitter->widget(0));
 				QTextEdit* msgEdit = static_cast<QTextEdit*>(wdgSplitter->widget(1));
 				AddMessageToView(m_currentUserName, msgEdit->toPlainText(), msgView);
-				msgEdit->setPlainText("");
+				msgEdit->clear();
 			}
 		}
+	}
+
+	void MainFrame::LogIn()
+	{
+		LoginManager::Instance()->LogIn(this);
+	}
+
+	void MainFrame::LogOut()
+	{
+		LoginManager::Instance()->LogOut();
+	}
+
+	void MainFrame::About()
+	{
+
+		QMessageBox messageBox(this);
+		messageBox.setWindowTitle(ABOUT_TITLE);
+		messageBox.setText(ABOUT_MESSAGE);
+		messageBox.setIconPixmap(QPixmap(MAIN_ICON_PATH).scaled(50, 50));
+		messageBox.setMaximumHeight(150);
+		messageBox.setMaximumWidth(300);
+		messageBox.exec();
 	}
 }

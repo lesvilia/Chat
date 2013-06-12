@@ -1,6 +1,7 @@
 #include "LoginDialog.h"
 #include "LoginManager.h"
 #include "StaticLink.h"
+#include "Settings.h"
 #include <QPushButton>
 #include <QLabel>
 #include <QGridLayout>
@@ -11,16 +12,24 @@ namespace ui
 {
 	namespace controls
 	{
+		using namespace settings::logindialog;
 		namespace
 		{
-			const unsigned DIALOG_WIDTH = 300;
-			const unsigned DIALOG_HEIGHT = 150;
-			const QString LOGIN_TITLE("Log In");
-			const QString REGISTRATION_TITLE("Registration");
-
 			std::wstring QStrToWStr(const QString& str)
 			{
 				return std::wstring((wchar_t*)str.unicode(), str.length());
+			}
+
+			login::UserDataPtr CreateUserData(QLineEdit* nameEdit, QLineEdit* passwordEdit)
+			{
+				std::wstring name(QStrToWStr(nameEdit->text()));
+				std::wstring password(QStrToWStr(passwordEdit->text()));
+				return std::make_shared<login::UserData>(name, password);
+			}
+
+			QString SetLinkStyle(const QString& str)
+			{
+				return QString(QObject::tr(LINK_FORMAT).arg(str));
 			}
 		}
 
@@ -28,10 +37,10 @@ namespace ui
 			: QDialog(parent)
 			, m_handler(handler)
 			, m_mainLayout(new QStackedLayout())
-			, m_loginWidget(nullptr)
+			, m_loginWidget(new QWidget())
 			, m_logNameEdit(nullptr)
 			, m_logPassEdit(nullptr)
-			, m_registrationWidget(nullptr)
+			, m_registrationWidget(new QWidget())
 			, m_regNameEdit(nullptr)
 			, m_regPassEdit(nullptr)
 		{
@@ -58,8 +67,8 @@ namespace ui
 
 		void LoginDialog::SetupUI()
 		{
-			SetUIRegistration();
 			SetUILogin();
+			SetUIRegistration();
 			m_mainLayout->addWidget(m_loginWidget);
 			m_mainLayout->addWidget(m_registrationWidget);
 			setLayout(m_mainLayout);
@@ -88,16 +97,17 @@ namespace ui
 			buttonOk->setAutoDefault(true);
 			buttonCancel->setAutoDefault(false);
 
-			QLabel* labelName = new QLabel("Name:"); 
-			QLabel* labelPassword = new QLabel("Password:");
+			QLabel* labelName = new QLabel(LABEL_NAME); 
+			QLabel* labelPassword = new QLabel(LABEL_PASSWORD);
 
 			StaticLink* link = new StaticLink();
 			link->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-			link->setText("<a href=\"registration\">Registration</a>");
+			link->setText(SetLinkStyle("Registration"));
 			connect(link, SIGNAL(clicked()), SLOT(SwitchToRegistrationMode()));
 
 			m_logNameEdit = new QLineEdit();
 			m_logPassEdit = new QLineEdit();
+			m_logPassEdit->setEchoMode(QLineEdit::Password);
 			QGridLayout* mainLayot = new QGridLayout();
 
 			mainLayot->addWidget(labelName, 0, 0, 1, 2);
@@ -107,7 +117,6 @@ namespace ui
 			mainLayot->addWidget(link, 2, 0, 1, 1);
 			mainLayot->addWidget(buttonCancel, 2, 2, 1, 1);
 			mainLayot->addWidget(buttonOk, 2, 4, 1, 1);
-			m_loginWidget = new QWidget();
 			m_loginWidget->setLayout(mainLayot);
 		}
 
@@ -121,16 +130,17 @@ namespace ui
 			buttonOk->setAutoDefault(true);
 			buttonCancel->setAutoDefault(false);
 
-			QLabel* labelName = new QLabel("Name:"); 
-			QLabel* labelPassword = new QLabel("Password:");
+			QLabel* labelName = new QLabel(LABEL_NAME); 
+			QLabel* labelPassword = new QLabel(LABEL_PASSWORD);
 
 			QLabel* loginLink = new StaticLink();
 			loginLink->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-			loginLink->setText("<a href=\"login\">Log In</a>");
+			loginLink->setText(SetLinkStyle("Log In"));
 			connect(loginLink, SIGNAL(clicked()), SLOT(SwitchToLoginMode()));
 
 			m_regNameEdit = new QLineEdit();
 			m_regPassEdit = new QLineEdit();
+			m_regPassEdit->setEchoMode(QLineEdit::Password);
 			QGridLayout* mainLayot = new QGridLayout();
 
 			mainLayot->addWidget(labelName, 0, 0, 1, 2);
@@ -140,16 +150,12 @@ namespace ui
 			mainLayot->addWidget(loginLink, 2, 0, 1, 1);
 			mainLayot->addWidget(buttonCancel, 2, 2, 1, 1);
 			mainLayot->addWidget(buttonOk, 2, 4, 1, 1);
-			m_registrationWidget = new QWidget();
 			m_registrationWidget->setLayout(mainLayot);
 		}
 
 		void LoginDialog::DoLogin()
 		{
-			std::wstring name(QStrToWStr(m_logNameEdit->text()));
-			std::wstring password(QStrToWStr(m_logPassEdit->text()));
-			login::UserDataPtr data(std::make_shared<login::UserData>(name, password));
-			
+			login::UserDataPtr data(CreateUserData(m_logNameEdit, m_logPassEdit));
 			if (m_handler->IsValidLoginData(data))
 			{
 				m_handler->SetCurrentUser(data);
@@ -164,9 +170,7 @@ namespace ui
 
 		void LoginDialog::DoRegistration()
 		{
-			std::wstring name(QStrToWStr(m_regNameEdit->text()));
-			std::wstring password(QStrToWStr(m_regPassEdit->text()));
-			login::UserDataPtr data(std::make_shared<login::UserData>(name, password));
+			login::UserDataPtr data(CreateUserData(m_regNameEdit, m_regPassEdit));
 			if (m_handler->IsValidRegistrationData(data))
 			{
 				m_handler->AddNewUserData(data);
@@ -187,16 +191,16 @@ namespace ui
 				unsigned error = m_handler->GetUserDataError(data);
 				if (error & login::USER_NOT_FOUND)
 				{
-					QMessageBox::warning(this, tr("Login Error!"), tr("User not found! Please check entered name."));
+					QMessageBox::warning(this, MSGBOX_LOGIN_TITLE, MSGBOX_USER_NOT_FOUND);
 				}
 				else if (error & login::WRONG_USER_PASSWORD)
 				{
-					QMessageBox::warning(this, tr("Login Error!"), tr("Wrong user password!"));
+					QMessageBox::warning(this, MSGBOX_LOGIN_TITLE, MSGBOX_WRONG_PASS);
 				}
 			}
 			else
 			{
-				QMessageBox::warning(this, tr("Login Error!"), tr("You not entered Name or Password."));
+				QMessageBox::warning(this, MSGBOX_LOGIN_TITLE, MSGBOX_DATA_EMPTY);
 			}
 		}
 
@@ -206,12 +210,12 @@ namespace ui
 			{
 				if (m_handler->GetUserDataError(data) & login::USER_EXISTS)
 				{
-					QMessageBox::warning(this, tr("Registration Error!"), tr("User already exists! Please enter other name."));
+					QMessageBox::warning(this, MSGBOX_REG_TITLE, MSGBOX_USER_EXIST);
 				}
 			}
 			else
 			{
-				QMessageBox::warning(this, tr("Registration Error!"), tr("You not entered Name or Password."));
+				QMessageBox::warning(this, MSGBOX_REG_TITLE, MSGBOX_DATA_EMPTY);
 			}
 		}
 	}

@@ -46,6 +46,9 @@
     <Filter Include="UIControls\StaticLink\src">
       <UniqueIdentifier>{a209e264-91d1-468a-b7b5-832c74dceb5a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Settings">
+      <UniqueIdentifier>{c5818d23-4f6f-447d-ae47-6ddbe580d30d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_Mainframe.cpp">
@@ -114,6 +117,12 @@
     </ClInclude>
     <ClInclude Include="Sources\ILoginManager.h">
       <Filter>LoginManager</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Settings.h">
+      <Filter>Settings</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

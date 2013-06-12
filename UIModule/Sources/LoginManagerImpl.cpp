@@ -1,6 +1,6 @@
 #include "LoginManagerImpl.h"
 #include "LoginManager.h"
-#include "LoginDialog.h"
+#include "Settings.h"
 #include <string>
 #include <vector>
 
@@ -8,13 +8,10 @@ namespace login
 {
 	namespace impl
 	{
+		using namespace settings::loginmanager;
+		
 		namespace
 		{
-			const wchar_t USERS_KEYS_PATH[] = L"Software\\LChat\\Users";
-			const wchar_t USER_NAME[] = L"Name";
-			const wchar_t USER_PASSWORD[] = L"Password";
-			const DWORD MAX_STRING_LENGTH = 128;
-
 			std::wstring GetStringValue(CRegKey& key, const std::wstring& valueName)
 			{
 				ULONG nChars = 0;
@@ -48,9 +45,9 @@ namespace login
 			if(ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, USERS_KEYS_PATH, KEY_READ))
 			{
 				DWORD index = 0;
-				DWORD nameLength = MAX_STRING_LENGTH;
 				LONG result = 0;
-				std::vector<wchar_t> buff(MAX_STRING_LENGTH, '\0');
+				DWORD nameLength = MAX_BUFFER_LENGTH;
+				std::vector<wchar_t> buff(nameLength, '\0');
 				while ((result = key.EnumKey(index, &buff[0], &nameLength)) != ERROR_NO_MORE_ITEMS)
 				{
 					if(result == ERROR_SUCCESS)
@@ -63,8 +60,12 @@ namespace login
 						}
 					}
 					++index;
-					nameLength = MAX_STRING_LENGTH;
+					nameLength = MAX_BUFFER_LENGTH;
 				}
+			}
+			else
+			{
+				key.Create(HKEY_CURRENT_USER, USERS_KEYS_PATH);
 			}
 		}
 

@@ -45,6 +45,7 @@ namespace ui
 		void SendMessage();
 		void LogIn();
 		void LogOut();
+		void About();
 
 	private:
 		QListWidget*		m_userListWidget;
