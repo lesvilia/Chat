@@ -29,6 +29,11 @@ namespace
 			"QSplitter::handle { background: #CAFF70; }"
 		);
 	
+	const QString STATE_LABEL_STYLE
+		(
+			"QLabel { background-color: #9ACD32; }"
+		);
+
 	const char ONLINE_STATE[] = "Online";
 	const char OFLINE_STATE[] = "Ofline";
 
@@ -46,10 +51,17 @@ namespace
 
 	const unsigned BOTTOM_PART_HEIGH = MAINFRAME_HEIGH / 3;
 	const unsigned TOP_PART_HEIGH = MAINFRAME_HEIGH - BOTTOM_PART_HEIGH;
+
+	QString	WStrToQStr(const std::wstring& str)
+	{
+		return (QString((const QChar*)str.c_str(), str.length()));
+	}
 }
 
 namespace ui
 {
+	using namespace login;
+
 	MainFrame::MainFrame(QWidget *parent)
 		: QMainWindow(parent)
 		, m_userListWidget(nullptr)
@@ -64,44 +76,57 @@ namespace ui
 		AddNewUser("Sidorov Petia");
 		AddNewUser("Anuta Maluta");
 		resize(MAINFRAME_WIDTH, MAINFRAME_HEIGH);
-		//connect(this, SIGNAL());
+		LoginManager::Instance()->Subscribe(this);
 	}
 
 	MainFrame::~MainFrame()
 	{
 	}
 
-	void MainFrame::Login()
+	void MainFrame::LogIn()
 	{
-		login::LoginManager::Instance()->Login(this);
+		LoginManager::Instance()->LogIn(this);
+	}
+
+	void MainFrame::LogOut()
+	{
+		LoginManager::Instance()->LogOut();
 	}
 
 	void MainFrame::show()
 	{
 		QMainWindow::show();
-		Login();
+		LogIn();
+	}
+
+	void MainFrame::EnableLoginUI()
+	{
+		controls::LoginDialog dlg(this, LoginManager::Instance()->GetLoginHandler());
+		dlg.exec();
 	}
 
 	void MainFrame::OnlineStateChanged()
 	{
-		/*login::UserDataPtr user(login::LoginManager::Instance()->GetCurrentUser());
-		if(user)
+		if (LoginManager::Instance()->IsOnline())
 		{
-			QString msgState("You name: ");
-			msgState.append(user->name.c_str());
-					"You name:"
-					user->name.c_str()
-
-				);
-			if(login::LoginManager::Instance()->IsOnline())
+			UserDataPtr user(LoginManager::Instance()->GetCurrentUser());
+			QString newUser(WStrToQStr(user->name));
+			if (m_currentUserName != newUser)
 			{
-				m_stateLabel->setText(ONLINE_STATE);
+				m_currentUserName = newUser;
+				QString stateMessage("<font style='font-weight: bold;'>" + m_currentUserName + "</font>");
+				stateMessage.append("  ");
+				stateMessage.append(ONLINE_STATE);
+				m_stateLabel->setText(stateMessage);
+				Reset();
 			}
-			else
-			{
-				m_stateLabel->setText(OFLINE_STATE);
-			}
-		}*/
+		}
+		else
+		{
+			Reset();
+			m_currentUserName.clear();
+			m_stateLabel->setText(OFLINE_STATE);
+		}
 	}
 
 	void MainFrame::SetupUI()
@@ -125,9 +150,9 @@ namespace ui
 		menuBar()->setStyleSheet(MAIN_MENU_BAR_STYLE);
 		QMenu* menu = menuBar()->addMenu("Sign_In");
 		menu->setStyleSheet(MENU_STYLE);
-		menu->addAction("Sign_In");
-		menu->addAction("Sign_Out");
-		menu->addAction("Exit");
+		menu->addAction("Sign_In", this, SLOT(LogIn()));
+		menu->addAction("Sign_Out", this, SLOT(LogOut()));
+		menu->addAction("Exit", this, SLOT(close()));
 		menuBar()->addAction("About");
 	}
 
@@ -150,10 +175,11 @@ namespace ui
 
 		m_stateLabel = new QLabel();
 		m_stateLabel->setText(OFLINE_STATE);
+		m_stateLabel->setAlignment(Qt::AlignCenter);
+		m_stateLabel->setStyleSheet(STATE_LABEL_STYLE);
 
 		msgBotomWidget->addWidget(sendMsgButton);
-		msgBotomWidget->addStretch(1);
-		msgBotomWidget->addWidget(m_stateLabel);
+		msgBotomWidget->addWidget(m_stateLabel, 1);
 
 		verticalLayout->setMargin(0);
 		verticalLayout->setSpacing(5);
@@ -209,7 +235,7 @@ namespace ui
 	{
 		QSplitter* msgViewWidget = new QSplitter(Qt::Vertical); 
 		QTextEdit* msgView = new QTextEdit();
-		QTextEdit* msgEdit = new QTextEdit("Create messages."); 
+		QTextEdit* msgEdit = new QTextEdit(); 
 		msgView->setReadOnly(true);
 
 		msgViewWidget->addWidget(msgView);
@@ -253,15 +279,29 @@ namespace ui
 		}
 	}
 
-	void MainFrame::AddMessageToView(const QString& msg, QTextEdit* view)
+	void MainFrame::AddMessageToView(const QString& userName, const QString& msg, QTextEdit* view)
 	{
 		if (!msg.isEmpty())
 		{
-			QString userName("<font style='font-weight: bold;'>" + m_currentItem->text() + "</font>");
+			QString userName("<font style='font-weight: bold;'>" + userName + "</font>");
+			
 			view->append(userName);
 			view->append(msg);
 			view->append("");
 		}
+	}
+
+	void MainFrame::Reset()
+	{
+		std::for_each(m_userListItems.begin(), m_userListItems.end(),
+		[this](const std::pair<QListWidgetItem*, int>& item)
+		{
+			QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStack->widget(item.second));
+			QTextEdit* msgView = static_cast<QTextEdit*>(wdgSplitter->widget(0));
+			QTextEdit* msgEdit = static_cast<QTextEdit*>(wdgSplitter->widget(1));
+			msgView->clear();
+			msgEdit->clear();
+		});
 	}
 
 	/*------------------Slots-------------*/
@@ -295,13 +335,16 @@ namespace ui
 
 	void MainFrame::SendMessage()
 	{
-		QSplitter* wdgSplitter = static_cast<QSplitter*>(SearchMsgView(m_currentItem));
-		if (wdgSplitter)
+		if (LoginManager::Instance()->IsOnline())
 		{
-			QTextEdit* msgView = static_cast<QTextEdit*>(wdgSplitter->widget(0));
-			QTextEdit* msgEdit = static_cast<QTextEdit*>(wdgSplitter->widget(1));
-			AddMessageToView(msgEdit->toPlainText(), msgView);
-			msgEdit->setPlainText("");
+			QSplitter* wdgSplitter = static_cast<QSplitter*>(SearchMsgView(m_currentItem));
+			if (wdgSplitter)
+			{
+				QTextEdit* msgView = static_cast<QTextEdit*>(wdgSplitter->widget(0));
+				QTextEdit* msgEdit = static_cast<QTextEdit*>(wdgSplitter->widget(1));
+				AddMessageToView(m_currentUserName, msgEdit->toPlainText(), msgView);
+				msgEdit->setPlainText("");
+			}
 		}
 	}
 }

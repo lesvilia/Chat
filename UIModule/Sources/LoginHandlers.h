@@ -16,11 +16,21 @@ namespace login
 		USER_NOT_FOUND		= 4
 	};
 
+	class ILoginUIHandler
+	{
+	public:
+		virtual ~ILoginUIHandler() {}
+		virtual void EnableLoginUI() = 0;
+	};
+
 	class ILoginHandler
 	{
 	public:
 		virtual ~ILoginHandler() {}
 		virtual void AddNewUserData(const UserDataPtr& data) = 0;
+		virtual void SetCurrentUser(const UserDataPtr& data) = 0;
+		virtual void SetLoginState(bool online) = 0;
+		virtual std::vector<UserDataPtr> GetUsersData() const = 0;
 		virtual bool IsValidRegistrationData(const UserDataPtr& data) = 0;
 		virtual bool IsValidLoginData(const UserDataPtr& data) = 0;
 		virtual unsigned GetUserDataError(const UserDataPtr& data) = 0;

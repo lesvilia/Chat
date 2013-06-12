@@ -34,17 +34,11 @@
     <Filter Include="UIControls">
       <UniqueIdentifier>{8726cba8-16c6-43fe-a3f6-22e62215076a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UIControls\RegistrationDialog">
-      <UniqueIdentifier>{6aaf29a0-1069-404b-85b4-b3f9115f6ed1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UIControls\LoginDialog">
       <UniqueIdentifier>{4b9f067c-3d61-4a31-be1f-d7a6f1563fe2}</UniqueIdentifier>
     </Filter>
     <Filter Include="UIControls\LoginDialog\src">
       <UniqueIdentifier>{e92de347-0aef-41a6-89fc-43db4358d89f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UIControls\RegistrationDialog\src">
-      <UniqueIdentifier>{644cc9c5-ec49-42a4-9479-ec58fa2e4096}</UniqueIdentifier>
     </Filter>
     <Filter Include="UIControls\StaticLink">
       <UniqueIdentifier>{ee71d339-0943-4775-bc2e-b5d335c653a8}</UniqueIdentifier>
@@ -70,9 +64,6 @@
     <ClCompile Include="Sources\LoginDialog.cpp">
       <Filter>UIControls\LoginDialog\src</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\RegistrationDialog.cpp">
-      <Filter>UIControls\RegistrationDialog\src</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\LoginManagerImpl.cpp">
       <Filter>LoginManager\src</Filter>
     </ClCompile>
@@ -91,12 +82,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_LoginDialog.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_RegistrationDialog.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_RegistrationDialog.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="client.png">
@@ -113,9 +98,6 @@
     <CustomBuild Include="Sources\StaticLink.h">
       <Filter>UIControls\StaticLink</Filter>
     </CustomBuild>
-    <CustomBuild Include="Sources\RegistrationDialog.h">
-      <Filter>UIControls\RegistrationDialog</Filter>
-    </CustomBuild>
     <CustomBuild Include="Sources\LoginDialog.h">
       <Filter>UIControls\LoginDialog</Filter>
     </CustomBuild>
@@ -129,6 +111,9 @@
     </ClInclude>
     <ClInclude Include="Sources\LoginManagerImpl.h">
       <Filter>LoginManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ILoginManager.h">
+      <Filter>LoginManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -16,33 +16,32 @@ namespace login
 			: private boost::noncopyable
 		{
 		public:
-			explicit LoginManagerImpl(ILoginHandler* handler);
+			explicit LoginManagerImpl();
 			~LoginManagerImpl();
-			void Login(QWidget* parent);
+			void Login(ILoginUIHandler* uiHandler);
 			void Logout();
 			bool IsOnline() const;
-			void Subscrabe(ILoginStateObserver* observer);
+			void Subscribe(ILoginStateObserver* observer);
 			UserDataPtr GetCurrentUser() const;
 
 			void AddNewUserData(const UserDataPtr& data);
+			void SetCurrentUser(const UserDataPtr& data);
+			void SetLoginState(bool online);
+			std::vector<UserDataPtr> GetUsersData() const;
 			bool IsValidRegistrationData(const UserDataPtr& data);
 			bool IsValidLoginData(const UserDataPtr& data);
 			unsigned GetUserDataError(const UserDataPtr& data);
 
 		private:
 			void Init();
-			void ShowRegistrationDlg(QWidget* parent);
-			void ShowLoginDlg(QWidget* parent);
 			void GetUserData(CRegKey& userKey);
 			void SaveUsersData();
-			void SetLoginState(bool online);
 			void NotifyObservers();
 
 		private:
 			std::map<std::wstring, UserDataPtr> m_users;
 			std::vector<ILoginStateObserver*> m_obsrevers;
 			mutable boost::mutex m_mutex;
-			ILoginHandler* m_handler;
 			bool m_isOnline;
 			UserDataPtr m_currentUser;
 		};

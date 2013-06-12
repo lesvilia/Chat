@@ -19,7 +19,7 @@ namespace login
 	}
 
 
-	LoginManager* LoginManager::Instance()
+	ILoginManager* LoginManager::Instance()
 	{
 		static LoginManager manager;
 		return &manager;
@@ -27,7 +27,7 @@ namespace login
 
 	
 	LoginManager::LoginManager()
-		: m_impl(new impl::LoginManagerImpl(this))
+		: m_impl(new impl::LoginManagerImpl())
 	{
 	}
 
@@ -35,12 +35,12 @@ namespace login
 	{
 	}
 
-	void LoginManager::Login(QWidget* parent)
+	void LoginManager::LogIn(ILoginUIHandler* uiHandler)
 	{
-		m_impl->Login(parent);
+		m_impl->Login(uiHandler);
 	}
 
-	void LoginManager::Logout()
+	void LoginManager::LogOut()
 	{
 		m_impl->Logout();
 	}
@@ -50,9 +50,19 @@ namespace login
 		return m_impl->IsOnline();
 	}
 	
-	void LoginManager::Subscrabe(ILoginStateObserver* observer)
+	void LoginManager::Subscribe(ILoginStateObserver* observer)
 	{
-		m_impl->Subscrabe(observer);
+		m_impl->Subscribe(observer);
+	}
+
+	ILoginHandler* LoginManager::GetLoginHandler()
+	{
+		return this;
+	}
+
+	void LoginManager::SetLoginState(bool online)
+	{
+		m_impl->SetLoginState(online);
 	}
 
 	UserDataPtr LoginManager::GetCurrentUser() const
@@ -63,6 +73,16 @@ namespace login
 	void LoginManager::AddNewUserData(const UserDataPtr& data)
 	{
 		m_impl->AddNewUserData(data);
+	}
+
+	void LoginManager::SetCurrentUser(const UserDataPtr& data)
+	{
+		m_impl->SetCurrentUser(data);
+	}
+
+	std::vector<UserDataPtr> LoginManager::GetUsersData() const
+	{
+		return m_impl->GetUsersData();
 	}
 
 	bool LoginManager::IsValidRegistrationData(const UserDataPtr& data)

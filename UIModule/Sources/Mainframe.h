@@ -13,6 +13,7 @@ namespace ui
 {
 	class MainFrame 
 		: public QMainWindow
+		, public login::ILoginUIHandler
 		, public login::ILoginStateObserver
 	{
 		Q_OBJECT
@@ -21,6 +22,7 @@ namespace ui
 		MainFrame(QWidget* parent = 0);
 		~MainFrame();
 		void show();
+		virtual void EnableLoginUI();
 		virtual void OnlineStateChanged();
 
 	private:
@@ -34,19 +36,22 @@ namespace ui
 		int AddUserMsgView();
 		QListWidgetItem* AddUserListItem(const std::string& userName);
 		QWidget* SearchMsgView(QListWidgetItem* item) const;
-		void AddMessageToView(const QString& msg, QTextEdit* view);
-		void Login();
+		void AddMessageToView(const QString& userName, const QString& msg, QTextEdit* view);
+		void Reset();
 
 	private slots:
 		void ListItemChanged(QListWidgetItem* currentItem, QListWidgetItem* prevItem);
 		void ResizeMessagesView();
 		void SendMessage();
+		void LogIn();
+		void LogOut();
 
 	private:
 		QListWidget*		m_userListWidget;
 		QStackedWidget*		m_msgBoxStack;
 		QListWidgetItem*	m_currentItem;
 		QLabel*				m_stateLabel;
+		QString				m_currentUserName;
 		std::map<QListWidgetItem*, int> m_userListItems;
 	};
 }

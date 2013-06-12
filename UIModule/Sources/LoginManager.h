@@ -2,7 +2,7 @@
 #include <memory>
 #include <QWidget>
 #include "boost/noncopyable.hpp"
-#include "LoginHandlers.h"
+#include "ILoginManager.h"
 
 namespace login
 {
@@ -22,19 +22,26 @@ namespace login
 	};
 
 	class LoginManager
-		: public ILoginHandler
+		: public ILoginManager
+		, public ILoginHandler
 		, private boost::noncopyable
 	{
 	public:
-		static LoginManager* Instance();
-		void Login(QWidget* parent);
-		void Logout();
-		bool IsOnline() const;
-		void Subscrabe(ILoginStateObserver* observer);
-		UserDataPtr GetCurrentUser() const;
+		static ILoginManager* Instance();
+
+		//ILoginManager interface
+		virtual void LogIn(ILoginUIHandler* uiHandler);
+		virtual void LogOut();
+		virtual bool IsOnline() const;
+		virtual UserDataPtr GetCurrentUser() const;
+		virtual void Subscribe(ILoginStateObserver* observer);
+		virtual ILoginHandler* GetLoginHandler();
 
 		//ILoginHandler interface
 		virtual void AddNewUserData(const UserDataPtr& data);
+		virtual void SetCurrentUser(const UserDataPtr& data);
+		virtual void SetLoginState(bool online);
+		virtual std::vector<UserDataPtr> GetUsersData() const;
 		virtual bool IsValidRegistrationData(const UserDataPtr& data);
 		virtual bool IsValidLoginData(const UserDataPtr& data);
 		virtual unsigned GetUserDataError(const UserDataPtr& data);

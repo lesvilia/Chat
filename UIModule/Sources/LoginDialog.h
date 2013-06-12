@@ -1,6 +1,7 @@
 #pragma once
 #include <QDialog>
 #include <QLineEdit>
+#include <QStackedLayout>
 #include "LoginHandlers.h"
 
 namespace ui
@@ -14,23 +15,32 @@ namespace ui
 		public:
 			LoginDialog(QWidget* parent, login::ILoginHandler* handler);
 			~LoginDialog();
-			bool NeedRegistration() const;
-			login::UserDataPtr GetUserData() const;
 
 		private:
 			void InitDialog();
-			void HandleErrorData(const login::UserDataPtr& data);
+			void SetupUI();
+			void HandleLoginError(const login::UserDataPtr& data);
+			void HandleRegistrationError(const login::UserDataPtr& data);
+			void SetUILogin();
+			void SetUIRegistration();
 
 		private slots:
-			void SetNeedRegistartion();
 			void DoLogin();
+			void DoRegistration();
+			void SwitchToRegistrationMode();
+			void SwitchToLoginMode();
 
 		private:
 			login::ILoginHandler* m_handler;
-			login::UserDataPtr m_user;
-			QLineEdit* m_nameEdit;
-			QLineEdit* m_passEdit;
-			bool m_needRegistration;
+			QStackedLayout* m_mainLayout;
+			
+			QWidget* m_loginWidget;
+			QLineEdit* m_logNameEdit;
+			QLineEdit* m_logPassEdit;
+			
+			QWidget* m_registrationWidget;
+			QLineEdit* m_regNameEdit;
+			QLineEdit* m_regPassEdit;
 		};
 	}
 }

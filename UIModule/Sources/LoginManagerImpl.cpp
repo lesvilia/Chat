@@ -1,7 +1,6 @@
 #include "LoginManagerImpl.h"
 #include "LoginManager.h"
 #include "LoginDialog.h"
-#include "RegistrationDialog.h"
 #include <string>
 #include <vector>
 
@@ -31,9 +30,8 @@ namespace login
 			}
 		}
 
-		LoginManagerImpl::LoginManagerImpl(ILoginHandler* handler)
-			: m_handler(handler)
-			, m_isOnline(false)
+		LoginManagerImpl::LoginManagerImpl()
+			: m_isOnline(false)
 			, m_currentUser(nullptr)
 		{
 			Init();
@@ -101,50 +99,9 @@ namespace login
 			}
 		}
 
-		void LoginManagerImpl::ShowRegistrationDlg(QWidget* parent)
+		void LoginManagerImpl::Login(ILoginUIHandler* uiHandler)
 		{
-			ui::controls::RegistrationDialog dlg(parent, m_handler);
-			if (dlg.exec() == QDialog::Accepted)
-			{
-				SetLoginState(true);
-				m_currentUser = dlg.GetUserData();
-			}
-			else
-			{
-				if (dlg.NeedLogin())
-				{
-					ShowLoginDlg(parent);
-				}
-			}
-		}
-
-		void LoginManagerImpl::ShowLoginDlg(QWidget* parent)
-		{
-			ui::controls::LoginDialog dlg(parent, m_handler);
-			if (dlg.exec() == QDialog::Accepted)
-			{
-				SetLoginState(true);
-				m_currentUser = dlg.GetUserData();
-			}
-			else
-			{
-				if (dlg.NeedRegistration())
-				{
-					ShowRegistrationDlg(parent);
-				}
-			}
-		}
-
-		void LoginManagerImpl::Login(QWidget* parent)
-		{
-			if (m_users.empty())	//no registration users
-			{
-				ShowRegistrationDlg(parent);
-			}
-			else
-			{
-				ShowLoginDlg(parent);
-			}
+			uiHandler->EnableLoginUI();
 		}
 
 		void LoginManagerImpl::Logout()
@@ -154,8 +111,8 @@ namespace login
 
 		bool LoginManagerImpl::IsOnline() const
 		{
-				boost::mutex::scoped_lock lock(m_mutex);
-				return m_isOnline;
+			boost::mutex::scoped_lock lock(m_mutex);
+			return m_isOnline;
 		}
 
 		void LoginManagerImpl::SetLoginState(bool online)
@@ -180,9 +137,14 @@ namespace login
 			});
 		}
 
-		void LoginManagerImpl::Subscrabe(ILoginStateObserver* observer)
+		void LoginManagerImpl::Subscribe(ILoginStateObserver* observer)
 		{
 			m_obsrevers.push_back(observer);
+		}
+
+		void LoginManagerImpl::AddNewUserData(const UserDataPtr& data)
+		{
+			m_users[data->name] = data;
 		}
 
 		UserDataPtr LoginManagerImpl::GetCurrentUser() const
@@ -190,9 +152,20 @@ namespace login
 			return m_currentUser;
 		}
 
-		void LoginManagerImpl::AddNewUserData(const UserDataPtr& data)
+		void LoginManagerImpl::SetCurrentUser(const UserDataPtr& data)
 		{
-			m_users[data->name] = data;
+			m_currentUser = data;  
+		}
+
+		std::vector<UserDataPtr> LoginManagerImpl::GetUsersData() const
+		{
+			std::vector<UserDataPtr> users;
+			std::for_each(m_users.begin(), m_users.end(),
+			[&users](const std::pair<std::wstring, UserDataPtr>& it)
+			{
+				users.push_back(it.second);
+			});
+			return users;
 		}
 
 		bool LoginManagerImpl::IsValidRegistrationData(const UserDataPtr& data)
