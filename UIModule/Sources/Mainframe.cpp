@@ -20,6 +20,16 @@ namespace
 	{
 		return QString("<font style='font-weight: bold;'>" + str + "</font>");
 	}
+
+	void PrepareMessage(QString& msg)
+	{
+		QString temp(msg);
+		temp.remove("\n");
+		if (temp.isEmpty())
+		{
+			msg.clear();
+		}
+	}
 }
 
 namespace ui
@@ -237,8 +247,9 @@ namespace ui
 	{
 		if (!msg.isEmpty())
 		{
-			QString msg(tr(MSG_FORMAT).arg(SetBoldStyle(userName), msg));
+			view->append(SetBoldStyle(userName));
 			view->append(msg);
+			view->append("");
 		}
 	}
 
@@ -293,7 +304,9 @@ namespace ui
 			{
 				QTextEdit* msgView = static_cast<QTextEdit*>(wdgSplitter->widget(0));
 				QTextEdit* msgEdit = static_cast<QTextEdit*>(wdgSplitter->widget(1));
-				AddMessageToView(m_currentUserName, msgEdit->toPlainText(), msgView);
+				QString message(msgEdit->toPlainText());
+				PrepareMessage(message);
+				AddMessageToView(m_currentUserName, message, msgView);
 				msgEdit->clear();
 			}
 		}

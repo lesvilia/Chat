@@ -44,7 +44,6 @@ namespace settings
 				"QSplitter::handle { background: #CAFF70; }"
 			);
 
-			const char MSG_FORMAT[] = "%1<br>%2<br>";
 			const char STATE_LABEL_FORMAT[] = "%1 %2";
 			const QString STATE_LABEL_STYLE("QLabel { background-color: #9ACD32; }");
 			const QString USER_ICON_PATH("user_ico.png");
