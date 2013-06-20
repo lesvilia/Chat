@@ -19,14 +19,14 @@ namespace login
 	class ILoginUIHandler
 	{
 	public:
-		virtual ~ILoginUIHandler() {}
 		virtual void EnableLoginUI() = 0;
+	protected:
+		~ILoginUIHandler() {}
 	};
 
 	class ILoginHandler
 	{
 	public:
-		virtual ~ILoginHandler() {}
 		virtual void AddNewUserData(const UserDataPtr& data) = 0;
 		virtual void SetCurrentUser(const UserDataPtr& data) = 0;
 		virtual void SetLoginState(bool online) = 0;
@@ -34,12 +34,15 @@ namespace login
 		virtual bool IsValidRegistrationData(const UserDataPtr& data) = 0;
 		virtual bool IsValidLoginData(const UserDataPtr& data) = 0;
 		virtual unsigned GetUserDataError(const UserDataPtr& data) = 0;
+	protected:
+		~ILoginHandler() {}
 	};
 
 	class ILoginStateObserver
 	{
 	public:
-		virtual ~ILoginStateObserver() {}
 		virtual void OnlineStateChanged() = 0;
+	protected:
+		~ILoginStateObserver() {}
 	};
 }
