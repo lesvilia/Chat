@@ -39,10 +39,20 @@ namespace ui
 	using namespace settings::mainframe::sizes;
 	using namespace settings::mainframe::strings;
 
+	MainFrame::UserItem::UserItem()
+	{
+	}
+
+	MainFrame::UserItem::UserItem(controls::UserListItem* item, int id)
+		: userlistItem(item)
+		, msgWidgetID(id)
+	{
+	}
+
 	MainFrame::MainFrame(QWidget *parent)
 		: QMainWindow(parent)
 		, m_userListWidget(nullptr)
-		, m_msgBoxStack(nullptr)
+		, m_msgBoxStackedWidget(nullptr)
 		, m_currentItem(nullptr)
 		, m_stateLabel(nullptr)
 	{
@@ -78,18 +88,17 @@ namespace ui
 		{
 			UserDataPtr user(LoginManager::Instance()->GetCurrentUser());
 			QString newUser(WStrToQStr(user->name));
-			if (m_currentUserName != newUser)
+			if (m_currentUser != newUser)
 			{
 				Reset();
-				m_currentUserName = newUser;
-				QString stateMessage(tr(STATE_LABEL_FORMAT).arg(SetBoldStyle(m_currentUserName), ONLINE_STATE));
+				m_currentUser = newUser;
+				QString stateMessage(tr(STATE_LABEL_FORMAT).arg(SetBoldStyle(m_currentUser), ONLINE_STATE));
 				m_stateLabel->setText(stateMessage);
 			}
 		}
 		else
 		{
 			Reset();
-			m_currentUserName.clear();
 			m_stateLabel->setText(OFLINE_STATE);
 		}
 	}
@@ -98,7 +107,34 @@ namespace ui
 	{
 		UserListItem* userItem = AddUserListItem(name, uuid);
 		int viewID = AddUserMsgView();
-		m_userItems[uuid] = std::make_pair(userItem, viewID);
+		m_userItems[uuid] = UserItem(userItem, viewID);
+	}
+
+	UserListItem* MainFrame::AddUserListItem(const std::wstring& userName, const std::wstring& uuid)
+	{
+		UserListItem* userItem = new UserListItem(QIcon(USER_ICON_PATH), WStrToQStr(userName), uuid);
+		userItem->setSizeHint(QSize(25, 25));
+
+		m_userListWidget->addItem(userItem);
+		return userItem;
+	}
+
+	int MainFrame::AddUserMsgView()
+	{
+		QSplitter* msgViewWidget = new QSplitter(Qt::Vertical); 
+		QTextEdit* msgView = new QTextEdit();
+		QTextEdit* msgEdit = new QTextEdit(); 
+		msgView->setReadOnly(true);
+
+		msgViewWidget->addWidget(msgView);
+		msgViewWidget->addWidget(msgEdit);
+
+		QList<int> listSizes;
+		listSizes << TOP_PART_HEIGH << BOTTOM_PART_HEIGH;
+		msgViewWidget->setSizes(listSizes);
+
+		connect(msgViewWidget, SIGNAL(splitterMoved(int, int)), SLOT(ResizeMessagesView()));
+		return m_msgBoxStackedWidget->addWidget(msgViewWidget);
 	}
 
 	void MainFrame::RemoveUser(const std::wstring& uuid)
@@ -106,8 +142,8 @@ namespace ui
 		auto iter = m_userItems.find(uuid);
 		if (iter != m_userItems.end())
 		{
-			m_userListWidget->removeItemWidget(iter->second.first);
-			m_msgBoxStack->removeWidget(m_msgBoxStack->widget(iter->second.second));
+			m_userListWidget->removeItemWidget(iter->second.userlistItem);
+			m_msgBoxStackedWidget->removeWidget(m_msgBoxStackedWidget->widget(iter->second.msgWidgetID));
 		}
 	}
 
@@ -116,10 +152,42 @@ namespace ui
 		auto iter = m_userItems.find(uuid);
 		if (iter != m_userItems.end())
 		{
-
+			UserItem item(iter->second);
+			QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStackedWidget->widget(item.msgWidgetID));
+			if (wdgSplitter)
+			{
+				QTextEdit* msgView = static_cast<QTextEdit*>(wdgSplitter->widget(0));
+				AddMessageToView(item.userlistItem->text(), WStrToQStr(message), msgView);
+			}
 		}
 	}
 
+	void MainFrame::SendMessage()
+	{
+		if (LoginManager::Instance()->IsOnline())
+		{
+			QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStackedWidget->currentWidget());
+			if (wdgSplitter)
+			{
+				QTextEdit* msgView = static_cast<QTextEdit*>(wdgSplitter->widget(0));
+				QTextEdit* msgEdit = static_cast<QTextEdit*>(wdgSplitter->widget(1));
+				QString message(msgEdit->toPlainText());
+				PrepareMessage(message);
+				AddMessageToView(m_currentUser, message, msgView);
+				msgEdit->clear();
+			}
+		}
+	}
+
+	void MainFrame::AddMessageToView(const QString& userName, const QString& msg, QTextEdit* view)
+	{
+		if (!msg.isEmpty())
+		{
+			view->append(SetBoldStyle(userName));
+			view->append(msg);
+			view->append("");
+		}
+	}
 
 	void MainFrame::SetupUI()
 	{
@@ -158,7 +226,7 @@ namespace ui
 		label->setMaximumHeight(20);
 		label->setMinimumHeight(20);
 
-		m_msgBoxStack = new QStackedWidget();
+		m_msgBoxStackedWidget = new QStackedWidget();
 
 		QBoxLayout* msgBotomWidget = new QBoxLayout(QBoxLayout::RightToLeft);
 		QPushButton* sendMsgButton = new QPushButton(BUTTON_TEXT);
@@ -176,7 +244,7 @@ namespace ui
 		verticalLayout->setMargin(0);
 		verticalLayout->setSpacing(5);
 		verticalLayout->addWidget(label);
-		verticalLayout->addWidget(m_msgBoxStack);
+		verticalLayout->addWidget(m_msgBoxStackedWidget);
 		verticalLayout->addLayout(msgBotomWidget);
 		verticalWidget->setLayout(verticalLayout);
 	
@@ -222,50 +290,12 @@ namespace ui
 		return horizontalLayout;
 	}
 
-
-	int MainFrame::AddUserMsgView()
-	{
-		QSplitter* msgViewWidget = new QSplitter(Qt::Vertical); 
-		QTextEdit* msgView = new QTextEdit();
-		QTextEdit* msgEdit = new QTextEdit(); 
-		msgView->setReadOnly(true);
-
-		msgViewWidget->addWidget(msgView);
-		msgViewWidget->addWidget(msgEdit);
-	
-		QList<int> listSizes;
-		listSizes << TOP_PART_HEIGH << BOTTOM_PART_HEIGH;
-		msgViewWidget->setSizes(listSizes);
-	
-		connect(msgViewWidget, SIGNAL(splitterMoved(int, int)), SLOT(ResizeMessagesView()));
-		return m_msgBoxStack->addWidget(msgViewWidget);
-	}
-
-	UserListItem* MainFrame::AddUserListItem(const std::wstring& userName, const std::wstring& uuid)
-	{
-		UserListItem* userItem = new UserListItem(QIcon(USER_ICON_PATH), WStrToQStr(userName), uuid);
-		userItem->setSizeHint(QSize(25, 25));
-	
-		m_userListWidget->addItem(userItem);
-		return userItem;
-	}
-
-	void MainFrame::AddMessageToView(const QString& userName, const QString& msg, QTextEdit* view)
-	{
-		if (!msg.isEmpty())
-		{
-			view->append(SetBoldStyle(userName));
-			view->append(msg);
-			view->append("");
-		}
-	}
-
 	void MainFrame::Reset()
 	{
 		std::for_each(m_userItems.begin(), m_userItems.end(),
 		[this](const std::pair<std::wstring, UserItem>& item)
 		{
-			QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStack->widget(item.second.second));
+			QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStackedWidget->widget(item.second.msgWidgetID));
 			QTextEdit* msgView = static_cast<QTextEdit*>(wdgSplitter->widget(0));
 			QTextEdit* msgEdit = static_cast<QTextEdit*>(wdgSplitter->widget(1));
 			msgView->clear();
@@ -282,13 +312,13 @@ namespace ui
 		if (iter != m_userItems.end())
 		{
 			m_currentItem = item;
-			m_msgBoxStack->setCurrentIndex(iter->second.second); 
+			m_msgBoxStackedWidget->setCurrentIndex(iter->second.msgWidgetID); 
 		}
 	}
 
 	void MainFrame::ResizeMessagesView()
 	{
-		QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStack->currentWidget());
+		QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStackedWidget->currentWidget());
 		if (wdgSplitter)
 		{
 			QList<int> newSizesWdg(wdgSplitter->sizes());
@@ -296,26 +326,9 @@ namespace ui
 			{
 				if (it->first != m_currentItem->GetUserID())
 				{
-					QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStack->widget(it->second.second));
+					QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStackedWidget->widget(it->second.msgWidgetID));
 					wdgSplitter->setSizes(newSizesWdg);
 				}
-			}
-		}
-	}
-
-	void MainFrame::SendMessage()
-	{
-		if (LoginManager::Instance()->IsOnline())
-		{
-			QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStack->currentWidget());
-			if (wdgSplitter)
-			{
-				QTextEdit* msgView = static_cast<QTextEdit*>(wdgSplitter->widget(0));
-				QTextEdit* msgEdit = static_cast<QTextEdit*>(wdgSplitter->widget(1));
-				QString message(msgEdit->toPlainText());
-				PrepareMessage(message);
-				AddMessageToView(m_currentUserName, message, msgView);
-				msgEdit->clear();
 			}
 		}
 	}

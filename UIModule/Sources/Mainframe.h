@@ -21,7 +21,13 @@ namespace ui
 	{
 		Q_OBJECT
 
-		typedef std::pair<controls::UserListItem*, int> UserItem;
+		struct UserItem
+		{
+			UserItem();
+			UserItem(controls::UserListItem* item, int id);
+			controls::UserListItem* userlistItem;
+			int msgWidgetID;
+		};
 
 	public:
 		MainFrame(QWidget* parent = 0);
@@ -35,17 +41,17 @@ namespace ui
 		virtual void AddNewMessage(const std::wstring& uuid, const std::wstring& message);
 
 	private:
+		int AddUserMsgView();
+		controls::UserListItem* AddUserListItem(const std::wstring& userName, const std::wstring& uuid);
+		void AddMessageToView(const QString& userName, const QString& msg, QTextEdit* view);
+		void Reset();
+
 		void SetupUI();
 		void CreateMenuBar();
 		QWidget* CreateMessagesWidget();
 		QWidget* CreateUsersWidget();
 		QHBoxLayout* CreateMainLayout(QWidget* leftWidget, QWidget* rightWidget);
 	
-		int AddUserMsgView();
-		controls::UserListItem* AddUserListItem(const std::wstring& userName, const std::wstring& uuid);
-		void AddMessageToView(const QString& userName, const QString& msg, QTextEdit* view);
-		void Reset();
-
 	private slots:
 		void ListItemChanged(QListWidgetItem* currentItem, QListWidgetItem* prevItem);
 		void ResizeMessagesView();
@@ -56,10 +62,10 @@ namespace ui
 
 	private:
 		QListWidget*			m_userListWidget;
-		QStackedWidget*			m_msgBoxStack;
+		QStackedWidget*			m_msgBoxStackedWidget;
 		controls::UserListItem*	m_currentItem;
 		QLabel*					m_stateLabel;
-		QString					m_currentUserName;
+		QString					m_currentUser;
 		std::map<std::wstring, UserItem> m_userItems;
 	};
 }
