@@ -7,16 +7,21 @@
 #include <QStackedWidget>
 #include <QPushButton>
 #include <QLabel>
+#include "UIMessageHandler.h"
 #include "LoginHandlers.h"
+#include "UserListItem.h"
 
 namespace ui
 {
 	class MainFrame 
 		: public QMainWindow
+		, public UIMessageHandler
 		, public login::ILoginUIHandler
 		, public login::ILoginStateObserver
 	{
 		Q_OBJECT
+
+		typedef std::pair<controls::UserListItem*, int> UserItem;
 
 	public:
 		MainFrame(QWidget* parent = 0);
@@ -25,6 +30,10 @@ namespace ui
 		virtual void EnableLoginUI();
 		virtual void OnlineStateChanged();
 
+		virtual void AddNewUser(const std::wstring& uuid, const std::wstring& name);
+		virtual void RemoveUser(const std::wstring& uuid);
+		virtual void AddNewMessage(const std::wstring& uuid, const std::wstring& message);
+
 	private:
 		void SetupUI();
 		void CreateMenuBar();
@@ -32,10 +41,8 @@ namespace ui
 		QWidget* CreateUsersWidget();
 		QHBoxLayout* CreateMainLayout(QWidget* leftWidget, QWidget* rightWidget);
 	
-		QListWidgetItem* AddNewUser(const std::string& name);
 		int AddUserMsgView();
-		QListWidgetItem* AddUserListItem(const std::string& userName);
-		QWidget* SearchMsgView(QListWidgetItem* item) const;
+		controls::UserListItem* AddUserListItem(const std::wstring& userName, const std::wstring& uuid);
 		void AddMessageToView(const QString& userName, const QString& msg, QTextEdit* view);
 		void Reset();
 
@@ -48,11 +55,11 @@ namespace ui
 		void About();
 
 	private:
-		QListWidget*		m_userListWidget;
-		QStackedWidget*		m_msgBoxStack;
-		QListWidgetItem*	m_currentItem;
-		QLabel*				m_stateLabel;
-		QString				m_currentUserName;
-		std::map<QListWidgetItem*, int> m_userListItems;
+		QListWidget*			m_userListWidget;
+		QStackedWidget*			m_msgBoxStack;
+		controls::UserListItem*	m_currentItem;
+		QLabel*					m_stateLabel;
+		QString					m_currentUserName;
+		std::map<std::wstring, UserItem> m_userItems;
 	};
 }

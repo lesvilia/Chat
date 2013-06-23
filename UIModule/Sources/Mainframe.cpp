@@ -35,6 +35,7 @@ namespace
 namespace ui
 {
 	using namespace login;
+	using namespace controls;
 	using namespace settings::mainframe::sizes;
 	using namespace settings::mainframe::strings;
 
@@ -47,10 +48,10 @@ namespace ui
 	{
 		SetupUI();
 
-		AddNewUser("Sialiuk Ivan"); // for testing
-		AddNewUser("Petrov Vasia");
-		AddNewUser("Sidorov Petia");
-		AddNewUser("Anuta Maluta");
+		AddNewUser(L"1", L"Sialiuk Ivan"); // for testing
+		AddNewUser(L"2", L"Petrov Vasia");
+		AddNewUser(L"3", L"Sidorov Petia");
+		AddNewUser(L"4", L"Anuta Maluta");
 		resize(MAINFRAME_WIDTH, MAINFRAME_HEIGH);
 		LoginManager::Instance()->Subscribe(this);
 	}
@@ -67,7 +68,7 @@ namespace ui
 
 	void MainFrame::EnableLoginUI()
 	{
-		controls::LoginDialog dlg(this, LoginManager::Instance()->GetLoginHandler());
+		LoginDialog dlg(this, LoginManager::Instance()->GetLoginHandler());
 		dlg.exec();
 	}
 
@@ -92,6 +93,33 @@ namespace ui
 			m_stateLabel->setText(OFLINE_STATE);
 		}
 	}
+
+	void MainFrame::AddNewUser(const std::wstring& uuid, const std::wstring& name)
+	{
+		UserListItem* userItem = AddUserListItem(name, uuid);
+		int viewID = AddUserMsgView();
+		m_userItems[uuid] = std::make_pair(userItem, viewID);
+	}
+
+	void MainFrame::RemoveUser(const std::wstring& uuid)
+	{
+		auto iter = m_userItems.find(uuid);
+		if (iter != m_userItems.end())
+		{
+			m_userListWidget->removeItemWidget(iter->second.first);
+			m_msgBoxStack->removeWidget(m_msgBoxStack->widget(iter->second.second));
+		}
+	}
+
+	void MainFrame::AddNewMessage(const std::wstring& uuid, const std::wstring& message)
+	{
+		auto iter = m_userItems.find(uuid);
+		if (iter != m_userItems.end())
+		{
+
+		}
+	}
+
 
 	void MainFrame::SetupUI()
 	{
@@ -213,34 +241,13 @@ namespace ui
 		return m_msgBoxStack->addWidget(msgViewWidget);
 	}
 
-	QListWidgetItem* MainFrame::AddNewUser(const std::string& name)
+	UserListItem* MainFrame::AddUserListItem(const std::wstring& userName, const std::wstring& uuid)
 	{
-		QListWidgetItem* userItem = AddUserListItem(name);
-		int viewID = AddUserMsgView();
-		m_userListItems[userItem] = viewID;
-		return userItem;
-	}
-
-	QListWidgetItem* MainFrame::AddUserListItem(const std::string& userName)
-	{
-		QListWidgetItem* userItem = new QListWidgetItem(QIcon(USER_ICON_PATH), userName.c_str());
+		UserListItem* userItem = new UserListItem(QIcon(USER_ICON_PATH), WStrToQStr(userName), uuid);
 		userItem->setSizeHint(QSize(25, 25));
 	
 		m_userListWidget->addItem(userItem);
 		return userItem;
-	}
-
-	QWidget* MainFrame::SearchMsgView(QListWidgetItem* item) const
-	{
-		auto iter = m_userListItems.find(item);
-		if (iter != m_userListItems.end())
-		{
-			return m_msgBoxStack->widget(iter->second);
-		}
-		else
-		{
-			return nullptr;
-		}
 	}
 
 	void MainFrame::AddMessageToView(const QString& userName, const QString& msg, QTextEdit* view)
@@ -255,10 +262,10 @@ namespace ui
 
 	void MainFrame::Reset()
 	{
-		std::for_each(m_userListItems.begin(), m_userListItems.end(),
-		[this](const std::pair<QListWidgetItem*, int>& item)
+		std::for_each(m_userItems.begin(), m_userItems.end(),
+		[this](const std::pair<std::wstring, UserItem>& item)
 		{
-			QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStack->widget(item.second));
+			QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStack->widget(item.second.second));
 			QTextEdit* msgView = static_cast<QTextEdit*>(wdgSplitter->widget(0));
 			QTextEdit* msgEdit = static_cast<QTextEdit*>(wdgSplitter->widget(1));
 			msgView->clear();
@@ -270,25 +277,26 @@ namespace ui
 
 	void MainFrame::ListItemChanged(QListWidgetItem* currentItem, QListWidgetItem* prevItem)
 	{
-		auto iter = m_userListItems.find(currentItem);
-		if (iter != m_userListItems.end())
+		UserListItem* item = static_cast<UserListItem*>(currentItem);
+		auto iter = m_userItems.find(item->GetUserID());
+		if (iter != m_userItems.end())
 		{
-			m_currentItem = currentItem;
-			m_msgBoxStack->setCurrentIndex(iter->second); 
+			m_currentItem = item;
+			m_msgBoxStack->setCurrentIndex(iter->second.second); 
 		}
 	}
 
 	void MainFrame::ResizeMessagesView()
 	{
-		QSplitter* wdgSplitter = static_cast<QSplitter*>(SearchMsgView(m_currentItem));
+		QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStack->currentWidget());
 		if (wdgSplitter)
 		{
 			QList<int> newSizesWdg(wdgSplitter->sizes());
-			for(auto it = m_userListItems.begin(); it != m_userListItems.end(); ++it)
+			for(auto it = m_userItems.begin(); it != m_userItems.end(); ++it)
 			{
-				if (it->first != m_currentItem)
+				if (it->first != m_currentItem->GetUserID())
 				{
-					QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStack->widget(it->second));
+					QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStack->widget(it->second.second));
 					wdgSplitter->setSizes(newSizesWdg);
 				}
 			}
@@ -299,7 +307,7 @@ namespace ui
 	{
 		if (LoginManager::Instance()->IsOnline())
 		{
-			QSplitter* wdgSplitter = static_cast<QSplitter*>(SearchMsgView(m_currentItem));
+			QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStack->currentWidget());
 			if (wdgSplitter)
 			{
 				QTextEdit* msgView = static_cast<QTextEdit*>(wdgSplitter->widget(0));
@@ -324,7 +332,6 @@ namespace ui
 
 	void MainFrame::About()
 	{
-
 		QMessageBox messageBox(this);
 		messageBox.setWindowTitle(ABOUT_TITLE);
 		messageBox.setText(ABOUT_MESSAGE);

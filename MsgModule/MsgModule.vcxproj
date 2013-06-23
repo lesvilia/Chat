@@ -88,7 +88,6 @@
     <ClCompile Include="Sources\stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sources\MessageHandlers.h" />
     <ClInclude Include="Sources\MessageReceiver.h" />
     <ClInclude Include="Sources\Messages.h" />
     <ClInclude Include="Sources\MessagesQueue.h" />

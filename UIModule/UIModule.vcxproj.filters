@@ -49,6 +49,12 @@
     <Filter Include="Settings">
       <UniqueIdentifier>{c5818d23-4f6f-447d-ae47-6ddbe580d30d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UIControls\ListItem">
+      <UniqueIdentifier>{807d70c2-fc7a-4dae-8998-2617ffe0fa69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UIControls\ListItem\src">
+      <UniqueIdentifier>{8fae3960-58a2-48ba-a0a3-ab3e97b1992b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_Mainframe.cpp">
@@ -85,6 +91,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_LoginDialog.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\UserListItem.cpp">
+      <Filter>UIControls\ListItem\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="client.png">
@@ -103,6 +112,9 @@
     </CustomBuild>
     <CustomBuild Include="Sources\LoginDialog.h">
       <Filter>UIControls\LoginDialog</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\UserListItem.h">
+      <Filter>UIControls\ListItem</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +135,9 @@
     </ClInclude>
     <ClInclude Include="Sources\Settings.h">
       <Filter>Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\UIMessageHandler.h">
+      <Filter>MainFrame</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

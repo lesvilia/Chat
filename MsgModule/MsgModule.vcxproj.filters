@@ -54,9 +54,6 @@
     <ClInclude Include="Sources\targetver.h">
       <Filter>stdafx</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\MessageHandlers.h">
-      <Filter>MessageReceiver</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\MessageWindow.h">
       <Filter>MessageReceiver</Filter>
     </ClInclude>
