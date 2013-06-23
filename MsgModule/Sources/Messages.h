@@ -7,7 +7,9 @@ namespace msg
 {
 	enum State
 	{
-		CONNECT_STATE,
+		UNDEFINED_STATE,
+		CONNECT_REQUEST_STATE,
+		CONNECT_RESPONSE_STATE,
 		DISCONNECT_STATE
 	};
 
@@ -15,11 +17,10 @@ namespace msg
 	{
 	public:
 		StateMessage();
-		explicit StateMessage(State state);
-		void SetState(int state);
-		int GetState() const;
-	private:
-	  int m_state;
+		StateMessage(int state, const std::wstring& uuid, const std::wstring& username);
+		int m_state;
+		std::wstring m_uuid;
+		std::wstring m_username;
 	};
 
 	int operator<<(ACE_OutputCDR& cdr, const StateMessage& message);
@@ -29,11 +30,8 @@ namespace msg
 	{
 	public:
 		ChatMessage();
-		explicit ChatMessage(const std::wstring& message);
-		void SetData(const std::wstring& data);
-		const wchar_t* GetData() const;
-		size_t MsgLength() const;
-	private:
+		ChatMessage(const std::wstring& uuid, const std::wstring& message);
+		std::wstring m_uuid;
 		std::wstring m_message;
 	};
 

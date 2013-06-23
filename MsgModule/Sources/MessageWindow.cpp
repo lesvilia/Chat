@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "MsgReceiverWindow.h"
+#include "MessageWindow.h"
 
 namespace msg
 {
@@ -25,31 +25,31 @@ namespace msg
 		}
 	}
 
-	MsgReceiverWindow::MsgReceiverWindow( IStateMsgHandler* stateHandler, IChatMsgHandler* chatHandler)
+	MessageWindow::MessageWindow(MessageReciever* msgReceiver)
 		: m_window(NULL)
-		, m_stateHandler(stateHandler)
-		, m_chatHandler(chatHandler)
+		, m_msgReceiver(msgReceiver)
+
 	{
 		RegisterMainWindow();
 		CreateMainWindow();
 	}
 
-	MsgReceiverWindow::~MsgReceiverWindow()
+	MessageWindow::~MessageWindow()
 	{
 		::DestroyWindow(m_window);
 	}
 
-	void MsgReceiverWindow::OnStateMessageReceived(StateMsgQueue* queue)
+	void MessageWindow::OnStateMessageReceived()
 	{
-		::PostMessage(m_window, WM_PROCESS_STATE_MSG, reinterpret_cast<WPARAM>(queue), reinterpret_cast<LPARAM>(m_stateHandler));
+		::PostMessage(m_window, WM_PROCESS_STATE_MSG, reinterpret_cast<WPARAM>(m_msgReceiver), NULL);
 	}
 
-	void MsgReceiverWindow::OnChatMessageReceived(ChatMsgQueue* queue)
+	void MessageWindow::OnChatMessageReceived()
 	{
-		::PostMessage(m_window, WM_PROCESS_CHAT_MSG, reinterpret_cast<WPARAM>(queue), reinterpret_cast<LPARAM>(m_chatHandler));
+		::PostMessage(m_window, WM_PROCESS_CHAT_MSG, reinterpret_cast<WPARAM>(m_msgReceiver), NULL);
 	}
 
-	void MsgReceiverWindow::RegisterMainWindow()
+	void MessageWindow::RegisterMainWindow()
 	{
 		WNDCLASSEX wcex = {0};
 		wcex.cbSize = sizeof(WNDCLASSEX);
@@ -59,7 +59,7 @@ namespace msg
 		assert(result != NULL);
 	}
 
-	void MsgReceiverWindow::CreateMainWindow()
+	void MessageWindow::CreateMainWindow()
 	{
 		m_window = CreateWindow(CLASS_NAME, L"", 0, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0,
 								 HWND_MESSAGE, nullptr, nullptr, nullptr);

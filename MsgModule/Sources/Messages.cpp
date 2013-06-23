@@ -4,36 +4,60 @@
 
 namespace msg
 {
+	namespace
+	{
+		void ReadIntFromCDR(ACE_InputCDR& cdr, int& outInt)
+		{
+			ACE_CDR::ULong value = 0;
+			if (cdr >> value)
+			{
+				outInt = value;
+			}
+		}
+
+		void ReadWstringFromCDR(ACE_InputCDR& cdr, std::wstring& outStr)
+		{
+			ACE_CDR::ULong length = 0;
+			if (cdr >> length)
+			{
+				std::vector<wchar_t> tempBuffer(length + 1, '\0');
+				cdr.read_wchar_array(&tempBuffer[0], length);
+				outStr.swap(std::wstring(&tempBuffer[0]));
+			}
+		}
+	}
+
 	StateMessage::StateMessage()
+		:m_state(UNDEFINED_STATE)
 	{
 	}
 
-	StateMessage::StateMessage(State state)
+	StateMessage::StateMessage(int state, const std::wstring& uuid, const std::wstring& username)
 		: m_state(state)
+		, m_uuid(uuid)
+		, m_username(username)
 	{
 	}
 
-	void StateMessage::SetState(int state)
-	{
-		m_state = state;
-	}
-
-	int StateMessage::GetState()const
-	{
-		return m_state;
-	}
-	
 	int operator<<(ACE_OutputCDR& cdr, const StateMessage& message)
 	{
-		cdr << ACE_CDR::ULong(message.GetState());
+		cdr << ACE_CDR::ULong(message.m_state);
+		
+		cdr << ACE_CDR::ULong(message.m_uuid.size());
+		cdr.write_wchar_array(message.m_uuid.c_str(), message.m_uuid.size());
+		
+		cdr << ACE_CDR::ULong(message.m_username.size());
+		cdr.write_wchar_array(message.m_username.c_str(), message.m_username.size());
+		
 		return cdr.good_bit();
 	}
 
 	int operator>>(ACE_InputCDR& cdr, StateMessage& message)
 	{
-		ACE_CDR::ULong state = 0;
-		cdr >> state;
-		message.SetState(state);
+		ReadIntFromCDR(cdr, message.m_state);
+		ReadWstringFromCDR(cdr, message.m_uuid);
+		ReadWstringFromCDR(cdr, message.m_username);
+
 		return cdr.good_bit();
 	}
 	
@@ -42,44 +66,29 @@ namespace msg
 	{
 	}
 
-	ChatMessage::ChatMessage(const std::wstring& message)
-		: m_message(message)
+	ChatMessage::ChatMessage(const std::wstring& uuid, const std::wstring& message)
+		: m_uuid(uuid)
+		, m_message(message)
 	{
 	}
 
-	const wchar_t* ChatMessage::GetData() const
-	{
-		return m_message.c_str();
-	}
-
-	void ChatMessage::SetData(const std::wstring& data)
-	{
-		m_message = data;
-	}
-
-	size_t ChatMessage::MsgLength() const
-	{
-		return m_message.size();
-	}
 	
 
 	int operator<<(ACE_OutputCDR& cdr, const ChatMessage& message)
 	{
-		size_t msgLen = message.MsgLength();
-		cdr << ACE_CDR::ULong(msgLen);
-		cdr.write_wchar_array(message.GetData(), msgLen);
+		cdr << ACE_CDR::ULong(message.m_uuid.size());
+		cdr.write_wchar_array(message.m_uuid.c_str(), message.m_uuid.size());
+
+		cdr << ACE_CDR::ULong(message.m_message.size());
+		cdr.write_wchar_array(message.m_message.c_str(), message.m_message.size());
+
 		return cdr.good_bit();
 	}
 
 	int operator>>(ACE_InputCDR& cdr, ChatMessage& message)
 	{
-		ACE_CDR::ULong bufferLen = 0;
-		if (cdr >> bufferLen)
-		{
-			std::vector<wchar_t> tempBuffer(bufferLen + 1, '\0');
-			cdr.read_wchar_array(&tempBuffer[0], bufferLen);
-			message.SetData(&tempBuffer[0]);
-		}
+		ReadWstringFromCDR(cdr, message.m_uuid);
+		ReadWstringFromCDR(cdr, message.m_message);
 		return cdr.good_bit();
 	}
 
