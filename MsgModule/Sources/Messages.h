@@ -13,9 +13,8 @@ namespace msg
 		DISCONNECT_STATE
 	};
 
-	class StateMessage
+	struct StateMessage
 	{
-	public:
 		StateMessage();
 		StateMessage(int state, const std::wstring& uuid, const std::wstring& username);
 		int m_state;
@@ -26,9 +25,8 @@ namespace msg
 	int operator<<(ACE_OutputCDR& cdr, const StateMessage& message);
 	int operator>>(ACE_InputCDR& cdr, StateMessage& message);
 
-	class ChatMessage
+	struct ChatMessage
 	{
-	public:
 		ChatMessage();
 		ChatMessage(const std::wstring& uuid, const std::wstring& message);
 		std::wstring m_uuid;

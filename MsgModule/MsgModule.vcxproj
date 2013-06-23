@@ -83,6 +83,7 @@
   <ItemGroup>
     <ClCompile Include="Sources\MessageReceiver.cpp" />
     <ClCompile Include="Sources\Messages.cpp" />
+    <ClCompile Include="Sources\MessagesQueue.cpp" />
     <ClCompile Include="Sources\MessageWindow.cpp" />
     <ClCompile Include="Sources\stdafx.cpp" />
   </ItemGroup>
@@ -90,6 +91,7 @@
     <ClInclude Include="Sources\MessageHandlers.h" />
     <ClInclude Include="Sources\MessageReceiver.h" />
     <ClInclude Include="Sources\Messages.h" />
+    <ClInclude Include="Sources\MessagesQueue.h" />
     <ClInclude Include="Sources\MessageWindow.h" />
     <ClInclude Include="Sources\stdafx.h" />
     <ClInclude Include="Sources\targetver.h" />

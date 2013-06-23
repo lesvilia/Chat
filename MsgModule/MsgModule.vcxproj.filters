@@ -14,6 +14,12 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="MessagesQueue">
+      <UniqueIdentifier>{2b7846ba-9e89-443e-a089-d0729fb06619}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MessagesQueue\src">
+      <UniqueIdentifier>{e51757e1-c78b-45c4-952d-272af7561e08}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -30,6 +36,9 @@
     </ClCompile>
     <ClCompile Include="Sources\MessageWindow.cpp">
       <Filter>MessageReceiver\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\MessagesQueue.cpp">
+      <Filter>MessagesQueue\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +59,9 @@
     </ClInclude>
     <ClInclude Include="Sources\MessageWindow.h">
       <Filter>MessageReceiver</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\MessagesQueue.h">
+      <Filter>MessagesQueue</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
