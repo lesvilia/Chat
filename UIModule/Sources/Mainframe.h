@@ -32,10 +32,15 @@ namespace ui
 	public:
 		MainFrame(QWidget* parent = 0);
 		~MainFrame();
-		void show();
+		void Show();
+
+		//ILoginUIHandler interface
 		virtual void EnableLoginUI();
+
+		//ILoginStateObserver interface
 		virtual void OnlineStateChanged();
 
+		//UIMessageHandler interface
 		virtual void AddNewUser(const std::wstring& uuid, const std::wstring& name);
 		virtual void RemoveUser(const std::wstring& uuid);
 		virtual void AddNewMessage(const std::wstring& uuid, const std::wstring& message);
@@ -44,8 +49,7 @@ namespace ui
 		int AddUserMsgView();
 		controls::UserListItem* AddUserListItem(const std::wstring& userName, const std::wstring& uuid);
 		void AddMessageToView(const QString& userName, const QString& msg, QTextEdit* view);
-		void Reset();
-
+		void ClearMsgWidgets();
 		void SetupUI();
 		void CreateMenuBar();
 		QWidget* CreateMessagesWidget();

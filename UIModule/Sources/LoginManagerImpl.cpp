@@ -25,6 +25,22 @@ namespace login
 				}
 				return std::wstring();
 			}
+
+			std::wstring GenerateUUID()
+			{
+				UUID uuid = {0};
+				if (::UuidCreate(&uuid) == RPC_S_OK)
+				{
+					RPC_WSTR str = nullptr;
+					if (::UuidToString(&uuid, &str) == RPC_S_OK)
+					{
+						std::wstring result(static_cast<wchar_t*>(str));
+						::RpcStringFree(&str);
+						return result;
+					}
+				}
+				return std::wstring();
+			}
 		}
 
 		LoginManagerImpl::LoginManagerImpl()
@@ -73,7 +89,8 @@ namespace login
 		{
 			UserDataPtr user(std::make_shared<UserData>
 				(GetStringValue(userKey, USER_NAME)
-				, GetStringValue(userKey, USER_PASSWORD)));
+				, GetStringValue(userKey, USER_PASSWORD)
+				, GetStringValue(userKey, USER_UUID)));
 
 			if (!user->Empty())
 			{
@@ -95,6 +112,7 @@ namespace login
 					{
 						newKey.SetStringValue(USER_NAME, data->name.c_str());
 						newKey.SetStringValue(USER_PASSWORD, data->password.c_str());
+						newKey.SetStringValue(USER_UUID, data->uuid.c_str());
 					}
 				});				
 			}
@@ -145,7 +163,8 @@ namespace login
 
 		void LoginManagerImpl::AddNewUserData(const UserDataPtr& data)
 		{
-			m_users[data->name] = data;
+			data->uuid = GenerateUUID();
+			m_users.insert(std::make_pair(data->name, data));
 		}
 
 		UserDataPtr LoginManagerImpl::GetCurrentUser() const
@@ -171,13 +190,18 @@ namespace login
 
 		bool LoginManagerImpl::IsValidRegistrationData(const UserDataPtr& data)
 		{
-			return !data->Empty() && m_users.find(data->name) == m_users.end();
+			return	!data->name.empty() 
+					&& !data->password.empty() 
+					&& m_users.find(data->name) == m_users.end();
 		}
 
 		bool LoginManagerImpl::IsValidLoginData(const UserDataPtr& data)
 		{
 			auto iter = m_users.find(data->name);
-			return !data->Empty() && iter != m_users.end() && iter->second->password == data->password;
+			return !data->name.empty() 
+				   && !data->password.empty()
+				   && iter != m_users.end() 
+				   && iter->second->password == data->password;
 		}
 
 		unsigned LoginManagerImpl::GetUserDataError(const UserDataPtr& data)

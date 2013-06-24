@@ -7,15 +7,16 @@ namespace login
 	{
 	}
 
-	UserData::UserData(const std::wstring& n, const std::wstring& p) 
-		: name(n)
-		, password(p)
+	UserData::UserData(const std::wstring& userName, const std::wstring& userPass, const std::wstring& userID) 
+		: name(userName)
+		, password(userPass)
+		, uuid(userID)
 	{
 	}
 
 	bool UserData::Empty() const
 	{
-		return name.empty() && password.empty();  
+		return name.empty() || password.empty() || uuid.empty();  
 	}
 
 

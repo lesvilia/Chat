@@ -14,11 +14,12 @@ namespace login
 	struct UserData
 	{
 		UserData();
-		UserData(const std::wstring& n, const std::wstring& p); 
+		UserData(const std::wstring& userName, const std::wstring& userPass, const std::wstring& userID = std::wstring()); 
 		bool Empty() const;
 
 		std::wstring name;
 		std::wstring password;
+		std::wstring uuid;
 	};
 
 	class LoginManager

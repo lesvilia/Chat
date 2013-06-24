@@ -70,7 +70,7 @@ namespace ui
 	{
 	}
 
-	void MainFrame::show()
+	void MainFrame::Show()
 	{
 		QMainWindow::show();
 		LogIn();
@@ -90,7 +90,7 @@ namespace ui
 			QString newUser(WStrToQStr(user->name));
 			if (m_currentUser != newUser)
 			{
-				Reset();
+				ClearMsgWidgets();
 				m_currentUser = newUser;
 				QString stateMessage(tr(STATE_LABEL_FORMAT).arg(SetBoldStyle(m_currentUser), ONLINE_STATE));
 				m_stateLabel->setText(stateMessage);
@@ -98,7 +98,7 @@ namespace ui
 		}
 		else
 		{
-			Reset();
+			ClearMsgWidgets();
 			m_stateLabel->setText(OFLINE_STATE);
 		}
 	}
@@ -195,12 +195,10 @@ namespace ui
 		mainWidget->setObjectName(MAIN_WIDGET_NAME);
 		mainWidget->setStyleSheet(MAIN_WIDGET_STYLE);
 		CreateMenuBar();
-		QWidget* msgWidget = CreateMessagesWidget();
-		QWidget* usersWidget = CreateUsersWidget();
-		QHBoxLayout* mainLayout = CreateMainLayout(usersWidget, msgWidget);
+		QHBoxLayout* mainLayout = CreateMainLayout(CreateUsersWidget(), CreateMessagesWidget());
 		mainWidget->setLayout(mainLayout);
-		this->setCentralWidget(mainWidget);
-
+		
+		setCentralWidget(mainWidget);
 		setWindowTitle(MAIN_TITLE);
 		setWindowIcon(QIcon(MAIN_ICON_PATH));
 	}
@@ -290,7 +288,7 @@ namespace ui
 		return horizontalLayout;
 	}
 
-	void MainFrame::Reset()
+	void MainFrame::ClearMsgWidgets()
 	{
 		std::for_each(m_userItems.begin(), m_userItems.end(),
 		[this](const std::pair<std::wstring, UserItem>& item)
