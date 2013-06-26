@@ -186,7 +186,7 @@ namespace ui
 
 		void LoginDialog::HandleLoginError(const login::UserDataPtr& data)
 		{
-			if (!data->Empty())
+			if (!data->name.empty() && !data->password.empty())
 			{	
 				unsigned error = m_handler->GetUserDataError(data);
 				if (error & login::USER_NOT_FOUND)
@@ -206,7 +206,7 @@ namespace ui
 
 		void LoginDialog::HandleRegistrationError(const login::UserDataPtr& data)
 		{
-			if (!data->Empty())
+			if (!data->name.empty() && !data->password.empty())
 			{
 				if (m_handler->GetUserDataError(data) & login::USER_EXISTS)
 				{

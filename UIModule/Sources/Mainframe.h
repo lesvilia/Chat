@@ -9,6 +9,7 @@
 #include <QLabel>
 #include "UIMessageHandler.h"
 #include "LoginHandlers.h"
+#include "INetUsersObserver.h"
 #include "UserListItem.h"
 
 namespace ui
@@ -18,6 +19,7 @@ namespace ui
 		, public UIMessageHandler
 		, public login::ILoginUIHandler
 		, public login::ILoginStateObserver
+		, public net::INetUsersObserver
 	{
 		Q_OBJECT
 
@@ -40,15 +42,19 @@ namespace ui
 		//ILoginStateObserver interface
 		virtual void OnlineStateChanged();
 
+		//INetUsersObserver interface
+		virtual void OnNetUserConnected(const std::wstring& uuid);
+		virtual void OnNetUserDisconnected(const std::wstring& uuid);
+
 		//UIMessageHandler interface
-		virtual void AddNewUser(const std::wstring& uuid, const std::wstring& name);
-		virtual void RemoveUser(const std::wstring& uuid);
 		virtual void AddNewMessage(const std::wstring& uuid, const std::wstring& message);
 
 	private:
 		int AddUserMsgView();
 		controls::UserListItem* AddUserListItem(const std::wstring& userName, const std::wstring& uuid);
 		void AddMessageToView(const QString& userName, const QString& msg, QTextEdit* view);
+		void AddNewUser(const std::wstring& uuid);
+		void RemoveUser(const std::wstring& uuid);
 		void ClearMsgWidgets();
 		void SetupUI();
 		void CreateMenuBar();
@@ -59,7 +65,7 @@ namespace ui
 	private slots:
 		void ListItemChanged(QListWidgetItem* currentItem, QListWidgetItem* prevItem);
 		void ResizeMessagesView();
-		void SendMessage();
+		void SendMessageToUser();
 		void LogIn();
 		void LogOut();
 		void About();

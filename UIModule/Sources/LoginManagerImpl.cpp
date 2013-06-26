@@ -34,7 +34,7 @@ namespace login
 					RPC_WSTR str = nullptr;
 					if (::UuidToString(&uuid, &str) == RPC_S_OK)
 					{
-						std::wstring result(static_cast<wchar_t*>(str));
+						std::wstring result(reinterpret_cast<wchar_t*>(str));
 						::RpcStringFree(&str);
 						return result;
 					}

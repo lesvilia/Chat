@@ -1,17 +1,18 @@
-#include "Mainframe.h"
-#include "LoginDialog.h"
-#include "LoginManager.h"
-#include "Settings.h"
 #include <QSplitter>
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QMenuBar>
 #include <QEvent>
 #include <QMessageBox>
+#include "Mainframe.h"
+#include "NetUsersManager.h"
+#include "LoginDialog.h"
+#include "LoginManager.h"
+#include "Settings.h"
 
 namespace
 {
-	QString	WStrToQStr(const std::wstring& str)
+	QString WStrToQStr(const std::wstring& str)
 	{
 		return (QString((const QChar*)str.c_str(), str.length()));
 	}
@@ -34,8 +35,6 @@ namespace
 
 namespace ui
 {
-	using namespace login;
-	using namespace controls;
 	using namespace settings::mainframe::sizes;
 	using namespace settings::mainframe::strings;
 
@@ -57,13 +56,9 @@ namespace ui
 		, m_stateLabel(nullptr)
 	{
 		SetupUI();
-
-		AddNewUser(L"1", L"Sialiuk Ivan"); // for testing
-		AddNewUser(L"2", L"Petrov Vasia");
-		AddNewUser(L"3", L"Sidorov Petia");
-		AddNewUser(L"4", L"Anuta Maluta");
 		resize(MAINFRAME_WIDTH, MAINFRAME_HEIGH);
-		LoginManager::Instance()->Subscribe(this);
+		login::LoginManager::Instance()->Subscribe(this);
+		net::NetUsersManager::Instance()->Subscribe(this);
 	}
 
 	MainFrame::~MainFrame()
@@ -78,15 +73,15 @@ namespace ui
 
 	void MainFrame::EnableLoginUI()
 	{
-		LoginDialog dlg(this, LoginManager::Instance()->GetLoginHandler());
+		controls::LoginDialog dlg(this, login::LoginManager::Instance()->GetLoginHandler());
 		dlg.exec();
 	}
 
 	void MainFrame::OnlineStateChanged()
 	{
-		if (LoginManager::Instance()->IsOnline())
+		if (login::LoginManager::Instance()->IsOnline())
 		{
-			UserDataPtr user(LoginManager::Instance()->GetCurrentUser());
+			login::UserDataPtr user(login::LoginManager::Instance()->GetCurrentUser());
 			QString newUser(WStrToQStr(user->name));
 			if (m_currentUser != newUser)
 			{
@@ -103,16 +98,36 @@ namespace ui
 		}
 	}
 
-	void MainFrame::AddNewUser(const std::wstring& uuid, const std::wstring& name)
+	void MainFrame::OnNetUserConnected(const std::wstring& uuid)
 	{
-		UserListItem* userItem = AddUserListItem(name, uuid);
+		AddNewUser(uuid);
+	}
+
+	void MainFrame::OnNetUserDisconnected(const std::wstring& uuid)
+	{
+		RemoveUser(uuid);
+	}
+
+	void MainFrame::AddNewUser(const std::wstring& uuid)
+	{
+		controls::UserListItem* userItem = AddUserListItem(net::NetUsersManager::Instance()->GetNetUserName(uuid), uuid);
 		int viewID = AddUserMsgView();
 		m_userItems[uuid] = UserItem(userItem, viewID);
 	}
 
-	UserListItem* MainFrame::AddUserListItem(const std::wstring& userName, const std::wstring& uuid)
+	void MainFrame::RemoveUser(const std::wstring& uuid)
 	{
-		UserListItem* userItem = new UserListItem(QIcon(USER_ICON_PATH), WStrToQStr(userName), uuid);
+		auto iter = m_userItems.find(uuid);
+		if (iter != m_userItems.end())
+		{
+			m_userListWidget->removeItemWidget(iter->second.userlistItem);
+			m_msgBoxStackedWidget->removeWidget(m_msgBoxStackedWidget->widget(iter->second.msgWidgetID));
+		}
+	}
+
+	controls::UserListItem* MainFrame::AddUserListItem(const std::wstring& userName, const std::wstring& uuid)
+	{
+		controls::UserListItem* userItem = new controls::UserListItem(QIcon(USER_ICON_PATH), WStrToQStr(userName), uuid);
 		userItem->setSizeHint(QSize(25, 25));
 
 		m_userListWidget->addItem(userItem);
@@ -137,16 +152,6 @@ namespace ui
 		return m_msgBoxStackedWidget->addWidget(msgViewWidget);
 	}
 
-	void MainFrame::RemoveUser(const std::wstring& uuid)
-	{
-		auto iter = m_userItems.find(uuid);
-		if (iter != m_userItems.end())
-		{
-			m_userListWidget->removeItemWidget(iter->second.userlistItem);
-			m_msgBoxStackedWidget->removeWidget(m_msgBoxStackedWidget->widget(iter->second.msgWidgetID));
-		}
-	}
-
 	void MainFrame::AddNewMessage(const std::wstring& uuid, const std::wstring& message)
 	{
 		auto iter = m_userItems.find(uuid);
@@ -162,9 +167,9 @@ namespace ui
 		}
 	}
 
-	void MainFrame::SendMessage()
+	void MainFrame::SendMessageToUser()
 	{
-		if (LoginManager::Instance()->IsOnline())
+		if (login::LoginManager::Instance()->IsOnline())
 		{
 			QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStackedWidget->currentWidget());
 			if (wdgSplitter)
@@ -305,7 +310,7 @@ namespace ui
 
 	void MainFrame::ListItemChanged(QListWidgetItem* currentItem, QListWidgetItem* prevItem)
 	{
-		UserListItem* item = static_cast<UserListItem*>(currentItem);
+		controls::UserListItem* item = static_cast<controls::UserListItem*>(currentItem);
 		auto iter = m_userItems.find(item->GetUserID());
 		if (iter != m_userItems.end())
 		{
@@ -333,12 +338,12 @@ namespace ui
 
 	void MainFrame::LogIn()
 	{
-		LoginManager::Instance()->LogIn(this);
+		login::LoginManager::Instance()->LogIn(this);
 	}
 
 	void MainFrame::LogOut()
 	{
-		LoginManager::Instance()->LogOut();
+		login::LoginManager::Instance()->LogOut();
 	}
 
 	void MainFrame::About()
