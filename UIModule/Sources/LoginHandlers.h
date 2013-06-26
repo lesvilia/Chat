@@ -5,7 +5,7 @@
 
 namespace login
 {
-	class UserData;
+	struct UserData;
 	typedef std::shared_ptr<UserData> UserDataPtr;
 
 	enum LoginErr
