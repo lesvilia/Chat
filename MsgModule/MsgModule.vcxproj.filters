@@ -26,6 +26,12 @@
     <Filter Include="NetUsersManager\src">
       <UniqueIdentifier>{fffb1b99-8e4b-4c43-9caf-a3dee402c441}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AdaptersAddressManager">
+      <UniqueIdentifier>{69cc015f-dc22-4c43-8baf-88c85c37d95e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AdaptersAddressManager\src">
+      <UniqueIdentifier>{b91c37a6-d022-4203-a82e-04792c47601f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -48,6 +54,9 @@
     </ClCompile>
     <ClCompile Include="Sources\NetUsersManager.cpp">
       <Filter>NetUsersManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\AdaptersAddressManager.cpp">
+      <Filter>AdaptersAddressManager\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -74,6 +83,9 @@
     </ClInclude>
     <ClInclude Include="Sources\INetUsersObserver.h">
       <Filter>NetUsersManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\AdaptersAddressManager.h">
+      <Filter>AdaptersAddressManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
