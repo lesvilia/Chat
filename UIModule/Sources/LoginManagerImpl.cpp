@@ -1,6 +1,7 @@
 #include "LoginManagerImpl.h"
 #include "LoginManager.h"
 #include "Settings.h"
+#include "RegistryHelpers.h"
 #include <string>
 #include <vector>
 
@@ -12,7 +13,7 @@ namespace login
 		
 		namespace
 		{
-			std::wstring GetStringValue(CRegKey& key, const std::wstring& valueName)
+			/*std::wstring GetStringValue(CRegKey& key, const std::wstring& valueName)
 			{
 				ULONG nChars = 0;
 				if (ERROR_SUCCESS == key.QueryStringValue(valueName.c_str(), NULL, &nChars))
@@ -24,7 +25,7 @@ namespace login
 					}
 				}
 				return std::wstring();
-			}
+			}*/
 
 			std::wstring GenerateUUID()
 			{
@@ -88,9 +89,9 @@ namespace login
 		void LoginManagerImpl::GetUserData(CRegKey& userKey)
 		{
 			UserDataPtr user(std::make_shared<UserData>
-				(GetStringValue(userKey, USER_NAME)
-				, GetStringValue(userKey, USER_PASSWORD)
-				, GetStringValue(userKey, USER_UUID)));
+				(reghlp::GetStringValue(userKey, USER_NAME)
+				, reghlp::GetStringValue(userKey, USER_PASSWORD)
+				, reghlp::GetStringValue(userKey, USER_UUID)));
 
 			if (!user->Empty())
 			{

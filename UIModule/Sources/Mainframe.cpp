@@ -9,19 +9,10 @@
 #include "LoginDialog.h"
 #include "LoginManager.h"
 #include "Settings.h"
+#include "QtHelpers.h"
 
 namespace
 {
-	QString WStrToQStr(const std::wstring& str)
-	{
-		return (QString((const QChar*)str.c_str(), str.length()));
-	}
-
-	QString SetBoldStyle(const QString& str)
-	{
-		return QString("<font style='font-weight: bold;'>" + str + "</font>");
-	}
-
 	void PrepareMessage(QString& msg)
 	{
 		QString temp(msg);
@@ -82,12 +73,12 @@ namespace ui
 		if (login::LoginManager::Instance()->IsOnline())
 		{
 			login::UserDataPtr user(login::LoginManager::Instance()->GetCurrentUser());
-			QString newUser(WStrToQStr(user->name));
+			QString newUser(hlp::WStrToQStr(user->name));
 			if (m_currentUser != newUser)
 			{
 				ClearMsgWidgets();
 				m_currentUser = newUser;
-				QString stateMessage(tr(STATE_LABEL_FORMAT).arg(SetBoldStyle(m_currentUser), ONLINE_STATE));
+				QString stateMessage(tr(STATE_LABEL_FORMAT).arg(hlp::SetBoldStyle(m_currentUser), ONLINE_STATE));
 				m_stateLabel->setText(stateMessage);
 			}
 		}
@@ -127,7 +118,7 @@ namespace ui
 
 	controls::UserListItem* MainFrame::AddUserListItem(const std::wstring& userName, const std::wstring& uuid)
 	{
-		controls::UserListItem* userItem = new controls::UserListItem(QIcon(USER_ICON_PATH), WStrToQStr(userName), uuid);
+		controls::UserListItem* userItem = new controls::UserListItem(QIcon(USER_ICON_PATH), hlp::WStrToQStr(userName), uuid);
 		userItem->setSizeHint(QSize(25, 25));
 
 		m_userListWidget->addItem(userItem);
@@ -162,7 +153,7 @@ namespace ui
 			if (wdgSplitter)
 			{
 				QTextEdit* msgView = static_cast<QTextEdit*>(wdgSplitter->widget(0));
-				AddMessageToView(item.userlistItem->text(), WStrToQStr(message), msgView);
+				AddMessageToView(item.userlistItem->text(), hlp::WStrToQStr(message), msgView);
 			}
 		}
 	}
@@ -188,7 +179,7 @@ namespace ui
 	{
 		if (!msg.isEmpty())
 		{
-			view->append(SetBoldStyle(userName));
+			view->append(hlp::SetBoldStyle(userName));
 			view->append(msg);
 			view->append("");
 		}

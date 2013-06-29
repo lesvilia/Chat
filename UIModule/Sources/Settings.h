@@ -70,7 +70,6 @@ namespace settings
 		const QString REGISTRATION_TITLE("Registration");
 		const QString LABEL_NAME("Name:");
 		const QString LABEL_PASSWORD("Password:");
-		const char LINK_FORMAT[] = "<a href=\" \">%1</a>";
 
 		const QString MSGBOX_REG_TITLE("Registration Error!");
 		const QString MSGBOX_LOGIN_TITLE("Login Error!");
@@ -79,6 +78,13 @@ namespace settings
 		const QString MSGBOX_USER_EXIST("User already exists! Please enter other name.");
 		const QString MSGBOX_USER_NOT_FOUND("User not found! Please check entered name.");
 		const QString MSGBOX_DATA_EMPTY("You did not enter Name or Password.");
+	}
+
+	namespace settingsdialog
+	{
+		const QString LABEL_ADDRESS("IP address:");
+		const QString LABEL_STATE_PORT("State message port:");
+		const QString LABEL_CHAT_PORT("Chat message port:");
 	}
 
 	namespace loginmanager

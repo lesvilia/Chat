@@ -32,6 +32,18 @@
     <Filter Include="AdaptersAddressManager\src">
       <UniqueIdentifier>{b91c37a6-d022-4203-a82e-04792c47601f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SettingsManager">
+      <UniqueIdentifier>{60e5b0cc-97b1-407b-9374-8e0e6384a59d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SettingsManager\src">
+      <UniqueIdentifier>{f8ff53eb-b6e7-4358-ac12-3c79da616c87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Helpers">
+      <UniqueIdentifier>{86984152-c3ed-4330-bc03-a7928ca2fda4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Settings">
+      <UniqueIdentifier>{b558a6a2-0c3b-4856-8556-e486ab9feb1b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -57,6 +69,12 @@
     </ClCompile>
     <ClCompile Include="Sources\AdaptersAddressManager.cpp">
       <Filter>AdaptersAddressManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\SettingsManager.cpp">
+      <Filter>SettingsManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\RegistryHelpers.cpp">
+      <Filter>Helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -86,6 +104,15 @@
     </ClInclude>
     <ClInclude Include="Sources\AdaptersAddressManager.h">
       <Filter>AdaptersAddressManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\SettingsManager.h">
+      <Filter>SettingsManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\RegistryHelpers.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\MsgModuleSettings.h">
+      <Filter>Settings</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

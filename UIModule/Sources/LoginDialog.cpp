@@ -2,6 +2,7 @@
 #include "LoginManager.h"
 #include "StaticLink.h"
 #include "Settings.h"
+#include "QtHelpers.h"
 #include <QPushButton>
 #include <QLabel>
 #include <QGridLayout>
@@ -15,21 +16,11 @@ namespace ui
 		using namespace settings::logindialog;
 		namespace
 		{
-			std::wstring QStrToWStr(const QString& str)
-			{
-				return std::wstring((wchar_t*)str.unicode(), str.length());
-			}
-
 			login::UserDataPtr CreateUserData(QLineEdit* nameEdit, QLineEdit* passwordEdit)
 			{
-				std::wstring name(QStrToWStr(nameEdit->text()));
-				std::wstring password(QStrToWStr(passwordEdit->text()));
+				std::wstring name(hlp::QStrToWStr(nameEdit->text()));
+				std::wstring password(hlp::QStrToWStr(passwordEdit->text()));
 				return std::make_shared<login::UserData>(name, password);
-			}
-
-			QString SetLinkStyle(const QString& str)
-			{
-				return QString(QObject::tr(LINK_FORMAT).arg(str));
 			}
 		}
 
@@ -102,7 +93,7 @@ namespace ui
 
 			StaticLink* link = new StaticLink();
 			link->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-			link->setText(SetLinkStyle("Registration"));
+			link->setText(hlp::SetLinkStyle("Registration"));
 			connect(link, SIGNAL(clicked()), SLOT(SwitchToRegistrationMode()));
 
 			m_logNameEdit = new QLineEdit();
@@ -135,7 +126,7 @@ namespace ui
 
 			QLabel* loginLink = new StaticLink();
 			loginLink->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-			loginLink->setText(SetLinkStyle("Log In"));
+			loginLink->setText(hlp::SetLinkStyle("Log In"));
 			connect(loginLink, SIGNAL(clicked()), SLOT(SwitchToLoginMode()));
 
 			m_regNameEdit = new QLineEdit();

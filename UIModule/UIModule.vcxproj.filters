@@ -55,6 +55,15 @@
     <Filter Include="UIControls\ListItem\src">
       <UniqueIdentifier>{8fae3960-58a2-48ba-a0a3-ab3e97b1992b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UIControls\SettingsDialog">
+      <UniqueIdentifier>{55943252-26e6-4158-b0f9-4d594dcc7171}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UIControls\SettingsDialog\src">
+      <UniqueIdentifier>{b4da376b-57ef-418d-b6fd-71c1c1d17057}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Helpers">
+      <UniqueIdentifier>{89e74293-c78e-4e59-b7d9-b033d7b4a987}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_Mainframe.cpp">
@@ -94,6 +103,18 @@
     <ClCompile Include="Sources\UserListItem.cpp">
       <Filter>UIControls\ListItem\src</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\SettingsDialog.cpp">
+      <Filter>UIControls\SettingsDialog\src</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_SettingsDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_SettingsDialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\QtHelpers.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="client.png">
@@ -115,6 +136,9 @@
     </CustomBuild>
     <CustomBuild Include="Sources\UserListItem.h">
       <Filter>UIControls\ListItem</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Sources\SettingsDialog.h">
+      <Filter>UIControls\SettingsDialog</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -138,6 +162,9 @@
     </ClInclude>
     <ClInclude Include="Sources\UIMessageHandler.h">
       <Filter>MainFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\QtHelpers.h">
+      <Filter>Helpers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

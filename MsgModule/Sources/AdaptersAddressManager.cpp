@@ -125,6 +125,10 @@ namespace net
 			}
 			
 		});
+		if (appropriateAddress.empty() && !m_localAddress.empty())
+		{
+			appropriateAddress = *m_localAddress.begin();
+		}
 		return appropriateAddress;
 	}
 }

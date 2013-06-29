@@ -87,6 +87,8 @@
     <ClCompile Include="Sources\MessagesQueue.cpp" />
     <ClCompile Include="Sources\MessageWindow.cpp" />
     <ClCompile Include="Sources\NetUsersManager.cpp" />
+    <ClCompile Include="Sources\RegistryHelpers.cpp" />
+    <ClCompile Include="Sources\SettingsManager.cpp" />
     <ClCompile Include="Sources\stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -96,7 +98,10 @@
     <ClInclude Include="Sources\Messages.h" />
     <ClInclude Include="Sources\MessagesQueue.h" />
     <ClInclude Include="Sources\MessageWindow.h" />
+    <ClInclude Include="Sources\MsgModuleSettings.h" />
     <ClInclude Include="Sources\NetUsersManager.h" />
+    <ClInclude Include="Sources\RegistryHelpers.h" />
+    <ClInclude Include="Sources\SettingsManager.h" />
     <ClInclude Include="Sources\stdafx.h" />
     <ClInclude Include="Sources\targetver.h" />
   </ItemGroup>
