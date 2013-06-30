@@ -32,9 +32,6 @@
     <Filter Include="SettingsManager\src">
       <UniqueIdentifier>{f8ff53eb-b6e7-4358-ac12-3c79da616c87}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Settings">
-      <UniqueIdentifier>{b558a6a2-0c3b-4856-8556-e486ab9feb1b}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -93,11 +90,11 @@
     <ClInclude Include="Sources\SettingsManager.h">
       <Filter>SettingsManager</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\MsgModuleSettings.h">
-      <Filter>Settings</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\AdaptersAddressHolder.h">
       <Filter>SettingsManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\DefaultSettings.h">
+      <Filter>SettingsManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -95,12 +95,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\AdaptersAddressHolder.h" />
+    <ClInclude Include="Sources\DefaultSettings.h" />
     <ClInclude Include="Sources\INetUsersObserver.h" />
     <ClInclude Include="Sources\MessageReceiver.h" />
     <ClInclude Include="Sources\Messages.h" />
     <ClInclude Include="Sources\MessagesQueue.h" />
     <ClInclude Include="Sources\MessageWindow.h" />
-    <ClInclude Include="Sources\MsgModuleSettings.h" />
     <ClInclude Include="Sources\NetUsersManager.h" />
     <ClInclude Include="Sources\SettingsManager.h" />
     <ClInclude Include="Sources\stdafx.h" />

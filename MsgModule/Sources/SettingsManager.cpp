@@ -3,11 +3,17 @@
 #include "SettingsManager.h"
 #include "RegistryHelpers.h"
 #include "AdaptersAddressHolder.h"
-#include "MsgModuleSettings.h"
+#include "DefaultSettings.h"
 
 namespace sm
 {
-	using namespace settings::settingsmanager;
+	namespace 
+	{
+		const wchar_t SETTINGS_KEYS_PATH[] = L"Software\\LChat\\Settings";
+		const wchar_t CURRENT_NET_ADDRESS[] = L"IPAddress";
+		const wchar_t CURRENT_STATE_MSG_PORT[] = L"SPort";
+		const wchar_t CURRENT_CHAT_MSG_PORT[] = L"MPort";
+	}
 
 	SettingsManager* SettingsManager::Instance()
 	{
@@ -76,12 +82,12 @@ namespace sm
 
 	void SettingsManager::SetCurrentStatesPort(unsigned long statePort)
 	{
-		m_stateMsgPort = statePort;
+		m_stateMsgPort = statePort ? statePort : DEFAULT_STATE_MSG_PORT;
 	}
 
 	void SettingsManager::SetCurrentMessagesPort(unsigned long chatPort)
 	{
-		m_chatMsgPort = chatPort;
+		m_chatMsgPort = chatPort ? chatPort : DEFAULT_CHAT_MSG_PORT;
 	}
 
 	std::vector<std::wstring> SettingsManager::GetActiveAddresses() const

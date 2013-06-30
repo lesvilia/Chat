@@ -10,7 +10,7 @@
 #include "SettingsDialog.h"
 #include "SettingsManager.h"
 #include "LoginManager.h"
-#include "Settings.h"
+#include "UISettings.h"
 #include "QtHelpers.h"
 
 namespace

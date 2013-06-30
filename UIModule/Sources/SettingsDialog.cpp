@@ -6,9 +6,10 @@
 #include <vector>
 #include <algorithm>
 #include "StaticLink.h"
-#include "Settings.h"
+#include "UISettings.h"
 #include "QtHelpers.h"
 #include "SettingsManager.h"
+#include "DefaultSettings.h"
 
 namespace ui
 {

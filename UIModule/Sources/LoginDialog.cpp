@@ -1,7 +1,7 @@
 #include "LoginDialog.h"
 #include "LoginManager.h"
 #include "StaticLink.h"
-#include "Settings.h"
+#include "UISettings.h"
 #include "QtHelpers.h"
 #include <QPushButton>
 #include <QLabel>
