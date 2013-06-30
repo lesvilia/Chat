@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="stdafx">
+      <UniqueIdentifier>{61a22ccc-6367-45e9-8660-d02a2519e901}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RegistryHelpers">
+      <UniqueIdentifier>{6cbdec21-8f1a-47ad-a407-ad179b3f25f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="QtHelpers">
+      <UniqueIdentifier>{b641f037-be19-49ff-9a4d-78c499815f92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RegistryHelpers\src">
+      <UniqueIdentifier>{32a3b52b-fabd-460d-87d7-1c13b5711005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="QtHelpers\src">
+      <UniqueIdentifier>{28344351-9155-4787-953e-cd7707a7ef70}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\stdafx.cpp">
+      <Filter>stdafx</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\RegistryHelpers.cpp">
+      <Filter>RegistryHelpers\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\QtHelpers.cpp">
+      <Filter>QtHelpers\src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\stdafx.h">
+      <Filter>stdafx</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\targetver.h">
+      <Filter>stdafx</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\RegistryHelpers.h">
+      <Filter>RegistryHelpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\QtHelpers.h">
+      <Filter>QtHelpers</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

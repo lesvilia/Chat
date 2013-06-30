@@ -8,8 +8,6 @@
 #include "StaticLink.h"
 #include "Settings.h"
 #include "QtHelpers.h"
-#include "MsgModuleSettings.h"
-#include "AdaptersAddressManager.h"
 #include "SettingsManager.h"
 
 namespace ui
@@ -17,10 +15,10 @@ namespace ui
 	namespace controls
 	{
 		using namespace settings::settingsdialog;
-		using namespace settings::settingsmanager;
 
-		SettingsDialog::SettingsDialog(QWidget* parent)
+		SettingsDialog::SettingsDialog(QWidget* parent, sm::SettingsManager* settingsManager)
 			: QDialog(parent)
+			, m_settingsMngr(settingsManager)
 			, m_addressWidget(nullptr)
 			, m_statePortEdit(nullptr)
 			, m_chatPortEdit(nullptr)
@@ -62,7 +60,9 @@ namespace ui
 			connect(m_addressWidget, SIGNAL(activated(const QString&)), SLOT(EnableOkButton()));
 
 			m_statePortEdit = new QLineEdit();
+			m_statePortEdit->setText(QString::number(m_settingsMngr->GetCurrentStatesPort()));
 			m_chatPortEdit = new QLineEdit();
+			m_chatPortEdit->setText(QString::number(m_settingsMngr->GetCurrentMessagesPort()));
 			connect(m_statePortEdit, SIGNAL(textEdited(const QString&)), SLOT(EnableOkButton()));
 			connect(m_chatPortEdit, SIGNAL(textEdited(const QString&)), SLOT(EnableOkButton()));
 
@@ -81,22 +81,23 @@ namespace ui
 
 		void SettingsDialog::SaveSettings()
 		{
-			SettingsManager::Instance()->SetCurrentAddress(hlp::QStrToWStr(m_addressWidget->currentText()));
-			SettingsManager::Instance()->SetCurrentStatesPort(m_statePortEdit->text().toULong());
-			SettingsManager::Instance()->SetCurrentMessagesPort(m_chatPortEdit->text().toULong());
+			m_settingsMngr->SetCurrentAddress(hlp::QStrToWStr(m_addressWidget->currentText()));
+			m_settingsMngr->SetCurrentStatesPort(m_statePortEdit->text().toULong());
+			m_settingsMngr->SetCurrentMessagesPort(m_chatPortEdit->text().toULong());
+			accept();
 		}
 
 		void SettingsDialog::RestoreDefaultSettings()
 		{
 			m_addressWidget->setCurrentText(m_appropriateAddress);
-			m_statePortEdit->setText(QString::number(STATE_MSG_PORT));
-			m_chatPortEdit->setText(QString::number(CHAT_MSG_PORT));
+			m_statePortEdit->setText(QString::number(sm::DEFAULT_STATE_MSG_PORT));
+			m_chatPortEdit->setText(QString::number(sm::DEFAULT_CHAT_MSG_PORT));
 		}
 
 		void SettingsDialog::InitAddressesValues()
 		{ 
-			m_appropriateAddress = hlp::WStrToQStr(net::AdaptersAddressManager::Instance()->GetAppropriateAddress());
-			std::vector<std::wstring> addresses(net::AdaptersAddressManager::Instance()->GetLocalAddresses());
+			m_appropriateAddress = hlp::WStrToQStr(m_settingsMngr->GetCurrentNetAddres());
+			std::vector<std::wstring> addresses(m_settingsMngr->GetActiveAddresses());
 			std::for_each(addresses.cbegin(), addresses.cend(),
 			[this](const std::wstring& addr)
 			{
@@ -106,7 +107,14 @@ namespace ui
 
 		void SettingsDialog::EnableOkButton()
 		{
-			m_buttonOK->setEnabled(true);
+			if (!m_statePortEdit->text().isEmpty() && !m_chatPortEdit->text().isEmpty())
+			{
+				m_buttonOK->setEnabled(true);
+			}
+			else
+			{
+				m_buttonOK->setEnabled(false);
+			}
 		}
 	}
 }

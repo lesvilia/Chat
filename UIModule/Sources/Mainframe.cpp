@@ -7,6 +7,8 @@
 #include "Mainframe.h"
 #include "NetUsersManager.h"
 #include "LoginDialog.h"
+#include "SettingsDialog.h"
+#include "SettingsManager.h"
 #include "LoginManager.h"
 #include "Settings.h"
 #include "QtHelpers.h"
@@ -207,6 +209,7 @@ namespace ui
 		menu->addAction("Sign_In", this, SLOT(LogIn()));
 		menu->addAction("Sign_Out", this, SLOT(LogOut()));
 		menu->addAction("Exit", this, SLOT(close()));
+		menuBar()->addAction("Settings", this, SLOT(OpenSettingsDlg()));
 		menuBar()->addAction("About", this, SLOT(About()));
 	}
 
@@ -346,5 +349,11 @@ namespace ui
 		messageBox.setMaximumHeight(150);
 		messageBox.setMaximumWidth(300);
 		messageBox.exec();
+	}
+
+	void MainFrame::OpenSettingsDlg()
+	{
+		controls::SettingsDialog dlg(this, sm::SettingsManager::Instance());
+		dlg.exec();
 	}
 }

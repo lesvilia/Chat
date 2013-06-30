@@ -3,6 +3,11 @@
 #include <QLineEdit>
 #include <QComboBox>
 
+namespace sm
+{
+	class SettingsManager;
+}
+
 namespace ui
 {
 	namespace controls
@@ -13,7 +18,7 @@ namespace ui
 			Q_OBJECT
 
 		public:
-			SettingsDialog(QWidget* parent);
+			SettingsDialog(QWidget* parent, sm::SettingsManager* settingsManager);
 			~SettingsDialog();
 
 		private slots:
@@ -27,6 +32,7 @@ namespace ui
 			void SetupUI();
 
 		private:
+			sm::SettingsManager* m_settingsMngr;
 			QStringList m_addresses;
 			QString m_appropriateAddress;
 			QComboBox* m_addressWidget;

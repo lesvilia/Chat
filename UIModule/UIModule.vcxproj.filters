@@ -61,9 +61,6 @@
     <Filter Include="UIControls\SettingsDialog\src">
       <UniqueIdentifier>{b4da376b-57ef-418d-b6fd-71c1c1d17057}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Helpers">
-      <UniqueIdentifier>{89e74293-c78e-4e59-b7d9-b033d7b4a987}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_Mainframe.cpp">
@@ -112,9 +109,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_SettingsDialog.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\QtHelpers.cpp">
-      <Filter>Helpers</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="client.png">
@@ -162,9 +156,6 @@
     </ClInclude>
     <ClInclude Include="Sources\UIMessageHandler.h">
       <Filter>MainFrame</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\QtHelpers.h">
-      <Filter>Helpers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

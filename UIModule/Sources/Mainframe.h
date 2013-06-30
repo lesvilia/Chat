@@ -69,6 +69,7 @@ namespace ui
 		void LogIn();
 		void LogOut();
 		void About();
+		void OpenSettingsDlg();
 
 	private:
 		QListWidget*			m_userListWidget;
