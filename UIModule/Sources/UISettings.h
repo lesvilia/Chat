@@ -86,13 +86,4 @@ namespace settings
 		const QString LABEL_STATE_PORT("State message port:");
 		const QString LABEL_CHAT_PORT("Chat message port:");
 	}
-
-	namespace loginmanager
-	{
-		const wchar_t USERS_KEYS_PATH[] = L"Software\\LChat\\Users";
-		const wchar_t USER_NAME[] = L"Name";
-		const wchar_t USER_PASSWORD[] = L"Password";
-		const wchar_t USER_UUID[] = L"Uuid";
-		const unsigned long MAX_BUFFER_LENGTH = 128;
-	}
 }

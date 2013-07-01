@@ -1,14 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="MessageReceiver">
-      <UniqueIdentifier>{8270b314-92b3-4adf-b25c-39c9c44afc3f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Messages">
       <UniqueIdentifier>{4d9b1106-4342-4260-869e-a9c90fcf474a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MessageReceiver\src">
-      <UniqueIdentifier>{8768550d-8e8a-492d-8777-59bf32ad8a31}</UniqueIdentifier>
     </Filter>
     <Filter Include="stdafx">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
@@ -32,6 +26,30 @@
     <Filter Include="SettingsManager\src">
       <UniqueIdentifier>{f8ff53eb-b6e7-4358-ac12-3c79da616c87}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ChatMessageManager">
+      <UniqueIdentifier>{16b6448c-67a5-44c5-8fd1-6db0a3d76061}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateMessageManager">
+      <UniqueIdentifier>{612cf476-4e59-4e67-be15-fcfd911e4770}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateMessageManager\src">
+      <UniqueIdentifier>{a19426f1-80de-4a99-8862-ba560975e5b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Typedefs">
+      <UniqueIdentifier>{7d2c6e2e-41a4-433f-957f-3cf966313d7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MessagesServer">
+      <UniqueIdentifier>{73a0f342-f882-405d-b87c-d05f93ae73ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MessagesServer\src">
+      <UniqueIdentifier>{62c4098a-d204-426c-9b95-0ae668f7d49c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MessagesReceiver">
+      <UniqueIdentifier>{8270b314-92b3-4adf-b25c-39c9c44afc3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MessagesReceiver\src">
+      <UniqueIdentifier>{8768550d-8e8a-492d-8777-59bf32ad8a31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -40,14 +58,8 @@
     <ClCompile Include="Sources\Messages.cpp">
       <Filter>Messages</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\MessageReceiver.cpp">
-      <Filter>MessageReceiver\src</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\stdafx.cpp">
       <Filter>stdafx</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\MessageWindow.cpp">
-      <Filter>MessageReceiver\src</Filter>
     </ClCompile>
     <ClCompile Include="Sources\MessagesQueue.cpp">
       <Filter>MessagesQueue\src</Filter>
@@ -61,22 +73,31 @@
     <ClCompile Include="Sources\AdaptersAddressHolder.cpp">
       <Filter>SettingsManager\src</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\WSAStartupHolder.cpp">
+      <Filter>MessagesServer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\UDPMessagesServer.cpp">
+      <Filter>MessagesServer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\MessagesReceiver.cpp">
+      <Filter>MessagesReceiver\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\MessagesWindow.cpp">
+      <Filter>MessagesReceiver\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\StateMessagesManager.cpp">
+      <Filter>StateMessageManager\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\Messages.h">
       <Filter>Messages</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\MessageReceiver.h">
-      <Filter>MessageReceiver</Filter>
     </ClInclude>
     <ClInclude Include="Sources\stdafx.h">
       <Filter>stdafx</Filter>
     </ClInclude>
     <ClInclude Include="Sources\targetver.h">
       <Filter>stdafx</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\MessageWindow.h">
-      <Filter>MessageReceiver</Filter>
     </ClInclude>
     <ClInclude Include="Sources\MessagesQueue.h">
       <Filter>MessagesQueue</Filter>
@@ -95,6 +116,30 @@
     </ClInclude>
     <ClInclude Include="Sources\DefaultSettings.h">
       <Filter>SettingsManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Typedefs.h">
+      <Filter>Typedefs</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\WSAStartupHolder.h">
+      <Filter>MessagesServer\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\IServerSettingsHolder.h">
+      <Filter>MessagesServer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\IMessagesHahdler.h">
+      <Filter>MessagesServer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\UDPMessagesServer.h">
+      <Filter>MessagesServer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\MessagesReceiver.h">
+      <Filter>MessagesReceiver</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\MessagesWindow.h">
+      <Filter>MessagesReceiver\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\StateMessagesManager.h">
+      <Filter>StateMessageManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

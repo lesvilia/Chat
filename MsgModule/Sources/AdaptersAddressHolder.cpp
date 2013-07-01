@@ -1,29 +1,8 @@
 #include "stdafx.h"
 #include "AdaptersAddressHolder.h"
-#include <winsock2.h>
-#include <iphlpapi.h>
+#include "WSAStartupHolder.h"
 #include <memory>
 #include <algorithm>
-
-namespace net
-{
-	WSAStartupHolder::WSAStartupHolder(unsigned short version)
-		: m_error(0)
-	{
-		WSADATA wsaData;
-		m_error = ::WSAStartup(version, &wsaData);
-	}
-
-	int WSAStartupHolder::GetErrorCode() const
-	{
-		return m_error;
-	}
-
-	WSAStartupHolder::~WSAStartupHolder()
-	{
-		::WSACleanup();
-	}
-}
 
 namespace sm
 {

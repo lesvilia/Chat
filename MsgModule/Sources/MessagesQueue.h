@@ -4,6 +4,7 @@
 #include "boost/noncopyable.hpp"
 #include "boost/thread/mutex.hpp"
 #include "Messages.h"
+#include "Typedefs.h"
 #include "ace/INET_Addr.h"
 
 namespace msg
@@ -31,9 +32,6 @@ namespace msg
 	class MessagesQueue
 		: private boost::noncopyable
 	{
-		typedef boost::mutex Mutex;
-		typedef boost::unique_lock<Mutex> Lock;
-
 	public:
 		MessagesQueue()
 		{

@@ -1,6 +1,6 @@
+#include "stdafx.h"
 #include "LoginManagerImpl.h"
 #include "LoginManager.h"
-#include "Settings.h"
 #include "RegistryHelpers.h"
 #include <string>
 #include <vector>
@@ -9,23 +9,14 @@ namespace login
 {
 	namespace impl
 	{
-		using namespace settings::loginmanager;
-		
+				
 		namespace
 		{
-			/*std::wstring GetStringValue(CRegKey& key, const std::wstring& valueName)
-			{
-				ULONG nChars = 0;
-				if (ERROR_SUCCESS == key.QueryStringValue(valueName.c_str(), NULL, &nChars))
-				{
-					std::vector<wchar_t> buff(nChars, '\0');
-					if (ERROR_SUCCESS == key.QueryStringValue(valueName.c_str(), &buff[0], &nChars))
-					{
-						return std::wstring(&buff[0]);
-					}
-				}
-				return std::wstring();
-			}*/
+			const wchar_t USERS_KEYS_PATH[] = L"Software\\LChat\\Users";
+			const wchar_t USER_NAME[] = L"Name";
+			const wchar_t USER_PASSWORD[] = L"Password";
+			const wchar_t USER_UUID[] = L"Uuid";
+			const unsigned long MAX_BUFFER_LENGTH = 128;
 
 			std::wstring GenerateUUID()
 			{
@@ -131,14 +122,14 @@ namespace login
 
 		bool LoginManagerImpl::IsOnline() const
 		{
-			boost::mutex::scoped_lock lock(m_mutex);
+			Lock lock(m_mutex);
 			return m_isOnline;
 		}
 
 		void LoginManagerImpl::SetLoginState(bool online)
 		{
 			{
-				boost::mutex::scoped_lock lock(m_mutex);
+				Lock lock(m_mutex);
 				m_isOnline = online;
 			}
 

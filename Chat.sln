@@ -3,6 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MsgModule", "MsgModule\MsgModule.vcxproj", "{4721D053-398F-4103-8DDE-EE9F1C2CAF49}"
 	ProjectSection(ProjectDependencies) = postProject
+		{F7372A62-A039-4DD9-94CA-63F62FC86151} = {F7372A62-A039-4DD9-94CA-63F62FC86151}
 		{1198D79A-295F-49F8-A7A6-64E1BB45E7CA} = {1198D79A-295F-49F8-A7A6-64E1BB45E7CA}
 	EndProjectSection
 EndProject
@@ -12,6 +13,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UIModule", "UIModule\UIModu
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HlpModule", "HlpModule\HlpModule.vcxproj", "{1198D79A-295F-49F8-A7A6-64E1BB45E7CA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LoginModule", "LoginModule\LoginModule.vcxproj", "{F7372A62-A039-4DD9-94CA-63F62FC86151}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1198D79A-295F-49F8-A7A6-64E1BB45E7CA} = {1198D79A-295F-49F8-A7A6-64E1BB45E7CA}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +37,10 @@ Global
 		{1198D79A-295F-49F8-A7A6-64E1BB45E7CA}.Debug|Win32.Build.0 = Debug|Win32
 		{1198D79A-295F-49F8-A7A6-64E1BB45E7CA}.Release|Win32.ActiveCfg = Release|Win32
 		{1198D79A-295F-49F8-A7A6-64E1BB45E7CA}.Release|Win32.Build.0 = Release|Win32
+		{F7372A62-A039-4DD9-94CA-63F62FC86151}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F7372A62-A039-4DD9-94CA-63F62FC86151}.Debug|Win32.Build.0 = Debug|Win32
+		{F7372A62-A039-4DD9-94CA-63F62FC86151}.Release|Win32.ActiveCfg = Release|Win32
+		{F7372A62-A039-4DD9-94CA-63F62FC86151}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "MessageReceiver.h"
+#include "MessagesReceiver.h"
 
 namespace msg
 {

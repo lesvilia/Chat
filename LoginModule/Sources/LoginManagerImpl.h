@@ -4,10 +4,9 @@
 #include <map>
 #include <vector>
 #include "boost\noncopyable.hpp"
-#include "boost\thread\mutex.hpp"
+#include "boost/thread/mutex.hpp"
 #include "LoginHandlers.h"
 
-class QWidget;
 namespace login
 {
 	namespace impl
@@ -15,6 +14,9 @@ namespace login
 		class LoginManagerImpl
 			: private boost::noncopyable
 		{
+			typedef boost::mutex Mutex;
+			typedef boost::unique_lock<Mutex> Lock;
+
 		public:
 			explicit LoginManagerImpl();
 			~LoginManagerImpl();
@@ -41,7 +43,7 @@ namespace login
 		private:
 			std::map<std::wstring, UserDataPtr> m_users;
 			std::vector<ILoginStateObserver*> m_obsrevers;
-			mutable boost::mutex m_mutex;
+			mutable Mutex m_mutex;
 			bool m_isOnline;
 			UserDataPtr m_currentUser;
 		};

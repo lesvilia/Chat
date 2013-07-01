@@ -25,12 +25,6 @@
     <Filter Include="MainFrame\src">
       <UniqueIdentifier>{6b040aca-e584-4948-a5d8-17f9559b680f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="LoginManager">
-      <UniqueIdentifier>{2fbbf84e-db2f-43aa-91bb-c5cbd1d5e97b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LoginManager\src">
-      <UniqueIdentifier>{008ae6d3-cc24-49c7-b501-ccf5d3b26fb6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UIControls">
       <UniqueIdentifier>{8726cba8-16c6-43fe-a3f6-22e62215076a}</UniqueIdentifier>
     </Filter>
@@ -72,15 +66,9 @@
     <ClCompile Include="Sources\Mainframe.cpp">
       <Filter>MainFrame\src</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\LoginManager.cpp">
-      <Filter>LoginManager\src</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Sources\LoginDialog.cpp">
       <Filter>UIControls\LoginDialog\src</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\LoginManagerImpl.cpp">
-      <Filter>LoginManager\src</Filter>
     </ClCompile>
     <ClCompile Include="Sources\StaticLink.cpp">
       <Filter>UIControls\StaticLink\src</Filter>
@@ -136,18 +124,6 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sources\LoginManager.h">
-      <Filter>LoginManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\LoginHandlers.h">
-      <Filter>LoginManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\LoginManagerImpl.h">
-      <Filter>LoginManager\src</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\ILoginManager.h">
-      <Filter>LoginManager</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Generated Files</Filter>
     </ClInclude>

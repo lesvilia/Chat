@@ -1,6 +1,5 @@
 #pragma once
 #include <memory>
-#include <QWidget>
 #include "boost/noncopyable.hpp"
 #include "ILoginManager.h"
 

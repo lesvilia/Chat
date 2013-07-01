@@ -40,12 +40,12 @@ namespace sm
 		return m_currentNetAddress;
 	}
 
-	unsigned long SettingsManager::GetCurrentStatesPort() const
+	unsigned short SettingsManager::GetCurrentStatesPort() const
 	{
 		return m_stateMsgPort;
 	}
 
-	unsigned long SettingsManager::GetCurrentMessagesPort() const
+	unsigned short SettingsManager::GetCurrentMessagesPort() const
 	{
 		return m_chatMsgPort;
 	}
@@ -80,12 +80,12 @@ namespace sm
 		}
 	}
 
-	void SettingsManager::SetCurrentStatesPort(unsigned long statePort)
+	void SettingsManager::SetCurrentStatesPort(unsigned short statePort)
 	{
 		m_stateMsgPort = statePort ? statePort : DEFAULT_STATE_MSG_PORT;
 	}
 
-	void SettingsManager::SetCurrentMessagesPort(unsigned long chatPort)
+	void SettingsManager::SetCurrentMessagesPort(unsigned short chatPort)
 	{
 		m_chatMsgPort = chatPort ? chatPort : DEFAULT_CHAT_MSG_PORT;
 	}

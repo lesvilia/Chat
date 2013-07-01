@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="stdafx">
+      <UniqueIdentifier>{24f45004-4c77-4af7-8485-ef207570f0b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoginManager">
+      <UniqueIdentifier>{779d4708-37ca-4b2c-8a74-e94ee810e9fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoginManager\src">
+      <UniqueIdentifier>{753813cc-2d2f-4b8c-854a-f71482abd8d7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\stdafx.cpp">
+      <Filter>stdafx</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\LoginManager.cpp">
+      <Filter>LoginManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\LoginManagerImpl.cpp">
+      <Filter>LoginManager\src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\stdafx.h">
+      <Filter>stdafx</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\targetver.h">
+      <Filter>stdafx</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ILoginManager.h">
+      <Filter>LoginManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\LoginHandlers.h">
+      <Filter>LoginManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\LoginManager.h">
+      <Filter>LoginManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\LoginManagerImpl.h">
+      <Filter>LoginManager\src</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
