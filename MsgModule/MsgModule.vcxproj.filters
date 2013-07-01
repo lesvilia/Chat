@@ -14,18 +14,6 @@
     <Filter Include="MessagesQueue\src">
       <UniqueIdentifier>{e51757e1-c78b-45c4-952d-272af7561e08}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NetUsersManager">
-      <UniqueIdentifier>{2f268b16-9b9d-43da-afe6-c862b9943590}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="NetUsersManager\src">
-      <UniqueIdentifier>{fffb1b99-8e4b-4c43-9caf-a3dee402c441}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SettingsManager">
-      <UniqueIdentifier>{60e5b0cc-97b1-407b-9374-8e0e6384a59d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SettingsManager\src">
-      <UniqueIdentifier>{f8ff53eb-b6e7-4358-ac12-3c79da616c87}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ChatMessageManager">
       <UniqueIdentifier>{16b6448c-67a5-44c5-8fd1-6db0a3d76061}</UniqueIdentifier>
     </Filter>
@@ -64,18 +52,6 @@
     <ClCompile Include="Sources\MessagesQueue.cpp">
       <Filter>MessagesQueue\src</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\NetUsersManager.cpp">
-      <Filter>NetUsersManager\src</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\SettingsManager.cpp">
-      <Filter>SettingsManager\src</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\AdaptersAddressHolder.cpp">
-      <Filter>SettingsManager\src</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\WSAStartupHolder.cpp">
-      <Filter>MessagesServer\src</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\UDPMessagesServer.cpp">
       <Filter>MessagesServer\src</Filter>
     </ClCompile>
@@ -102,26 +78,8 @@
     <ClInclude Include="Sources\MessagesQueue.h">
       <Filter>MessagesQueue</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\NetUsersManager.h">
-      <Filter>NetUsersManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\INetUsersObserver.h">
-      <Filter>NetUsersManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\SettingsManager.h">
-      <Filter>SettingsManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\AdaptersAddressHolder.h">
-      <Filter>SettingsManager\src</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\DefaultSettings.h">
-      <Filter>SettingsManager</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Typedefs.h">
       <Filter>Typedefs</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\WSAStartupHolder.h">
-      <Filter>MessagesServer\src</Filter>
     </ClInclude>
     <ClInclude Include="Sources\IServerSettingsHolder.h">
       <Filter>MessagesServer</Filter>

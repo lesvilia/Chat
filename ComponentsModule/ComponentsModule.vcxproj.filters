@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="stdafx">
+      <UniqueIdentifier>{6ac374c0-00f9-4f9d-808d-7a8878568e8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoginManager">
+      <UniqueIdentifier>{e589fe4c-b370-4590-9c60-277567ef9379}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SettingsManager">
+      <UniqueIdentifier>{9723c4ce-9138-4801-8b37-f91ec5d5885f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetUsersManager">
+      <UniqueIdentifier>{8d84f09f-47b7-412b-8063-de1457307ae8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoginManager\src">
+      <UniqueIdentifier>{74b256b3-d945-498e-95bb-37b78dfeeba5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetUsersManager\src">
+      <UniqueIdentifier>{33f23c09-1aa2-4187-af5d-5c69c3be9315}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SettingsManager\src">
+      <UniqueIdentifier>{89a5e628-0bef-43f1-94dc-6bafac18d56a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WSAHolder">
+      <UniqueIdentifier>{6be2696f-001a-445c-8a2e-33148e16be31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WSAHolder\src">
+      <UniqueIdentifier>{c654a9d0-f84a-4a66-82f4-cd30e03a364b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\stdafx.cpp">
+      <Filter>stdafx</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\LoginManager.cpp">
+      <Filter>LoginManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\LoginManagerImpl.cpp">
+      <Filter>LoginManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\NetUsersManager.cpp">
+      <Filter>NetUsersManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\SettingsManager.cpp">
+      <Filter>SettingsManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\WSAStartupHolder.cpp">
+      <Filter>WSAHolder\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\AdaptersAddressHolder.cpp">
+      <Filter>SettingsManager\src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\stdafx.h">
+      <Filter>stdafx</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\targetver.h">
+      <Filter>stdafx</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ILoginManager.h">
+      <Filter>LoginManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\LoginHandlers.h">
+      <Filter>LoginManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\LoginManager.h">
+      <Filter>LoginManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\LoginManagerImpl.h">
+      <Filter>LoginManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\INetUsersObserver.h">
+      <Filter>NetUsersManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\NetUsersManager.h">
+      <Filter>NetUsersManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\DefaultSettings.h">
+      <Filter>SettingsManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\SettingsManager.h">
+      <Filter>SettingsManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\WSAStartupHolder.h">
+      <Filter>WSAHolder</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\AdaptersAddressHolder.h">
+      <Filter>SettingsManager\src</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

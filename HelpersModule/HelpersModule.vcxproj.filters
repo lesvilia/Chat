@@ -2,19 +2,19 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="stdafx">
-      <UniqueIdentifier>{61a22ccc-6367-45e9-8660-d02a2519e901}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="RegistryHelpers">
-      <UniqueIdentifier>{6cbdec21-8f1a-47ad-a407-ad179b3f25f2}</UniqueIdentifier>
+      <UniqueIdentifier>{aaecb644-c5ea-460a-9a3d-ae20f639c71b}</UniqueIdentifier>
     </Filter>
     <Filter Include="QtHelpers">
-      <UniqueIdentifier>{b641f037-be19-49ff-9a4d-78c499815f92}</UniqueIdentifier>
+      <UniqueIdentifier>{c320b6cf-1e60-4b16-bcd5-444e3254fb5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RegistryHelpers">
+      <UniqueIdentifier>{553e2abd-37a1-4063-9ac2-eb94fcb3a0b4}</UniqueIdentifier>
     </Filter>
     <Filter Include="RegistryHelpers\src">
-      <UniqueIdentifier>{32a3b52b-fabd-460d-87d7-1c13b5711005}</UniqueIdentifier>
+      <UniqueIdentifier>{2907e061-c06d-4fa7-9f8c-18f96a054671}</UniqueIdentifier>
     </Filter>
     <Filter Include="QtHelpers\src">
-      <UniqueIdentifier>{28344351-9155-4787-953e-cd7707a7ef70}</UniqueIdentifier>
+      <UniqueIdentifier>{111f9781-aa8d-456e-91fe-0a0468818e88}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
