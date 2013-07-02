@@ -1,7 +1,6 @@
 #pragma once
+#include <memory>
 #include <string>
-#include "ace/OS.h"
-#include "ace/CDR_Stream.h"
 
 namespace msg
 {
@@ -22,9 +21,6 @@ namespace msg
 		std::wstring m_username;
 	};
 
-	int operator<<(ACE_OutputCDR& cdr, const StateMessage& message);
-	int operator>>(ACE_InputCDR& cdr, StateMessage& message);
-
 	struct ChatMessage
 	{
 		ChatMessage();
@@ -33,6 +29,6 @@ namespace msg
 		std::wstring m_message;
 	};
 
-	int operator<<(ACE_OutputCDR& cdr, const ChatMessage& message);
-	int operator>>(ACE_InputCDR& cdr, ChatMessage& message);
+	typedef std::shared_ptr<StateMessage> StateMessagePtr;
+	typedef std::shared_ptr<ChatMessage> ChatMessagePtr;
 }

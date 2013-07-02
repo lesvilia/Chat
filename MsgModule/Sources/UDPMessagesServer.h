@@ -26,7 +26,6 @@ namespace msg
 	private:
 		void Initialize();
 		void InitSocket();
-		void ResetSocket();
 		bool ShouldShutdown();
 		bool NeedReset();
 		void WaitForEvents();

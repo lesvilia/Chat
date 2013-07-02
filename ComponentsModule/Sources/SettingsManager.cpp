@@ -56,8 +56,8 @@ namespace sm
 		if(ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, SETTINGS_KEYS_PATH, KEY_READ))
 		{
 			SetCurrentAddress(reghlp::GetStringValue(key, CURRENT_NET_ADDRESS));
-			SetCurrentStatesPort(reghlp::GetDWORDValue(key, CURRENT_STATE_MSG_PORT));
-			SetCurrentMessagesPort(reghlp::GetDWORDValue(key, CURRENT_CHAT_MSG_PORT));
+			SetCurrentStatesPort((unsigned short)reghlp::GetDWORDValue(key, CURRENT_STATE_MSG_PORT));
+			SetCurrentMessagesPort((unsigned short)reghlp::GetDWORDValue(key, CURRENT_CHAT_MSG_PORT));
 		}
 		else
 		{

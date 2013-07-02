@@ -25,7 +25,7 @@ namespace msg
 		}
 	}
 
-	MessageWindow::MessageWindow(MessageReciever* msgReceiver)
+	MessagesWindow::MessagesWindow(MessagesReceiver* msgReceiver)
 		: m_window(NULL)
 		, m_msgReceiver(msgReceiver)
 
@@ -34,22 +34,22 @@ namespace msg
 		CreateMainWindow();
 	}
 
-	MessageWindow::~MessageWindow()
+	MessagesWindow::~MessagesWindow()
 	{
 		::DestroyWindow(m_window);
 	}
 
-	void MessageWindow::OnStateMessageReceived()
+	void MessagesWindow::OnStateMessageReceived()
 	{
 		::PostMessage(m_window, WM_PROCESS_STATE_MSG, reinterpret_cast<WPARAM>(m_msgReceiver), NULL);
 	}
 
-	void MessageWindow::OnChatMessageReceived()
+	void MessagesWindow::OnChatMessageReceived()
 	{
 		::PostMessage(m_window, WM_PROCESS_CHAT_MSG, reinterpret_cast<WPARAM>(m_msgReceiver), NULL);
 	}
 
-	void MessageWindow::RegisterMainWindow()
+	void MessagesWindow::RegisterMainWindow()
 	{
 		WNDCLASSEX wcex = {0};
 		wcex.cbSize = sizeof(WNDCLASSEX);
@@ -59,7 +59,7 @@ namespace msg
 		assert(result != NULL);
 	}
 
-	void MessageWindow::CreateMainWindow()
+	void MessagesWindow::CreateMainWindow()
 	{
 		m_window = CreateWindow(CLASS_NAME, L"", 0, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0,
 								 HWND_MESSAGE, nullptr, nullptr, nullptr);

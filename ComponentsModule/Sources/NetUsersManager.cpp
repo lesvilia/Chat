@@ -1,7 +1,8 @@
 #include "stdafx.h"
+#include <algorithm>
 #include "NetUsersManager.h"
 #include "INetUsersObserver.h"
-#include <algorithm>
+#include "LoginManager.h"
 
 namespace net
 {
@@ -21,8 +22,9 @@ namespace net
 		return &manager;
 	}
 
-		NetUsersManager::NetUsersManager()
+	NetUsersManager::NetUsersManager()
 	{
+		login::LoginManager::Instance()->Subscribe(this);
 	}
 
 	NetUsersManager::~NetUsersManager()
@@ -46,7 +48,7 @@ namespace net
 		UserDisconnectedNotify(uuid);
 	}
 
-	ACE_INET_Addr NetUsersManager::GetNetUserAddres(const std::wstring& uuid)
+	ACE_INET_Addr NetUsersManager::GetNetUserAddress(const std::wstring& uuid)
 	{
 		auto iter = m_netUsers.find(uuid);
 		if (iter != m_netUsers.end())
@@ -57,6 +59,16 @@ namespace net
 		{
 			return ACE_INET_Addr();
 		}
+	}
+
+	std::vector<ACE_INET_Addr> NetUsersManager::GetNetUserAddresses() const
+	{
+		std::vector<ACE_INET_Addr> usersAddresses;
+		for (auto it = m_netUsers.begin(); it != m_netUsers.end(); ++it)
+		{
+			usersAddresses.push_back(it->second->address);
+		}
+		return usersAddresses;
 	}
 
 	std::wstring NetUsersManager::GetNetUserName(const std::wstring& uuid)
@@ -77,6 +89,18 @@ namespace net
 		return m_netUsers.find(uuid) != m_netUsers.end();
 	}
 
+	void NetUsersManager::OnlineStateChanged()
+	{
+		if (!login::LoginManager::Instance()->IsOnline())
+		{
+			for (auto it = m_netUsers.begin(); it != m_netUsers.end(); ++it)
+			{
+				UserDisconnectedNotify(it->first);
+			}
+			m_netUsers.clear();
+		}
+	}
+
 	void NetUsersManager::UserConnectedNotify(const std::wstring& uuid)
 	{
 		std::for_each(m_observers.cbegin(), m_observers.cend(),
@@ -85,6 +109,7 @@ namespace net
 			observer->OnNetUserConnected(uuid);
 		});
 	}
+
 	void NetUsersManager::UserDisconnectedNotify(const std::wstring& uuid)
 	{
 		std::for_each(m_observers.cbegin(), m_observers.cend(),

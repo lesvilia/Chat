@@ -3,22 +3,22 @@
 
 namespace msg
 {
-	MessageReciever::MessageReciever()
+	MessagesReceiver::MessagesReceiver()
 		: m_window(nullptr)
 	{
-		m_window.reset(new MessageWindow(this));
+		m_window.reset(new MessagesWindow(this));
 	}
 
-	MessageReciever::~MessageReciever()
+	MessagesReceiver::~MessagesReceiver()
 	{
 	}
 
-	void MessageReciever::OnStateMessageReceived()
+	void MessagesReceiver::OnStateMessageReceived()
 	{
 		m_window->OnStateMessageReceived();
 	}
 
-	void MessageReciever::OnChatMessageReceived()
+	void MessagesReceiver::OnChatMessageReceived()
 	{
 		m_window->OnChatMessageReceived();
 	}

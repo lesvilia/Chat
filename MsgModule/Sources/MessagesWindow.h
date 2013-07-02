@@ -7,14 +7,14 @@
 
 namespace msg
 {
-	class MessageReciever;
+	class MessagesReceiver;
 
-	class MessageWindow 
+	class MessagesWindow 
 		: private boost::noncopyable
 	{
 	public:
-		MessageWindow(MessageReciever* msgReceiver);
-		~MessageWindow();
+		MessagesWindow(MessagesReceiver* msgReceiver);
+		~MessagesWindow();
 		void OnStateMessageReceived();
 		void OnChatMessageReceived();
 
@@ -24,8 +24,8 @@ namespace msg
 
 	private:
 		HWND m_window;
-		MessageReciever* m_msgReceiver;
+		MessagesReceiver* m_msgReceiver;
 	};
 
-	typedef std::unique_ptr<MessageWindow> MessageWindowPtr;
+	typedef std::unique_ptr<MessagesWindow> MessagesWindowPtr;
 }

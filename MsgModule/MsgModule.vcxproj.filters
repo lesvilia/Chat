@@ -38,6 +38,9 @@
     <Filter Include="MessagesReceiver\src">
       <UniqueIdentifier>{8768550d-8e8a-492d-8777-59bf32ad8a31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ChatMessageManager\src">
+      <UniqueIdentifier>{b636ca02-bec9-4545-b364-d47ed7a08296}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -62,6 +65,18 @@
       <Filter>MessagesReceiver\src</Filter>
     </ClCompile>
     <ClCompile Include="Sources\StateMessagesManager.cpp">
+      <Filter>StateMessageManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\StateServerSettingsHolder.cpp">
+      <Filter>StateMessageManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ChatServerSettingsHolder.cpp">
+      <Filter>ChatMessageManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ChatMessagesHahdler.cpp">
+      <Filter>ChatMessageManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\StateMessagesHandler.cpp">
       <Filter>StateMessageManager\src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -98,6 +113,21 @@
     </ClInclude>
     <ClInclude Include="Sources\StateMessagesManager.h">
       <Filter>StateMessageManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\StateServerSettingsHolder.h">
+      <Filter>StateMessageManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ChatServerSettingsHolder.h">
+      <Filter>ChatMessageManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ChatMessagesHahdler.h">
+      <Filter>ChatMessageManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\MessagesTemplates.h">
+      <Filter>Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\StateMessagesHandler.h">
+      <Filter>StateMessageManager\src</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

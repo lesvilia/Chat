@@ -26,6 +26,7 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -43,7 +44,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ACE_ROOT);$(ProjectDir)Include;$(BOOST_ROOT);..\HelpersModule\Sources;..\ComponentsModule\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ACE_ROOT);$(ProjectDir)Include;$(BOOST_ROOT);..\HelpersModule\Sources;..\ComponentsModule\Sources;$(PUGIXML_ROOT)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
@@ -51,8 +52,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(ACE_ROOT)lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ACEd.lib;ComponentsModule.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ACE_ROOT)lib;$(OutDir);$(PUGIXML_ROOT)scripts\vs2010\x32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ACEd.lib;ComponentsModule.lib;pugixmlsd.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -62,8 +63,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ACE_ROOT);$(ProjectDir)Include;$(BOOST_ROOT);..\HelpersModule\Sources;..\ComponentsModule\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ACE_ROOT);$(ProjectDir)Include;$(BOOST_ROOT);..\HelpersModule\Sources;..\ComponentsModule\Sources;$(PUGIXML_ROOT)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -72,19 +74,23 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(ACE_ROOT)lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ACE.lib;ComponentsModule.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ACE_ROOT)lib;$(OutDir);$(PUGIXML_ROOT)scripts\vs2010\x32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ACE.lib;ComponentsModule.lib;pugixmls.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\ChatMessagesHahdler.cpp" />
+    <ClCompile Include="Sources\ChatServerSettingsHolder.cpp" />
     <ClCompile Include="Sources\Messages.cpp" />
     <ClCompile Include="Sources\MessagesQueue.cpp" />
     <ClCompile Include="Sources\MessagesReceiver.cpp" />
     <ClCompile Include="Sources\MessagesWindow.cpp" />
+    <ClCompile Include="Sources\StateMessagesHandler.cpp" />
     <ClCompile Include="Sources\StateMessagesManager.cpp" />
+    <ClCompile Include="Sources\StateServerSettingsHolder.cpp" />
     <ClCompile Include="Sources\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -92,13 +98,18 @@
     <ClCompile Include="Sources\UDPMessagesServer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Sources\ChatMessagesHahdler.h" />
+    <ClInclude Include="Sources\ChatServerSettingsHolder.h" />
     <ClInclude Include="Sources\IMessagesHahdler.h" />
     <ClInclude Include="Sources\IServerSettingsHolder.h" />
     <ClInclude Include="Sources\Messages.h" />
     <ClInclude Include="Sources\MessagesQueue.h" />
     <ClInclude Include="Sources\MessagesReceiver.h" />
+    <ClInclude Include="Sources\MessagesTemplates.h" />
     <ClInclude Include="Sources\MessagesWindow.h" />
+    <ClInclude Include="Sources\StateMessagesHandler.h" />
     <ClInclude Include="Sources\StateMessagesManager.h" />
+    <ClInclude Include="Sources\StateServerSettingsHolder.h" />
     <ClInclude Include="Sources\stdafx.h" />
     <ClInclude Include="Sources\targetver.h" />
     <ClInclude Include="Sources\Typedefs.h" />

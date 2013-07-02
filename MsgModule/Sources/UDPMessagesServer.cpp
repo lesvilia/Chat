@@ -13,7 +13,8 @@ namespace msg
 	namespace 
 	{
 		const ACE_Time_Value TIMEOUT(1); // 1 second
-		size_t BUFFER_SISE = 512;
+		const size_t BUFFER_SISE = 512;
+
 		void DeleteSocket(ACE_SOCK_Dgram* udpSocket)
 		{
 			udpSocket->close();
@@ -43,7 +44,6 @@ namespace msg
 
 	void UDPMessageServer::Run()
 	{
-
 		while (!ShouldShutdown())
 		{
 			if (login::LoginManager::Instance()->IsOnline())
@@ -63,10 +63,9 @@ namespace msg
 
 			if (NeedReset())
 			{
-				ResetSocket();
+				InitSocket();
 			}
 		}
-		m_udpSocket->close();
 	}
 
 	void UDPMessageServer::Shutdown()
@@ -97,11 +96,6 @@ namespace msg
 	{
 		ACE_INET_Addr serverAddr(m_settingsHolder->GetPort(), m_settingsHolder->GetAddress().c_str());
 		m_udpSocket.reset(new ACE_SOCK_Dgram(serverAddr));
-	}
-
-	void UDPMessageServer::ResetSocket()
-	{
-		InitSocket();
 	}
 
 	bool UDPMessageServer::ShouldShutdown()

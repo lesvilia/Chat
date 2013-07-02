@@ -3,16 +3,16 @@
 
 namespace msg
 {
-	class MessageReciever
+	class MessagesReceiver
 		: private boost::noncopyable
 	{
 	public:
-		MessageReciever();
-		~MessageReciever();
+		MessagesReceiver();
+		~MessagesReceiver();
 		void OnStateMessageReceived();
 		void OnChatMessageReceived();
 
 	private:
-		MessageWindowPtr m_window;
+		MessagesWindowPtr m_window;
 	};
 }

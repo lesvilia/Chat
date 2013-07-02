@@ -12,21 +12,18 @@ namespace msg
 	struct StateMessageData
 	{
 		StateMessageData();
-		StateMessageData(const ACE_INET_Addr& userAddr, const StateMessage& userMessage);
+		StateMessageData(const ACE_INET_Addr& userAddr, const StateMessagePtr& userMessage);
 		ACE_INET_Addr m_userAddr;
-		StateMessage m_userMessage;
+		StateMessagePtr m_userMessage;
 	};
 
 	struct ChatMessageData
 	{
 		ChatMessageData();
-		ChatMessageData(const ACE_INET_Addr& userAddr, const ChatMessage& userMessage);
+		ChatMessageData(const ACE_INET_Addr& userAddr, const ChatMessagePtr& userMessage);
 		ACE_INET_Addr m_userAddr;
-		ChatMessage m_userMessage;
+		ChatMessagePtr m_userMessage;
 	};
-
-	typedef std::shared_ptr<StateMessageData> StateMessagesDataPtr;
-	typedef std::shared_ptr<ChatMessageData> ChatMessagesDataPtr;
 
 	template<typename DataType>
 	class MessagesQueue
@@ -62,4 +59,10 @@ namespace msg
 		std::queue<DataType> m_messages;
 		Mutex m_mutex;
 	};
+
+	typedef std::shared_ptr<StateMessageData> StateMessageDataPtr;
+	typedef std::shared_ptr<ChatMessageData> ChatMessageDataPtr;
+	
+	typedef MessagesQueue<StateMessageDataPtr> StateMessagesQueue;
+	typedef MessagesQueue<ChatMessageDataPtr> ChatMessagesQueue;
 }

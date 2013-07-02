@@ -7,7 +7,7 @@ namespace msg
 	{
 	}
 
-	StateMessageData::StateMessageData(const ACE_INET_Addr& userAddr, const StateMessage& userMessage)
+	StateMessageData::StateMessageData(const ACE_INET_Addr& userAddr, const StateMessagePtr& userMessage)
 		: m_userAddr(userAddr)
 		, m_userMessage(userMessage)
 	{
@@ -17,7 +17,7 @@ namespace msg
 	{
 	}
 
-	ChatMessageData::ChatMessageData(const ACE_INET_Addr& userAddr, const ChatMessage& userMessage)
+	ChatMessageData::ChatMessageData(const ACE_INET_Addr& userAddr, const ChatMessagePtr& userMessage)
 		: m_userAddr(userAddr)
 		, m_userMessage(userMessage)
 	{
