@@ -18,8 +18,8 @@ namespace ui
 		{
 			login::UserDataPtr CreateUserData(QLineEdit* nameEdit, QLineEdit* passwordEdit)
 			{
-				std::wstring name(hlp::QStrToWStr(nameEdit->text()));
-				std::wstring password(hlp::QStrToWStr(passwordEdit->text()));
+				std::wstring name(qthlp::QStrToWStr(nameEdit->text()));
+				std::wstring password(qthlp::QStrToWStr(passwordEdit->text()));
 				return std::make_shared<login::UserData>(name, password);
 			}
 		}
@@ -93,7 +93,7 @@ namespace ui
 
 			StaticLink* link = new StaticLink();
 			link->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-			link->setText(hlp::SetLinkStyle("Registration"));
+			link->setText(qthlp::SetLinkStyle("Registration"));
 			connect(link, SIGNAL(clicked()), SLOT(SwitchToRegistrationMode()));
 
 			m_logNameEdit = new QLineEdit();
@@ -126,7 +126,7 @@ namespace ui
 
 			QLabel* loginLink = new StaticLink();
 			loginLink->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-			loginLink->setText(hlp::SetLinkStyle("Log In"));
+			loginLink->setText(qthlp::SetLinkStyle("Log In"));
 			connect(loginLink, SIGNAL(clicked()), SLOT(SwitchToLoginMode()));
 
 			m_regNameEdit = new QLineEdit();

@@ -9,6 +9,7 @@
 namespace net
 {
 	class INetUsersObserver;
+
 	class NetUsersManager
 		: private boost::noncopyable
 	{

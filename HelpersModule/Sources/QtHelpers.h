@@ -2,7 +2,7 @@
 #include <string>
 #include <QtCore\QString>
 
-namespace hlp
+namespace qthlp
 {
 	QString SetLinkStyle(const QString& str);
 	QString WStrToQStr(const std::wstring& str);

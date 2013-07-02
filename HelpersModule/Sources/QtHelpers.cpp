@@ -2,7 +2,7 @@
 #include "QtHelpers.h"
 #include <QObject>
 
-namespace hlp
+namespace qthlp
 {
 	QString SetLinkStyle(const QString& str)
 	{

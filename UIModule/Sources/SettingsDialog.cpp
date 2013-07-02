@@ -51,7 +51,7 @@ namespace ui
 
 			StaticLink* link = new StaticLink();
 			link->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
-			link->setText(hlp::SetLinkStyle("Restore default settings"));
+			link->setText(qthlp::SetLinkStyle("Restore default settings"));
 			connect(link, SIGNAL(clicked()), SLOT(RestoreDefaultSettings()));
 
 			m_addressWidget = new QComboBox();
@@ -82,7 +82,7 @@ namespace ui
 
 		void SettingsDialog::SaveSettings()
 		{
-			m_settingsMngr->SetCurrentAddress(hlp::QStrToWStr(m_addressWidget->currentText()));
+			m_settingsMngr->SetCurrentAddress(qthlp::QStrToWStr(m_addressWidget->currentText()));
 			m_settingsMngr->SetCurrentStatesPort(m_statePortEdit->text().toULong());
 			m_settingsMngr->SetCurrentMessagesPort(m_chatPortEdit->text().toULong());
 			accept();
@@ -97,12 +97,12 @@ namespace ui
 
 		void SettingsDialog::InitAddressesValues()
 		{ 
-			m_appropriateAddress = hlp::WStrToQStr(m_settingsMngr->GetCurrentNetAddres());
+			m_appropriateAddress = qthlp::WStrToQStr(m_settingsMngr->GetCurrentNetAddres());
 			std::vector<std::wstring> addresses(m_settingsMngr->GetActiveAddresses());
 			std::for_each(addresses.cbegin(), addresses.cend(),
 			[this](const std::wstring& addr)
 			{
-				m_addresses << hlp::WStrToQStr(addr);
+				m_addresses << qthlp::WStrToQStr(addr);
 			});
 		}
 
