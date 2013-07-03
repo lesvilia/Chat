@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "MessagesWindow.h"
+#include "MessagesReceiver.h"
 
 namespace msg
 {
@@ -11,17 +12,21 @@ namespace msg
 
 		LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
-			switch(message)
+			MessagesReceiver* msgReceiver = reinterpret_cast<MessagesReceiver*>(wParam);
+			if (msgReceiver != nullptr)
 			{
-			case WM_PROCESS_STATE_MSG:
-				return 0;
+				switch(message)
+				{
+				case WM_PROCESS_STATE_MSG:
+					msgReceiver->ProcessStateMessage();
+					return 0;
 
-			case WM_PROCESS_CHAT_MSG:
-				return 0;
-
-			default:
-				return DefWindowProc(hWnd, message, wParam, lParam);
+				case WM_PROCESS_CHAT_MSG:
+					msgReceiver->ProcessChatMessage();
+					return 0;
+				}
 			}
+			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
 	}
 

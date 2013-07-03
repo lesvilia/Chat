@@ -2,6 +2,7 @@
 #include "StateMessagesHandler.h"
 #include "MessagesReceiver.h"
 #include "MessagesTemplates.h"
+#include "LoginManager.h"
 #include "pugixml.hpp"
 
 namespace msg
@@ -24,7 +25,7 @@ namespace msg
 	void StateMessagesHandler::HandleMessage(const std::wstring& message, const ACE_INET_Addr& addr)
 	{
 		StateMessagePtr stateMsg(GetMsgDataFromXml(message));
-		if (stateMsg)
+		if (stateMsg && !IsMyBroadcastMessage(stateMsg->m_uuid))
 		{
 			StateMessageDataPtr newMessage(std::make_shared<StateMessageData>(addr, stateMsg)); //initialize newMessage (PugiXML)
 			m_msgQueue->Enqueue(newMessage);
@@ -32,7 +33,12 @@ namespace msg
 		}
 	}
 
-	StateMessagePtr GetMsgDataFromXml(const std::wstring& xmlMsg)
+	bool StateMessagesHandler::IsMyBroadcastMessage(const std::wstring& uuid)
+	{
+		return login::LoginManager::Instance()->GetCurrentUser()->uuid == uuid;
+	}
+
+	StateMessagePtr StateMessagesHandler::GetMsgDataFromXml(const std::wstring& xmlMsg)
 	{
 		StateMessagePtr stateMsg(std::make_shared<StateMessage>());
 		pugi::xml_document messageDoc;

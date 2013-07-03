@@ -37,16 +37,19 @@ namespace sm
 
 	std::wstring SettingsManager::GetCurrentNetAddres() const
 	{
+		Lock lock(m_mutex);
 		return m_currentNetAddress;
 	}
 
 	unsigned short SettingsManager::GetCurrentStatesPort() const
 	{
+		Lock lock(m_mutex);
 		return m_stateMsgPort;
 	}
 
 	unsigned short SettingsManager::GetCurrentMessagesPort() const
 	{
+		Lock lock(m_mutex);
 		return m_chatMsgPort;
 	}
 
@@ -68,6 +71,7 @@ namespace sm
 
 	void SettingsManager::SetCurrentAddress(const std::wstring& addr)
 	{
+		Lock lock(m_mutex);
 		std::vector<std::wstring> addresses(m_addressHolder->GetLocalAddresses());
 		auto iter = std::find(addresses.begin(), addresses.end(), addr);
 		if (iter != addresses.end())
@@ -82,11 +86,13 @@ namespace sm
 
 	void SettingsManager::SetCurrentStatesPort(unsigned short statePort)
 	{
+		Lock lock(m_mutex);
 		m_stateMsgPort = statePort ? statePort : DEFAULT_STATE_MSG_PORT;
 	}
 
 	void SettingsManager::SetCurrentMessagesPort(unsigned short chatPort)
 	{
+		Lock lock(m_mutex);
 		m_chatMsgPort = chatPort ? chatPort : DEFAULT_CHAT_MSG_PORT;
 	}
 

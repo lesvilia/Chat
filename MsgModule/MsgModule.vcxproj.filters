@@ -73,11 +73,14 @@
     <ClCompile Include="Sources\ChatServerSettingsHolder.cpp">
       <Filter>ChatMessageManager\src</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\ChatMessagesHahdler.cpp">
-      <Filter>ChatMessageManager\src</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\StateMessagesHandler.cpp">
       <Filter>StateMessageManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ChatMessagesManager.cpp">
+      <Filter>ChatMessageManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ChatMessagesHandler.cpp">
+      <Filter>ChatMessageManager\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -120,14 +123,20 @@
     <ClInclude Include="Sources\ChatServerSettingsHolder.h">
       <Filter>ChatMessageManager\src</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\ChatMessagesHahdler.h">
-      <Filter>ChatMessageManager\src</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\MessagesTemplates.h">
       <Filter>Messages</Filter>
     </ClInclude>
     <ClInclude Include="Sources\StateMessagesHandler.h">
       <Filter>StateMessageManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ChatMessagesManager.h">
+      <Filter>ChatMessageManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ChatMessagesHandler.h">
+      <Filter>ChatMessageManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\UIMessageHandler.h">
+      <Filter>MessagesReceiver</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

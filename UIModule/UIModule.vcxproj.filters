@@ -127,9 +127,6 @@
     <ClInclude Include="resource.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\UIMessageHandler.h">
-      <Filter>MainFrame</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\UISettings.h">
       <Filter>Settings</Filter>
     </ClInclude>

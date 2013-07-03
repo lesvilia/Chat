@@ -53,7 +53,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(ACE_ROOT)lib;$(OutDir);$(PUGIXML_ROOT)scripts\vs2010\x32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ACEd.lib;ComponentsModule.lib;pugixmlsd.lib</AdditionalDependencies>
+      <AdditionalDependencies>ACEd.lib;ComponentsModule.lib;pugixmld.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -75,14 +75,15 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(ACE_ROOT)lib;$(OutDir);$(PUGIXML_ROOT)scripts\vs2010\x32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ACE.lib;ComponentsModule.lib;pugixmls.lib</AdditionalDependencies>
+      <AdditionalDependencies>ACE.lib;ComponentsModule.lib;pugixml.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\ChatMessagesHahdler.cpp" />
+    <ClCompile Include="Sources\ChatMessagesHandler.cpp" />
+    <ClCompile Include="Sources\ChatMessagesManager.cpp" />
     <ClCompile Include="Sources\ChatServerSettingsHolder.cpp" />
     <ClCompile Include="Sources\Messages.cpp" />
     <ClCompile Include="Sources\MessagesQueue.cpp" />
@@ -98,7 +99,8 @@
     <ClCompile Include="Sources\UDPMessagesServer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sources\ChatMessagesHahdler.h" />
+    <ClInclude Include="Sources\ChatMessagesHandler.h" />
+    <ClInclude Include="Sources\ChatMessagesManager.h" />
     <ClInclude Include="Sources\ChatServerSettingsHolder.h" />
     <ClInclude Include="Sources\IMessagesHahdler.h" />
     <ClInclude Include="Sources\IServerSettingsHolder.h" />
@@ -114,6 +116,7 @@
     <ClInclude Include="Sources\targetver.h" />
     <ClInclude Include="Sources\Typedefs.h" />
     <ClInclude Include="Sources\UDPMessagesServer.h" />
+    <ClInclude Include="Sources\UIMessageHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

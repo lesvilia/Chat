@@ -16,7 +16,7 @@ namespace ui
 {
 	class MainFrame 
 		: public QMainWindow
-		, public UIMessageHandler
+		, public msg::UIMessageHandler
 		, public login::ILoginUIHandler
 		, public login::ILoginStateObserver
 		, public net::INetUsersObserver
@@ -48,6 +48,9 @@ namespace ui
 
 		//UIMessageHandler interface
 		virtual void AddNewMessage(const std::wstring& uuid, const std::wstring& message);
+
+	protected:
+		void closeEvent(QCloseEvent* event);
 
 	private:
 		int AddUserMsgView();

@@ -1,5 +1,6 @@
 #pragma once
 #include "MessagesWindow.h"
+#include "UIMessageHandler.h"
 
 namespace msg
 {
@@ -7,12 +8,15 @@ namespace msg
 		: private boost::noncopyable
 	{
 	public:
-		MessagesReceiver();
+		MessagesReceiver(UIMessageHandler* uiHandler);
 		~MessagesReceiver();
+		void ProcessStateMessage();
+		void ProcessChatMessage();
 		void OnStateMessageReceived();
 		void OnChatMessageReceived();
 
 	private:
+		UIMessageHandler* m_uiHandler;
 		MessagesWindowPtr m_window;
 	};
 }

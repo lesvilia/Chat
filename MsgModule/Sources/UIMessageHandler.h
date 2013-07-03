@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-namespace ui
+namespace msg
 {
 	class UIMessageHandler
 	{

@@ -10,23 +10,24 @@ namespace msg
 	class UDPMessageServer;
 	class StateServerSettingsHolder;
 
-	class StateMessageManager
+	class StateMessagesManager
 		: private boost::noncopyable
 		, public login::ILoginStateObserver
 	{
 	public:
-		static StateMessageManager* Instance();
-		void SendMessage(State currentState);
-		void SendBroadcastMessage(State currentState);
+		static StateMessagesManager* Instance();
+		void SendResponseToConnect(const ACE_INET_Addr& userAddr);
 		void Activate(MessagesReceiver* receiver);
 		StateMessagesQueue* GetMessagesQueue();
 		void ResetServer();
 		virtual void OnlineStateChanged();
 
 	private:
-		StateMessageManager();
-		~StateMessageManager();
+		StateMessagesManager();
+		~StateMessagesManager();
 		std::wstring CreateMessage(State currentState);
+		void SendMessageToUsers(State currentState);
+		void SendBroadcastMessage(State currentState);
 
 	private:
 		std::unique_ptr<StateMessagesQueue> m_msgQueue;

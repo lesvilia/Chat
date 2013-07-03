@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include "boost/thread/mutex.hpp"
 
 namespace sm
 {
@@ -12,6 +13,9 @@ namespace sm
 
 	class SettingsManager
 	{
+		typedef boost::mutex Mutex;
+		typedef boost::unique_lock<Mutex> Lock;
+
 	public:
 		static SettingsManager* Instance();
 		std::wstring GetCurrentNetAddres() const;
@@ -34,6 +38,7 @@ namespace sm
 		std::wstring m_currentNetAddress;
 		unsigned short m_stateMsgPort;
 		unsigned short m_chatMsgPort;
+		mutable Mutex m_mutex;
 	};
 }
 

@@ -53,7 +53,11 @@ namespace msg
 				size_t result = m_udpSocket->recv(&buff[0], BUFFER_SISE * sizeof(wchar_t), userAddr, 0, &TIMEOUT);
 				if (result > 0)
 				{
-					m_msgHandler->HandleMessage(&buff[0], userAddr);
+					std::wstring message(&buff[0]);
+					if (!message.empty())
+					{
+						m_msgHandler->HandleMessage(&buff[0], userAddr);
+					}
 				}
 			}
 			else
@@ -70,8 +74,10 @@ namespace msg
 
 	void UDPMessageServer::Shutdown()
 	{
-		Lock lock(m_mutex);
-		m_shouldShutdown = true;
+		{
+			Lock lock(m_mutex);
+			m_shouldShutdown = true;
+		}
 		m_condVariable.notify_one();
 	}
 

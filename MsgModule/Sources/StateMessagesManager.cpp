@@ -18,31 +18,44 @@ namespace msg
 		const unsigned short TEMP_PORT = 0;
 	}
 
-	StateMessageManager* StateMessageManager::Instance()
+	StateMessagesManager* StateMessagesManager::Instance()
 	{
-		static StateMessageManager manager;
+		static StateMessagesManager manager;
 		return &manager;
 	}
 
-	StateMessageManager::StateMessageManager()
+	StateMessagesManager::StateMessagesManager()
 		: m_msgQueue(new StateMessagesQueue())
 		, m_settingsHolder(new StateServerSettingsHolder(sm::SettingsManager::Instance()))
 	{
 		login::LoginManager::Instance()->Subscribe(this);
 	}
 
-	StateMessageManager::~StateMessageManager()
+	StateMessagesManager::~StateMessagesManager()
 	{
 		m_server->Shutdown();
 	}
 
-	void StateMessageManager::SendMessage(State currentState)
+	void StateMessagesManager::SendResponseToConnect(const ACE_INET_Addr& userAddr)
+	{
+		net::WSAStartupHolder wsaHolder(MAKEWORD(2, 2));
+		if (wsaHolder.GetErrorCode() == 0)
+		{
+			std::wstring message(CreateMessage(CONNECT_RESPONSE_STATE));
+			ACE_INET_Addr currentAddr(TEMP_PORT, m_settingsHolder->GetAddress().c_str());
+			ACE_SOCK_Dgram udpSocket(currentAddr);
+			udpSocket.send(message.c_str(), message.size() * sizeof(wchar_t), userAddr);
+			udpSocket.close();
+		}
+	}
+
+	void StateMessagesManager::SendMessageToUsers(State currentState)
 	{
 		net::WSAStartupHolder wsaHolder(MAKEWORD(2, 2));
 		if (wsaHolder.GetErrorCode() == 0)
 		{
 			std::wstring message(CreateMessage(currentState));
-			ACE_INET_Addr currentAddr(TEMP_PORT, sm::SettingsManager::Instance()->GetCurrentNetAddres().c_str());
+			ACE_INET_Addr currentAddr(TEMP_PORT, m_settingsHolder->GetAddress().c_str());
 			ACE_SOCK_Dgram udpSocket(currentAddr);
 			
 			std::vector<ACE_INET_Addr> usersAddresses(net::NetUsersManager::Instance()->GetNetUserAddresses());
@@ -55,20 +68,20 @@ namespace msg
 		}
 	}
 
-	void StateMessageManager::SendBroadcastMessage(State currentState)
+	void StateMessagesManager::SendBroadcastMessage(State currentState)
 	{
 		net::WSAStartupHolder wsaHolder(MAKEWORD(2, 2));
 		if (wsaHolder.GetErrorCode() == 0)
 		{
 			std::wstring message(CreateMessage(currentState));
-			ACE_INET_Addr currentAddr(TEMP_PORT, sm::SettingsManager::Instance()->GetCurrentNetAddres().c_str());
+			ACE_INET_Addr currentAddr(TEMP_PORT, m_settingsHolder->GetAddress().c_str());
 			ACE_SOCK_Dgram_Bcast udpBroadcastSocket(currentAddr);
-			udpBroadcastSocket.send(message.c_str(), message.size() * sizeof(wchar_t), sm::SettingsManager::Instance()->GetCurrentStatesPort());
+			size_t result = udpBroadcastSocket.send(message.c_str(), message.size() * sizeof(wchar_t), m_settingsHolder->GetPort());
 			udpBroadcastSocket.close();
 		}
 	}
 
-	void StateMessageManager::Activate(MessagesReceiver* receiver)
+	void StateMessagesManager::Activate(MessagesReceiver* receiver)
 	{
 		if (!m_server)
 		{
@@ -77,24 +90,30 @@ namespace msg
 		}
 	}
 
-	StateMessagesQueue* StateMessageManager::GetMessagesQueue()
+	StateMessagesQueue* StateMessagesManager::GetMessagesQueue()
 	{
 		return m_msgQueue.get();
 	}
 
-	void StateMessageManager::ResetServer()
+	void StateMessagesManager::ResetServer()
 	{
 		m_server->Reset();
 	}
 
-	std::wstring StateMessageManager::CreateMessage(State currentState)
+	std::wstring StateMessagesManager::CreateMessage(State currentState)
 	{
-		using namespace login;
-		UserDataPtr user(LoginManager::Instance()->GetCurrentUser());
-		return std::wstring((boost::wformat(STATE_MESSAGE) % user->uuid % user->name % currentState).str());
+		try
+		{
+			login::UserDataPtr user(login::LoginManager::Instance()->GetCurrentUser());
+			return boost::str(boost::wformat(STATE_MESSAGE_FORMAT) % user->uuid % user->name % currentState);
+		}
+		catch (const std::exception&) 
+		{
+			return std::wstring();
+		}
 	}
 
-	void StateMessageManager::OnlineStateChanged()
+	void StateMessagesManager::OnlineStateChanged()
 	{
 		if (login::LoginManager::Instance()->IsOnline())
 		{
@@ -103,7 +122,7 @@ namespace msg
 		}
 		else
 		{
-			SendMessage(DISCONNECT_STATE);
+			SendMessageToUsers(DISCONNECT_STATE);
 		}
 	}
 }

@@ -2,7 +2,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QMenuBar>
-#include <QEvent>
+#include <QCloseEvent>
 #include <QMessageBox>
 #include "Mainframe.h"
 #include "NetUsersManager.h"
@@ -10,6 +10,7 @@
 #include "SettingsDialog.h"
 #include "SettingsManager.h"
 #include "LoginManager.h"
+#include "ChatMessagesManager.h"
 #include "UISettings.h"
 #include "QtHelpers.h"
 
@@ -160,6 +161,12 @@ namespace ui
 		}
 	}
 
+	void MainFrame::closeEvent(QCloseEvent* event)
+	{
+		LogOut();
+		event->accept();
+	}
+
 	void MainFrame::SendMessageToUser()
 	{
 		if (login::LoginManager::Instance()->IsOnline())
@@ -171,7 +178,11 @@ namespace ui
 				QTextEdit* msgEdit = static_cast<QTextEdit*>(wdgSplitter->widget(1));
 				QString message(msgEdit->toPlainText());
 				PrepareMessage(message);
-				AddMessageToView(m_currentUser, message, msgView);
+				if (!message.isEmpty())
+				{
+					AddMessageToView(m_currentUser, message, msgView);
+					msg::ChatMessagesManager::Instance()->Send(m_currentItem->GetUserID(), qthlp::QStrToWStr(message));
+				}
 				msgEdit->clear();
 			}
 		}
@@ -179,12 +190,9 @@ namespace ui
 
 	void MainFrame::AddMessageToView(const QString& userName, const QString& msg, QTextEdit* view)
 	{
-		if (!msg.isEmpty())
-		{
-			view->append(qthlp::SetBoldStyle(userName));
-			view->append(msg);
-			view->append("");
-		}
+		view->append(qthlp::SetBoldStyle(userName));
+		view->append(msg);
+		view->append("");
 	}
 
 	void MainFrame::SetupUI()
