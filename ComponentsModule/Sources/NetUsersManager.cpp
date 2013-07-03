@@ -10,7 +10,7 @@ namespace net
 	{
 	}
 
-	NetUsersManager::NetUserData::NetUserData(const std::wstring& userName, const ACE_INET_Addr& userAddress)
+	NetUsersManager::NetUserData::NetUserData(const std::wstring& userName, const std::wstring& userAddress)
 		: name(userName)
 		, address(userAddress)
 	{
@@ -36,7 +36,7 @@ namespace net
 		m_observers.push_back(observer);
 	}
 
-	void NetUsersManager::AddNewUser(const std::wstring& uuid, const std::wstring& name, const ACE_INET_Addr& addr)
+	void NetUsersManager::AddNewUser(const std::wstring& uuid, const std::wstring& name, const std::wstring& addr)
 	{
 		m_netUsers.insert(std::make_pair(uuid, std::make_shared<NetUserData>(name, addr)));
 		UserConnectedNotify(uuid);
@@ -48,7 +48,7 @@ namespace net
 		UserDisconnectedNotify(uuid);
 	}
 
-	ACE_INET_Addr NetUsersManager::GetNetUserAddress(const std::wstring& uuid)
+	std::wstring NetUsersManager::GetNetUserAddress(const std::wstring& uuid)
 	{
 		auto iter = m_netUsers.find(uuid);
 		if (iter != m_netUsers.end())
@@ -57,13 +57,13 @@ namespace net
 		}
 		else
 		{
-			return ACE_INET_Addr();
+			return std::wstring();
 		}
 	}
 
-	std::vector<ACE_INET_Addr> NetUsersManager::GetNetUserAddresses() const
+	std::vector<std::wstring> NetUsersManager::GetNetUserAddresses() const
 	{
-		std::vector<ACE_INET_Addr> usersAddresses;
+		std::vector<std::wstring> usersAddresses;
 		for (auto it = m_netUsers.begin(); it != m_netUsers.end(); ++it)
 		{
 			usersAddresses.push_back(it->second->address);

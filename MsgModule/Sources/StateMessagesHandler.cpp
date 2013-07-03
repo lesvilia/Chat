@@ -3,15 +3,11 @@
 #include "MessagesReceiver.h"
 #include "MessagesTemplates.h"
 #include "LoginManager.h"
+#include "StringHelpers.h"
 #include "pugixml.hpp"
 
 namespace msg
 {
-	namespace 
-	{
-
-	}
-
 	StateMessagesHandler::StateMessagesHandler(MessagesReceiver* msgReceiver, StateMessagesQueue* msgQueue)
 		: m_msgReceiver(msgReceiver)
 		, m_msgQueue(msgQueue)
@@ -27,7 +23,8 @@ namespace msg
 		StateMessagePtr stateMsg(GetMsgDataFromXml(message));
 		if (stateMsg && !IsMyBroadcastMessage(stateMsg->m_uuid))
 		{
-			StateMessageDataPtr newMessage(std::make_shared<StateMessageData>(addr, stateMsg)); //initialize newMessage (PugiXML)
+			std::wstring userAddr(strhlp::StrToWstr(addr.get_host_addr()));
+			StateMessageDataPtr newMessage(std::make_shared<StateMessageData>(userAddr, stateMsg)); //initialize newMessage (PugiXML)
 			m_msgQueue->Enqueue(newMessage);
 			m_msgReceiver->OnStateMessageReceived();
 		}

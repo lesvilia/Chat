@@ -43,8 +43,10 @@ namespace msg
 			std::wstring message(CreateMessage(txtMessage));
 			ACE_INET_Addr currentAddr(TEMP_PORT, m_settingsHolder->GetAddress().c_str());
 			ACE_SOCK_Dgram udpSocket(currentAddr);
-			ACE_INET_Addr userAddr(net::NetUsersManager::Instance()->GetNetUserAddress(uuid));
-			udpSocket.send(message.c_str(), message.size() * sizeof(wchar_t), userAddr);
+			std::wstring addr(net::NetUsersManager::Instance()->GetNetUserAddress(uuid));
+			ACE_INET_Addr userAddr(m_settingsHolder->GetPort(), addr.c_str());
+
+			size_t res = udpSocket.send(message.c_str(), message.size() * sizeof(wchar_t), userAddr);
 			udpSocket.close();
 		}
 	}

@@ -2,6 +2,7 @@
 #include "ChatMessagesHandler.h"
 #include "MessagesReceiver.h"
 #include "MessagesTemplates.h"
+#include "StringHelpers.h"
 #include "pugixml.hpp"
 
 namespace msg
@@ -21,7 +22,8 @@ namespace msg
 		ChatMessagePtr chatMsg(GetMsgDataFromXml(message));
 		if (chatMsg)
 		{
-			ChatMessageDataPtr newMessage(std::make_shared<ChatMessageData>(addr, chatMsg)); //initialize newMessage (PugiXML)
+			std::wstring userAddr(strhlp::StrToWstr(addr.get_host_addr()));
+			ChatMessageDataPtr newMessage(std::make_shared<ChatMessageData>(userAddr, chatMsg)); //initialize newMessage (PugiXML)
 			m_msgQueue->Enqueue(newMessage);
 			m_msgReceiver->OnChatMessageReceived();
 		}

@@ -238,7 +238,7 @@ namespace ui
 
 		QBoxLayout* msgBotomWidget = new QBoxLayout(QBoxLayout::RightToLeft);
 		QPushButton* sendMsgButton = new QPushButton(BUTTON_TEXT);
-		connect(sendMsgButton, SIGNAL(clicked(bool)), SLOT(SendMessage()));
+		connect(sendMsgButton, SIGNAL(clicked(bool)), SLOT(SendMessageToUser()));
 		sendMsgButton->setMinimumWidth(MIN_BUTTON_WIDTH);
 
 		m_stateLabel = new QLabel();

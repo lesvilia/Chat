@@ -5,23 +5,22 @@
 #include "boost/thread/mutex.hpp"
 #include "Messages.h"
 #include "Typedefs.h"
-#include "ace/INET_Addr.h"
 
 namespace msg
 {
 	struct StateMessageData
 	{
 		StateMessageData();
-		StateMessageData(const ACE_INET_Addr& userAddr, const StateMessagePtr& userMessage);
-		ACE_INET_Addr m_userAddr;
+		StateMessageData(const std::wstring& userAddr, const StateMessagePtr& userMessage);
+		std::wstring m_userAddr;
 		StateMessagePtr m_userMessage;
 	};
 
 	struct ChatMessageData
 	{
 		ChatMessageData();
-		ChatMessageData(const ACE_INET_Addr& userAddr, const ChatMessagePtr& userMessage);
-		ACE_INET_Addr m_userAddr;
+		ChatMessageData(const std::wstring& userAddr, const ChatMessagePtr& userMessage);
+		std::wstring m_userAddr;
 		ChatMessagePtr m_userMessage;
 	};
 

@@ -16,6 +16,12 @@
     <Filter Include="QtHelpers\src">
       <UniqueIdentifier>{111f9781-aa8d-456e-91fe-0a0468818e88}</UniqueIdentifier>
     </Filter>
+    <Filter Include="StringHelpers">
+      <UniqueIdentifier>{0e026ed3-1a9d-44a0-893e-8d48c1c0bd21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StringHelpers\src">
+      <UniqueIdentifier>{877744a4-6dec-4b3d-a255-8f691de1785d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -30,6 +36,9 @@
     <ClCompile Include="Sources\QtHelpers.cpp">
       <Filter>QtHelpers\src</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\StringHelpers.cpp">
+      <Filter>StringHelpers\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\stdafx.h">
@@ -43,6 +52,9 @@
     </ClInclude>
     <ClInclude Include="Sources\QtHelpers.h">
       <Filter>QtHelpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\StringHelpers.h">
+      <Filter>StringHelpers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

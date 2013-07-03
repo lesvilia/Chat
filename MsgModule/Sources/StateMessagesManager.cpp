@@ -36,7 +36,7 @@ namespace msg
 		m_server->Shutdown();
 	}
 
-	void StateMessagesManager::SendResponseToConnect(const ACE_INET_Addr& userAddr)
+	void StateMessagesManager::SendResponseToConnect(const std::wstring& addr)
 	{
 		net::WSAStartupHolder wsaHolder(MAKEWORD(2, 2));
 		if (wsaHolder.GetErrorCode() == 0)
@@ -44,7 +44,9 @@ namespace msg
 			std::wstring message(CreateMessage(CONNECT_RESPONSE_STATE));
 			ACE_INET_Addr currentAddr(TEMP_PORT, m_settingsHolder->GetAddress().c_str());
 			ACE_SOCK_Dgram udpSocket(currentAddr);
-			udpSocket.send(message.c_str(), message.size() * sizeof(wchar_t), userAddr);
+			ACE_INET_Addr userAddr(m_settingsHolder->GetPort(), addr.c_str());
+			
+			size_t res = udpSocket.send(message.c_str(), message.size() * sizeof(wchar_t), userAddr);
 			udpSocket.close();
 		}
 	}
@@ -58,11 +60,12 @@ namespace msg
 			ACE_INET_Addr currentAddr(TEMP_PORT, m_settingsHolder->GetAddress().c_str());
 			ACE_SOCK_Dgram udpSocket(currentAddr);
 			
-			std::vector<ACE_INET_Addr> usersAddresses(net::NetUsersManager::Instance()->GetNetUserAddresses());
+			std::vector<std::wstring> usersAddresses(net::NetUsersManager::Instance()->GetNetUserAddresses());
 			std::for_each(usersAddresses.begin(), usersAddresses.end(),
-			[&](const ACE_INET_Addr& addr)
+			[&](const std::wstring& addr)
 			{
-				udpSocket.send(message.c_str(), message.size() * sizeof(wchar_t), addr);
+				ACE_INET_Addr userAddr(m_settingsHolder->GetPort(), addr.c_str());
+				udpSocket.send(message.c_str(), message.size() * sizeof(wchar_t), userAddr);
 			});
 			udpSocket.close();
 		}

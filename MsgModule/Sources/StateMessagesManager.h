@@ -16,7 +16,7 @@ namespace msg
 	{
 	public:
 		static StateMessagesManager* Instance();
-		void SendResponseToConnect(const ACE_INET_Addr& userAddr);
+		void SendResponseToConnect(const std::wstring& addr);
 		void Activate(MessagesReceiver* receiver);
 		StateMessagesQueue* GetMessagesQueue();
 		void ResetServer();

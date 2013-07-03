@@ -18,19 +18,19 @@ namespace net
 		struct NetUserData
 		{
 			NetUserData();
-			NetUserData(const std::wstring& userName, const ACE_INET_Addr& userAddress);
+			NetUserData(const std::wstring& userName, const std::wstring& userAddress);
 			std::wstring name;
-			ACE_INET_Addr address;
+			std::wstring address;
 		};
 		typedef std::shared_ptr<NetUserData> NetUserDataPtr;
 
 	public:
 		static NetUsersManager* Instance();
 		void Subscribe(INetUsersObserver* observer);
-		void AddNewUser(const std::wstring& uuid, const std::wstring& name, const ACE_INET_Addr& addr);
+		void AddNewUser(const std::wstring& uuid, const std::wstring& name, const std::wstring& addr);
 		void RemoveUser(const std::wstring& uuid);
-		ACE_INET_Addr GetNetUserAddress(const std::wstring& uuid);
-		std::vector<ACE_INET_Addr> GetNetUserAddresses() const;
+		std::wstring GetNetUserAddress(const std::wstring& uuid);
+		std::vector<std::wstring> GetNetUserAddresses() const;
 		std::wstring GetNetUserName(const std::wstring& uuid);
 		bool IsUserExist(const std::wstring& uuid);
 		virtual void OnlineStateChanged();
