@@ -38,15 +38,15 @@ namespace msg
 	void ChatMessagesManager::Send(const std::wstring& uuid, const std::wstring& txtMessage)
 	{
 		net::WSAStartupHolder wsaHolder(MAKEWORD(2, 2));
-		if (wsaHolder.GetErrorCode() == 0)
+		if ((wsaHolder.GetErrorCode() == 0) && net::NetUsersManager::Instance()->IsUserExist(uuid))
 		{
 			std::wstring message(CreateMessage(txtMessage));
-			ACE_INET_Addr currentAddr(TEMP_PORT, m_settingsHolder->GetAddress().c_str());
-			ACE_SOCK_Dgram udpSocket(currentAddr);
 			std::wstring addr(net::NetUsersManager::Instance()->GetNetUserAddress(uuid));
 			ACE_INET_Addr userAddr(m_settingsHolder->GetPort(), addr.c_str());
-
-			size_t res = udpSocket.send(message.c_str(), message.size() * sizeof(wchar_t), userAddr);
+			ACE_INET_Addr currentAddr(TEMP_PORT, m_settingsHolder->GetAddress().c_str());
+			
+			ACE_SOCK_Dgram udpSocket(currentAddr);
+			udpSocket.send(message.c_str(), message.size() * sizeof(wchar_t), userAddr);
 			udpSocket.close();
 		}
 	}

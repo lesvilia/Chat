@@ -42,10 +42,9 @@ namespace msg
 		if (wsaHolder.GetErrorCode() == 0)
 		{
 			std::wstring message(CreateMessage(CONNECT_RESPONSE_STATE));
+			ACE_INET_Addr userAddr(m_settingsHolder->GetPort(), addr.c_str());
 			ACE_INET_Addr currentAddr(TEMP_PORT, m_settingsHolder->GetAddress().c_str());
 			ACE_SOCK_Dgram udpSocket(currentAddr);
-			ACE_INET_Addr userAddr(m_settingsHolder->GetPort(), addr.c_str());
-			
 			size_t res = udpSocket.send(message.c_str(), message.size() * sizeof(wchar_t), userAddr);
 			udpSocket.close();
 		}
@@ -126,6 +125,7 @@ namespace msg
 		else
 		{
 			SendMessageToUsers(DISCONNECT_STATE);
+			net::NetUsersManager::Instance()->RemoveUsers();
 		}
 	}
 }

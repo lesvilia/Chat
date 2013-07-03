@@ -5,7 +5,6 @@
 #include <string>
 #include "ace/INET_Addr.h"
 #include "boost/noncopyable.hpp"
-#include "LoginHandlers.h"
 
 namespace net
 {
@@ -13,7 +12,6 @@ namespace net
 
 	class NetUsersManager
 		: private boost::noncopyable
-		, public login::ILoginStateObserver
 	{
 		struct NetUserData
 		{
@@ -29,11 +27,11 @@ namespace net
 		void Subscribe(INetUsersObserver* observer);
 		void AddNewUser(const std::wstring& uuid, const std::wstring& name, const std::wstring& addr);
 		void RemoveUser(const std::wstring& uuid);
+		void RemoveUsers();
 		std::wstring GetNetUserAddress(const std::wstring& uuid);
 		std::vector<std::wstring> GetNetUserAddresses() const;
 		std::wstring GetNetUserName(const std::wstring& uuid);
 		bool IsUserExist(const std::wstring& uuid);
-		virtual void OnlineStateChanged();
 
 	private:
 		NetUsersManager();

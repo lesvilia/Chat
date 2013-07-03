@@ -46,7 +46,6 @@ namespace ui
 		: QMainWindow(parent)
 		, m_userListWidget(nullptr)
 		, m_msgBoxStackedWidget(nullptr)
-		, m_currentItem(nullptr)
 		, m_stateLabel(nullptr)
 	{
 		SetupUI();
@@ -78,7 +77,6 @@ namespace ui
 			QString newUser(qthlp::WStrToQStr(user->name));
 			if (m_currentUser != newUser)
 			{
-				ClearMsgWidgets();
 				m_currentUser = newUser;
 				QString stateMessage(tr(STATE_LABEL_FORMAT).arg(qthlp::SetBoldStyle(m_currentUser), ONLINE_STATE));
 				m_stateLabel->setText(stateMessage);
@@ -86,7 +84,6 @@ namespace ui
 		}
 		else
 		{
-			ClearMsgWidgets();
 			m_stateLabel->setText(OFLINE_STATE);
 		}
 	}
@@ -105,7 +102,7 @@ namespace ui
 	{
 		controls::UserListItem* userItem = AddUserListItem(net::NetUsersManager::Instance()->GetNetUserName(uuid), uuid);
 		int viewID = AddUserMsgView();
-		m_userItems[uuid] = UserItem(userItem, viewID);
+		m_userItems.insert(std::make_pair(uuid, UserItem(userItem, viewID)));
 	}
 
 	void MainFrame::RemoveUser(const std::wstring& uuid)
@@ -113,7 +110,7 @@ namespace ui
 		auto iter = m_userItems.find(uuid);
 		if (iter != m_userItems.end())
 		{
-			m_userListWidget->removeItemWidget(iter->second.userlistItem);
+			std::unique_ptr<QListWidgetItem> listItem(m_userListWidget->takeItem(m_userListWidget->row(iter->second.userlistItem)));
 			m_msgBoxStackedWidget->removeWidget(m_msgBoxStackedWidget->widget(iter->second.msgWidgetID));
 		}
 	}
@@ -124,6 +121,7 @@ namespace ui
 		userItem->setSizeHint(QSize(25, 25));
 
 		m_userListWidget->addItem(userItem);
+		m_userListWidget->setCurrentItem(userItem);
 		return userItem;
 	}
 
@@ -155,7 +153,10 @@ namespace ui
 			if (wdgSplitter)
 			{
 				QTextEdit* msgView = static_cast<QTextEdit*>(wdgSplitter->widget(0));
-				AddMessageToView(item.userlistItem->text(), qthlp::WStrToQStr(message), msgView);
+				if (msgView)
+				{
+					AddMessageToView(item.userlistItem->text(), qthlp::WStrToQStr(message), msgView);
+				}
 			}
 		}
 	}
@@ -183,7 +184,11 @@ namespace ui
 				if (!message.isEmpty())
 				{
 					AddMessageToView(m_currentUser, message, msgView);
-					msg::ChatMessagesManager::Instance()->Send(m_currentItem->GetUserID(), qthlp::QStrToWStr(message));
+					controls::UserListItem* currentItem = static_cast<controls::UserListItem*>(m_userListWidget->currentItem());
+					if (currentItem)
+					{
+						msg::ChatMessagesManager::Instance()->Send(currentItem->GetUserID(), qthlp::QStrToWStr(message));
+					}
 				}
 				msgEdit->clear();
 			}
@@ -264,8 +269,8 @@ namespace ui
 		QWidget* verticalWidget = new QWidget();
 		QVBoxLayout* verticalLayout = new QVBoxLayout();
 		m_userListWidget = new QListWidget();
-		connect(m_userListWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
-			this, SLOT(ListItemChanged(QListWidgetItem*, QListWidgetItem*)));
+		connect(m_userListWidget, SIGNAL(itemActivated(QListWidgetItem*)),
+			this, SLOT(ListItemChanged(QListWidgetItem*)));
 
 		QLabel* label = new QLabel(USERS_LABEL_TEXT);
 		label->setAlignment(Qt::AlignCenter);
@@ -298,29 +303,18 @@ namespace ui
 		return horizontalLayout;
 	}
 
-	void MainFrame::ClearMsgWidgets()
-	{
-		std::for_each(m_userItems.begin(), m_userItems.end(),
-		[this](const std::pair<std::wstring, UserItem>& item)
-		{
-			QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStackedWidget->widget(item.second.msgWidgetID));
-			QTextEdit* msgView = static_cast<QTextEdit*>(wdgSplitter->widget(0));
-			QTextEdit* msgEdit = static_cast<QTextEdit*>(wdgSplitter->widget(1));
-			msgView->clear();
-			msgEdit->clear();
-		});
-	}
-
 	/*------------------Slots-------------*/
 
-	void MainFrame::ListItemChanged(QListWidgetItem* currentItem, QListWidgetItem* prevItem)
+	void MainFrame::ListItemChanged(QListWidgetItem* currentItem)
 	{
 		controls::UserListItem* item = static_cast<controls::UserListItem*>(currentItem);
-		auto iter = m_userItems.find(item->GetUserID());
-		if (iter != m_userItems.end())
+		if (item)
 		{
-			m_currentItem = item;
-			m_msgBoxStackedWidget->setCurrentIndex(iter->second.msgWidgetID); 
+			auto iter = m_userItems.find(item->GetUserID());
+			if (iter != m_userItems.end())
+			{
+				m_msgBoxStackedWidget->setCurrentIndex(iter->second.msgWidgetID); 
+			}
 		}
 	}
 
@@ -332,11 +326,8 @@ namespace ui
 			QList<int> newSizesWdg(wdgSplitter->sizes());
 			for(auto it = m_userItems.begin(); it != m_userItems.end(); ++it)
 			{
-				if (it->first != m_currentItem->GetUserID())
-				{
-					QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStackedWidget->widget(it->second.msgWidgetID));
-					wdgSplitter->setSizes(newSizesWdg);
-				}
+				QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStackedWidget->widget(it->second.msgWidgetID));
+				wdgSplitter->setSizes(newSizesWdg);
 			}
 		}
 	}

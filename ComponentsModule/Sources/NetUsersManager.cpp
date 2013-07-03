@@ -24,7 +24,6 @@ namespace net
 
 	NetUsersManager::NetUsersManager()
 	{
-		login::LoginManager::Instance()->Subscribe(this);
 	}
 
 	NetUsersManager::~NetUsersManager()
@@ -46,6 +45,15 @@ namespace net
 	{
 		m_netUsers.erase(uuid);
 		UserDisconnectedNotify(uuid);
+	}
+
+	void NetUsersManager::RemoveUsers()
+	{
+		for (auto it = m_netUsers.begin(); it != m_netUsers.end(); ++it)
+		{
+			UserDisconnectedNotify(it->first);
+		}
+		m_netUsers.clear();
 	}
 
 	std::wstring NetUsersManager::GetNetUserAddress(const std::wstring& uuid)
@@ -87,18 +95,6 @@ namespace net
 	bool NetUsersManager::IsUserExist(const std::wstring& uuid)
 	{
 		return m_netUsers.find(uuid) != m_netUsers.end();
-	}
-
-	void NetUsersManager::OnlineStateChanged()
-	{
-		if (!login::LoginManager::Instance()->IsOnline())
-		{
-			for (auto it = m_netUsers.begin(); it != m_netUsers.end(); ++it)
-			{
-				UserDisconnectedNotify(it->first);
-			}
-			m_netUsers.clear();
-		}
 	}
 
 	void NetUsersManager::UserConnectedNotify(const std::wstring& uuid)

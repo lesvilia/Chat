@@ -58,7 +58,6 @@ namespace ui
 		void AddMessageToView(const QString& userName, const QString& msg, QTextEdit* view);
 		void AddNewUser(const std::wstring& uuid);
 		void RemoveUser(const std::wstring& uuid);
-		void ClearMsgWidgets();
 		void SetupUI();
 		void CreateMenuBar();
 		QWidget* CreateMessagesWidget();
@@ -66,7 +65,7 @@ namespace ui
 		QHBoxLayout* CreateMainLayout(QWidget* leftWidget, QWidget* rightWidget);
 	
 	private slots:
-		void ListItemChanged(QListWidgetItem* currentItem, QListWidgetItem* prevItem);
+		void ListItemChanged(QListWidgetItem* currentItem);
 		void ResizeMessagesView();
 		void SendMessageToUser();
 		void LogIn();
@@ -77,7 +76,6 @@ namespace ui
 	private:
 		QListWidget*			m_userListWidget;
 		QStackedWidget*			m_msgBoxStackedWidget;
-		controls::UserListItem*	m_currentItem;
 		QLabel*					m_stateLabel;
 		QString					m_currentUser;
 		std::map<std::wstring, UserItem> m_userItems;
