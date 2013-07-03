@@ -63,7 +63,6 @@ namespace ui
 			m_mainLayout->addWidget(m_loginWidget);
 			m_mainLayout->addWidget(m_registrationWidget);
 			setLayout(m_mainLayout);
-			resize(DIALOG_WIDTH, DIALOG_HEIGHT);
 		}
 
 		void LoginDialog::SwitchToRegistrationMode()

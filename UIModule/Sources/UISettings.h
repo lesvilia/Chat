@@ -7,8 +7,8 @@ namespace settings
 	{
 		namespace sizes
 		{
-			const unsigned MAINFRAME_WIDTH = 800;
-			const unsigned MAINFRAME_HEIGH = 600;
+			const unsigned MAINFRAME_WIDTH = 700;
+			const unsigned MAINFRAME_HEIGH = 500;
 
 			const unsigned LEFT_PART_WIDTH = MAINFRAME_WIDTH / 3;
 			const unsigned RIGHT_PART_WIDTH = MAINFRAME_WIDTH - LEFT_PART_WIDTH;
@@ -64,8 +64,6 @@ namespace settings
 
 	namespace logindialog
 	{
-		const unsigned DIALOG_WIDTH = 300;
-		const unsigned DIALOG_HEIGHT = 150;
 		const QString LOGIN_TITLE("Log In");
 		const QString REGISTRATION_TITLE("Registration");
 		const QString LABEL_NAME("Name:");

@@ -99,10 +99,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="client.png">
+    <None Include="chat_icon.png">
       <Filter>Resources</Filter>
     </None>
-    <None Include="user.png">
+    <None Include="user_ico.png">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="LChat.ico">
       <Filter>Resources</Filter>
     </None>
   </ItemGroup>
@@ -130,5 +133,10 @@
     <ClInclude Include="Sources\UISettings.h">
       <Filter>Settings</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="UIModule.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

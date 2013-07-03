@@ -50,7 +50,6 @@ namespace ui
 		, m_stateLabel(nullptr)
 	{
 		SetupUI();
-		resize(MAINFRAME_WIDTH, MAINFRAME_HEIGH);
 		login::LoginManager::Instance()->Subscribe(this);
 		net::NetUsersManager::Instance()->Subscribe(this);
 	}
@@ -210,6 +209,7 @@ namespace ui
 		setCentralWidget(mainWidget);
 		setWindowTitle(MAIN_TITLE);
 		setWindowIcon(QIcon(MAIN_ICON_PATH));
+		resize(MAINFRAME_WIDTH, MAINFRAME_HEIGH);
 	}
 
 	void MainFrame::CreateMenuBar()
