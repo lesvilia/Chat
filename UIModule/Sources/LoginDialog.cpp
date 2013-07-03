@@ -149,7 +149,7 @@ namespace ui
 			login::UserDataPtr data(CreateUserData(m_logNameEdit, m_logPassEdit));
 			if (m_handler->IsValidLoginData(data))
 			{
-				m_handler->SetCurrentUser(data);
+				m_handler->SetCurrentUser(data->name);
 				m_handler->SetLoginState(true);
 				accept();
 			}
@@ -165,7 +165,7 @@ namespace ui
 			if (m_handler->IsValidRegistrationData(data))
 			{
 				m_handler->AddNewUserData(data);
-				m_handler->SetCurrentUser(data);
+				m_handler->SetCurrentUser(data->name);
 				m_handler->SetLoginState(true);
 				accept();
 			}

@@ -77,9 +77,9 @@ namespace login
 		m_impl->AddNewUserData(data);
 	}
 
-	void LoginManager::SetCurrentUser(const UserDataPtr& data)
+	void LoginManager::SetCurrentUser(const std::wstring& name)
 	{
-		m_impl->SetCurrentUser(data);
+		m_impl->SetCurrentUser(name);
 	}
 
 	std::vector<UserDataPtr> LoginManager::GetUsersData() const

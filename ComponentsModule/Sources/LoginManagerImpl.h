@@ -27,7 +27,7 @@ namespace login
 			UserDataPtr GetCurrentUser() const;
 
 			void AddNewUserData(const UserDataPtr& data);
-			void SetCurrentUser(const UserDataPtr& data);
+			void SetCurrentUser(const std::wstring& name);
 			void SetLoginState(bool online);
 			std::vector<UserDataPtr> GetUsersData() const;
 			bool IsValidRegistrationData(const UserDataPtr& data);

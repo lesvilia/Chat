@@ -29,7 +29,7 @@ namespace login
 	{
 	public:
 		virtual void AddNewUserData(const UserDataPtr& data) = 0;
-		virtual void SetCurrentUser(const UserDataPtr& data) = 0;
+		virtual void SetCurrentUser(const std::wstring& name) = 0;
 		virtual void SetLoginState(bool online) = 0;
 		virtual std::vector<UserDataPtr> GetUsersData() const = 0;
 		virtual bool IsValidRegistrationData(const UserDataPtr& data) = 0;

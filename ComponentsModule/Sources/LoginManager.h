@@ -39,7 +39,7 @@ namespace login
 
 		//ILoginHandler interface
 		virtual void AddNewUserData(const UserDataPtr& data);
-		virtual void SetCurrentUser(const UserDataPtr& data);
+		virtual void SetCurrentUser(const std::wstring& name);
 		virtual void SetLoginState(bool online);
 		virtual std::vector<UserDataPtr> GetUsersData() const;
 		virtual bool IsValidRegistrationData(const UserDataPtr& data);

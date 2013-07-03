@@ -164,9 +164,13 @@ namespace login
 			return m_currentUser;
 		}
 
-		void LoginManagerImpl::SetCurrentUser(const UserDataPtr& data)
+		void LoginManagerImpl::SetCurrentUser(const std::wstring& name)
 		{
-			m_currentUser = data;  
+			auto iter = m_users.find(name);
+			if (iter != m_users.end())
+			{
+				m_currentUser = iter->second;
+			} 
 		}
 
 		std::vector<UserDataPtr> LoginManagerImpl::GetUsersData() const

@@ -163,7 +163,10 @@ namespace ui
 
 	void MainFrame::closeEvent(QCloseEvent* event)
 	{
-		LogOut();
+		if (login::LoginManager::Instance()->IsOnline())
+		{
+			LogOut();
+		}
 		event->accept();
 	}
 
