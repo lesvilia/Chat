@@ -19,13 +19,16 @@ namespace msg
 
 	void ChatMessagesHandler::HandleMessage(const std::wstring& message, const ACE_INET_Addr& addr)
 	{
-		ChatMessagePtr chatMsg(GetMsgDataFromXml(message));
-		if (chatMsg)
+		if (m_msgReceiver)
 		{
-			std::wstring userAddr(strhlp::StrToWstr(addr.get_host_addr()));
-			ChatMessageDataPtr newMessage(std::make_shared<ChatMessageData>(userAddr, chatMsg)); //initialize newMessage (PugiXML)
-			m_msgQueue->Enqueue(newMessage);
-			m_msgReceiver->OnChatMessageReceived();
+			ChatMessagePtr chatMsg(GetMsgDataFromXml(message));
+			if (chatMsg)
+			{
+				std::wstring userAddr(strhlp::StrToWstr(addr.get_host_addr()));
+				ChatMessageDataPtr newMessage(std::make_shared<ChatMessageData>(userAddr, chatMsg));
+				m_msgQueue->Enqueue(newMessage);
+				m_msgReceiver->OnChatMessageReceived();
+			}
 		}
 	}
 

@@ -132,7 +132,6 @@ namespace login
 				Lock lock(m_mutex);
 				m_isOnline = online;
 			}
-
 			NotifyObservers();
 		}
 

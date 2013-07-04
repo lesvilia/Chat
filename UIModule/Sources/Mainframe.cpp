@@ -269,7 +269,7 @@ namespace ui
 		QWidget* verticalWidget = new QWidget();
 		QVBoxLayout* verticalLayout = new QVBoxLayout();
 		m_userListWidget = new QListWidget();
-		connect(m_userListWidget, SIGNAL(itemActivated(QListWidgetItem*)),
+		connect(m_userListWidget, SIGNAL(itemClicked(QListWidgetItem*)),
 			this, SLOT(ListItemChanged(QListWidgetItem*)));
 
 		QLabel* label = new QLabel(USERS_LABEL_TEXT);
@@ -320,14 +320,17 @@ namespace ui
 
 	void MainFrame::ResizeMessagesView()
 	{
-		QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStackedWidget->currentWidget());
-		if (wdgSplitter)
+		QSplitter* currentWdgSplitter = static_cast<QSplitter*>(m_msgBoxStackedWidget->currentWidget());
+		if (currentWdgSplitter)
 		{
-			QList<int> newSizesWdg(wdgSplitter->sizes());
+			QList<int> newSizesWdg(currentWdgSplitter->sizes());
 			for(auto it = m_userItems.begin(); it != m_userItems.end(); ++it)
 			{
 				QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStackedWidget->widget(it->second.msgWidgetID));
-				wdgSplitter->setSizes(newSizesWdg);
+				if (wdgSplitter != currentWdgSplitter)
+				{
+					wdgSplitter->setSizes(newSizesWdg);
+				}
 			}
 		}
 	}

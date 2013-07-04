@@ -20,13 +20,16 @@ namespace msg
 
 	void StateMessagesHandler::HandleMessage(const std::wstring& message, const ACE_INET_Addr& addr)
 	{
-		StateMessagePtr stateMsg(GetMsgDataFromXml(message));
-		if (stateMsg && !IsMyBroadcastMessage(stateMsg->m_uuid))
+		if (m_msgReceiver)
 		{
-			std::wstring userAddr(strhlp::StrToWstr(addr.get_host_addr()));
-			StateMessageDataPtr newMessage(std::make_shared<StateMessageData>(userAddr, stateMsg)); //initialize newMessage (PugiXML)
-			m_msgQueue->Enqueue(newMessage);
-			m_msgReceiver->OnStateMessageReceived();
+			StateMessagePtr stateMsg(GetMsgDataFromXml(message));
+			if (stateMsg && !IsMyBroadcastMessage(stateMsg->m_uuid))
+			{
+				std::wstring userAddr(strhlp::StrToWstr(addr.get_host_addr()));
+				StateMessageDataPtr newMessage(std::make_shared<StateMessageData>(userAddr, stateMsg));
+				m_msgQueue->Enqueue(newMessage);
+				m_msgReceiver->OnStateMessageReceived();
+			}
 		}
 	}
 
