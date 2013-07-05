@@ -11,6 +11,7 @@
 #include "SettingsManager.h"
 #include "LoginManager.h"
 #include "ChatMessagesManager.h"
+#include "StateMessagesManager.h"
 #include "UISettings.h"
 #include "QtHelpers.h"
 
@@ -75,12 +76,9 @@ namespace ui
 		{
 			login::UserDataPtr user(login::LoginManager::Instance()->GetCurrentUser());
 			QString newUser(qthlp::WStrToQStr(user->name));
-			if (m_currentUser != newUser)
-			{
-				m_currentUser = newUser;
-				QString stateMessage(tr(STATE_LABEL_FORMAT).arg(qthlp::SetBoldStyle(m_currentUser), ONLINE_STATE));
-				m_stateLabel->setText(stateMessage);
-			}
+			m_currentUser = newUser;
+			QString stateMessage(tr(STATE_LABEL_FORMAT).arg(qthlp::SetBoldStyle(m_currentUser), ONLINE_STATE));
+			m_stateLabel->setText(stateMessage);
 		}
 		else
 		{
@@ -145,6 +143,7 @@ namespace ui
 
 	void MainFrame::AddNewMessage(const std::wstring& uuid, const std::wstring& message)
 	{
+		using namespace qthlp;
 		auto iter = m_userItems.find(uuid);
 		if (iter != m_userItems.end())
 		{
@@ -155,7 +154,9 @@ namespace ui
 				QTextEdit* msgView = static_cast<QTextEdit*>(wdgSplitter->widget(0));
 				if (msgView)
 				{
-					AddMessageToView(item.userlistItem->text(), qthlp::WStrToQStr(message), msgView);
+					QString userName(SetFontColor(WStrToQStr(net::NetUsersManager::Instance()->GetNetUserName(uuid)), "blue"));
+					msgView->setTextColor(QColor(0, 0, 255));
+					AddMessageToView(userName, WStrToQStr(message), msgView);
 				}
 			}
 		}
@@ -183,6 +184,7 @@ namespace ui
 				PrepareMessage(message);
 				if (!message.isEmpty())
 				{
+					msgView->setTextColor(QColor(0, 0, 0));
 					AddMessageToView(m_currentUser, message, msgView);
 					controls::UserListItem* currentItem = static_cast<controls::UserListItem*>(m_userListWidget->currentItem());
 					if (currentItem)
@@ -359,6 +361,12 @@ namespace ui
 	void MainFrame::OpenSettingsDlg()
 	{
 		controls::SettingsDialog dlg(this, sm::SettingsManager::Instance());
-		dlg.exec();
+		if(dlg.exec() == QDialog::Accepted)
+		{
+			LogOut();
+			msg::ChatMessagesManager::Instance()->ResetServer();
+			msg::StateMessagesManager::Instance()->ResetServer();
+			LogIn();
+		}
 	}
 }

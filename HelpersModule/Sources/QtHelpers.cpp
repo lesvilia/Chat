@@ -22,6 +22,11 @@ namespace qthlp
 
 	QString SetBoldStyle(const QString& str)
 	{
-		return QString("<font style='font-weight: bold;'>" + str + "</font>");
+		return QString("<font style='font-weight: bold;'>%1</font>").arg(str);
+	}
+
+	QString SetFontColor(const QString& str, const QString& color)
+	{
+		return QString("<font style='color: %1;'>%2</font>").arg(color, str);
 	}
 }
