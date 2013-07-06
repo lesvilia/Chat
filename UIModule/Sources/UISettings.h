@@ -19,11 +19,18 @@ namespace settings
 			const unsigned MIN_BUTTON_WIDTH = 90;
 		}
 
+		namespace colors
+		{
+			const QColor MY_MSG_COLOR(QColor(0, 0, 0));
+			const QColor USERS_MSG_COLOR(QColor(0, 0, 255));
+		}
+
 		namespace strings
 		{
 			const QString MAIN_TITLE("LChat");
 			const QString MAIN_ICON_PATH("chat_icon.png");
 			const QString MAIN_WIDGET_NAME("main_widget");
+			
 			const QString MAIN_MENU_BAR_STYLE
 			(
 				"QMenuBar { min-height: 17px; background-color: #9ACD32; }"
@@ -42,7 +49,6 @@ namespace settings
 			(
 				"QWidget#main_widget { background: #CAFF70; }"
 				"QSplitter::handle { background: #CAFF70; }"
-				//"QListWidget::item { border: 1 solid #FFFFFF; background: #FFFFFF; }"
 				"QListWidget::item:selected { background: #007FFF; color: #FFFFFF; }"
 			);
 

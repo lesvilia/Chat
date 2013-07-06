@@ -32,6 +32,7 @@ namespace ui
 {
 	using namespace settings::mainframe::sizes;
 	using namespace settings::mainframe::strings;
+	using namespace settings::mainframe::colors;
 
 	MainFrame::UserItem::UserItem()
 	{
@@ -126,7 +127,7 @@ namespace ui
 	{
 		QSplitter* msgViewWidget = new QSplitter(Qt::Vertical); 
 		QTextEdit* msgView = new QTextEdit();
-		QTextEdit* msgEdit = new QTextEdit(); 
+		QTextEdit* msgEdit = new QTextEdit();
 		msgView->setReadOnly(true);
 
 		msgViewWidget->addWidget(msgView);
@@ -159,8 +160,8 @@ namespace ui
 			if (wdgSplitter)
 			{
 				QTextEdit* msgView = static_cast<QTextEdit*>(wdgSplitter->widget(0));
-				QString userName(SetFontColor(WStrToQStr(net::NetUsersManager::Instance()->GetNetUserName(uuid)), "blue"));
-				msgView->setTextColor(QColor(0, 0, 255));
+				QString userName(WStrToQStr(net::NetUsersManager::Instance()->GetNetUserName(uuid)));
+				msgView->setTextColor(USERS_MSG_COLOR);
 				AddMessageToView(userName, WStrToQStr(message), msgView);
 			}
 		}
@@ -188,7 +189,7 @@ namespace ui
 				PrepareMessage(message);
 				if (!message.isEmpty())
 				{
-					msgView->setTextColor(QColor(0, 0, 0));
+					msgView->setTextColor(MY_MSG_COLOR);
 					AddMessageToView(m_currentUser, message, msgView);
 					controls::UserListItem* currentItem = static_cast<controls::UserListItem*>(m_userListWidget->currentItem());
 					if (currentItem)
@@ -203,7 +204,9 @@ namespace ui
 
 	void MainFrame::AddMessageToView(const QString& userName, const QString& msg, QTextEdit* view)
 	{
-		view->append(qthlp::SetBoldStyle(userName));
+		view->setFontWeight(QFont::Bold);
+		view->append(userName);
+		view->setFontWeight(QFont::Normal);
 		view->append(msg);
 		view->append("");
 	}

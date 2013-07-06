@@ -13,8 +13,7 @@ namespace msg
 	namespace 
 	{
 		const ACE_Time_Value TIMEOUT(1); // 1 second
-		const size_t BUFFER_SISE = 4096;
-
+		
 		void DeleteSocket(ACE_SOCK_Dgram* udpSocket)
 		{
 			udpSocket->close();
@@ -49,15 +48,16 @@ namespace msg
 			if (login::LoginManager::Instance()->IsOnline())
 			{
 				ACE_INET_Addr userAddr;
-				std::vector<wchar_t> buff(BUFFER_SISE, '\0');
-				size_t result = m_udpSocket->recv(&buff[0], BUFFER_SISE * sizeof(wchar_t), userAddr, 0, &TIMEOUT);
-				if (result > 0)
+				iovec buffer = {0};
+				size_t result = m_udpSocket->recv(&buffer, userAddr, 0, &TIMEOUT);
+				if ((result > 0) && buffer.iov_base)
 				{
-					std::wstring message(&buff[0]);
+					std::wstring message((wchar_t*)buffer.iov_base, (wchar_t*)(buffer.iov_base + buffer.iov_len));
 					if (!message.empty())
 					{
-						m_msgHandler->HandleMessage(&buff[0], userAddr);
+						m_msgHandler->HandleMessage(message, userAddr);
 					}
+					delete[] buffer.iov_base;
 				}
 			}
 			else
