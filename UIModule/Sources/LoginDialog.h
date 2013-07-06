@@ -1,6 +1,7 @@
 #pragma once
 #include <QDialog>
 #include <QLineEdit>
+#include <QComboBox>
 #include <QStackedLayout>
 #include "LoginHandlers.h"
 
@@ -23,6 +24,7 @@ namespace ui
 			void HandleRegistrationError(const login::UserDataPtr& data);
 			void SetUILogin();
 			void SetUIRegistration();
+			void InitUsersList();
 
 		private slots:
 			void DoLogin();
@@ -35,12 +37,13 @@ namespace ui
 			QStackedLayout* m_mainLayout;
 			
 			QWidget* m_loginWidget;
-			QLineEdit* m_logNameEdit;
+			QComboBox* m_logNameEdit;
 			QLineEdit* m_logPassEdit;
 			
 			QWidget* m_registrationWidget;
 			QLineEdit* m_regNameEdit;
 			QLineEdit* m_regPassEdit;
+			QStringList m_usersList;
 		};
 	}
 }

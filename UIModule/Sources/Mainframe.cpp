@@ -101,6 +101,7 @@ namespace ui
 		controls::UserListItem* userItem = AddUserListItem(net::NetUsersManager::Instance()->GetNetUserName(uuid), uuid);
 		int viewID = AddUserMsgView();
 		m_userItems.insert(std::make_pair(uuid, UserItem(userItem, viewID)));
+		m_userListWidget->setCurrentItem(userItem);
 	}
 
 	void MainFrame::RemoveUser(const std::wstring& uuid)
@@ -118,7 +119,6 @@ namespace ui
 		controls::UserListItem* userItem = new controls::UserListItem(QIcon(USER_ICON_PATH), qthlp::WStrToQStr(userName), uuid);
 		userItem->setSizeHint(QSize(25, 25));
 		m_userListWidget->addItem(userItem);
-		m_userListWidget->setCurrentItem(userItem);
 		return userItem;
 	}
 
@@ -143,20 +143,25 @@ namespace ui
 	void MainFrame::AddNewMessage(const std::wstring& uuid, const std::wstring& message)
 	{
 		using namespace qthlp;
+		
 		auto iter = m_userItems.find(uuid);
 		if (iter != m_userItems.end())
 		{
 			UserItem item(iter->second);
+			
+			controls::UserListItem* curentItem = static_cast<controls::UserListItem*>(m_userListWidget->currentItem());
+			if (uuid != curentItem->GetUserID())
+			{
+				item.userlistItem->EnableNotifyStyle();
+			}
+
 			QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStackedWidget->widget(item.msgWidgetID));
 			if (wdgSplitter)
 			{
 				QTextEdit* msgView = static_cast<QTextEdit*>(wdgSplitter->widget(0));
-				if (msgView)
-				{
-					QString userName(SetFontColor(WStrToQStr(net::NetUsersManager::Instance()->GetNetUserName(uuid)), "blue"));
-					msgView->setTextColor(QColor(0, 0, 255));
-					AddMessageToView(userName, WStrToQStr(message), msgView);
-				}
+				QString userName(SetFontColor(WStrToQStr(net::NetUsersManager::Instance()->GetNetUserName(uuid)), "blue"));
+				msgView->setTextColor(QColor(0, 0, 255));
+				AddMessageToView(userName, WStrToQStr(message), msgView);
 			}
 		}
 	}
@@ -274,8 +279,8 @@ namespace ui
 		QWidget* verticalWidget = new QWidget();
 		QVBoxLayout* verticalLayout = new QVBoxLayout();
 		m_userListWidget = new QListWidget();
-		connect(m_userListWidget, SIGNAL(itemClicked(QListWidgetItem*)),
-			this, SLOT(ListItemChanged(QListWidgetItem*)));
+		connect(m_userListWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
+			this, SLOT(ListItemChanged(QListWidgetItem*, QListWidgetItem*)));
 
 		QLabel* label = new QLabel(USERS_LABEL_TEXT);
 		label->setAlignment(Qt::AlignCenter);
@@ -310,11 +315,12 @@ namespace ui
 
 	/*------------------Slots-------------*/
 
-	void MainFrame::ListItemChanged(QListWidgetItem* currentItem)
+	void MainFrame::ListItemChanged(QListWidgetItem* currentItem, QListWidgetItem* prevItem)
 	{
 		controls::UserListItem* item = static_cast<controls::UserListItem*>(currentItem);
 		if (item)
 		{
+			item->EnableNormalStyle();
 			auto iter = m_userItems.find(item->GetUserID());
 			if (iter != m_userItems.end())
 			{
@@ -375,10 +381,9 @@ namespace ui
 		controls::SettingsDialog dlg(this, sm::SettingsManager::Instance());
 		if(dlg.exec() == QDialog::Accepted)
 		{
-			login::LoginManager::Instance()->LogOut();
 			msg::ChatMessagesManager::Instance()->ResetServer();
 			msg::StateMessagesManager::Instance()->ResetServer();
-			login::LoginManager::Instance()->LogIn(this);
+			LogInAs();
 		}
 	}
 }

@@ -65,7 +65,7 @@ namespace ui
 		QHBoxLayout* CreateMainLayout(QWidget* leftWidget, QWidget* rightWidget);
 	
 	private slots:
-		void ListItemChanged(QListWidgetItem* currentItem);
+		void ListItemChanged(QListWidgetItem* currentItem, QListWidgetItem* prevItem);
 		void ResizeMessagesView();
 		void SendMessageToUser();
 		void LogIn();

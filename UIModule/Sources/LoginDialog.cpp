@@ -8,7 +8,6 @@
 #include <QGridLayout>
 #include <QMessageBox>
 
-
 namespace ui
 {
 	namespace controls
@@ -16,11 +15,11 @@ namespace ui
 		using namespace settings::logindialog;
 		namespace
 		{
-			login::UserDataPtr CreateUserData(QLineEdit* nameEdit, QLineEdit* passwordEdit)
+			login::UserDataPtr CreateUserData(const QString& name, const QString& password)
 			{
-				std::wstring name(qthlp::QStrToWStr(nameEdit->text()));
-				std::wstring password(qthlp::QStrToWStr(passwordEdit->text()));
-				return std::make_shared<login::UserData>(name, password);
+				std::wstring userName(qthlp::QStrToWStr(name));
+				std::wstring userPassword(qthlp::QStrToWStr(password));
+				return std::make_shared<login::UserData>(userName, userPassword);
 			}
 		}
 
@@ -44,6 +43,7 @@ namespace ui
 
 		void LoginDialog::InitDialog()
 		{
+			InitUsersList();
 			SetupUI();
 
 			if (m_handler->GetUsersData().empty())
@@ -95,7 +95,11 @@ namespace ui
 			link->setText(qthlp::SetLinkStyle("Registration"));
 			connect(link, SIGNAL(clicked()), SLOT(SwitchToRegistrationMode()));
 
-			m_logNameEdit = new QLineEdit();
+
+			m_logNameEdit = new QComboBox();
+			m_logNameEdit->setEditable(false);
+			m_logNameEdit->insertItems(0, m_usersList);
+			
 			m_logPassEdit = new QLineEdit();
 			m_logPassEdit->setEchoMode(QLineEdit::Password);
 			QGridLayout* mainLayot = new QGridLayout();
@@ -143,9 +147,19 @@ namespace ui
 			m_registrationWidget->setLayout(mainLayot);
 		}
 
+		void LoginDialog::InitUsersList()
+		{
+			std::vector<login::UserDataPtr> users(m_handler->GetUsersData());
+			std::for_each(users.cbegin(), users.cend(),
+				[this](const login::UserDataPtr& user)
+			{
+				m_usersList << qthlp::WStrToQStr(user->name);
+			});
+		}
+
 		void LoginDialog::DoLogin()
 		{
-			login::UserDataPtr data(CreateUserData(m_logNameEdit, m_logPassEdit));
+			login::UserDataPtr data(CreateUserData(m_logNameEdit->currentText(), m_logPassEdit->text()));
 			if (m_handler->IsValidLoginData(data))
 			{
 				m_handler->SetCurrentUser(data->name);
@@ -160,7 +174,7 @@ namespace ui
 
 		void LoginDialog::DoRegistration()
 		{
-			login::UserDataPtr data(CreateUserData(m_regNameEdit, m_regPassEdit));
+			login::UserDataPtr data(CreateUserData(m_regNameEdit->text(), m_regPassEdit->text()));
 			if (m_handler->IsValidRegistrationData(data))
 			{
 				m_handler->AddNewUserData(data);

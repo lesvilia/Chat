@@ -13,7 +13,7 @@ namespace msg
 	namespace 
 	{
 		const ACE_Time_Value TIMEOUT(1); // 1 second
-		const size_t BUFFER_SISE = 512;
+		const size_t BUFFER_SISE = 4096;
 
 		void DeleteSocket(ACE_SOCK_Dgram* udpSocket)
 		{
