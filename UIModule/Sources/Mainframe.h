@@ -69,6 +69,7 @@ namespace ui
 		void ResizeMessagesView();
 		void SendMessageToUser();
 		void LogIn();
+		void LogInAs();
 		void LogOut();
 		void About();
 		void OpenSettingsDlg();

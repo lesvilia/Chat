@@ -42,6 +42,8 @@ namespace settings
 			(
 				"QWidget#main_widget { background: #CAFF70; }"
 				"QSplitter::handle { background: #CAFF70; }"
+				"QListWidget::item { border: 1 solid #FFFFFF; background: #FFFFFF; }"
+				"QListWidget::item:selected { background: #007FFF; color: #FFFFFF; }"
 			);
 
 			const char STATE_LABEL_FORMAT[] = "%1 %2";

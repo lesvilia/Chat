@@ -117,7 +117,6 @@ namespace ui
 	{
 		controls::UserListItem* userItem = new controls::UserListItem(QIcon(USER_ICON_PATH), qthlp::WStrToQStr(userName), uuid);
 		userItem->setSizeHint(QSize(25, 25));
-
 		m_userListWidget->addItem(userItem);
 		m_userListWidget->setCurrentItem(userItem);
 		return userItem;
@@ -209,13 +208,16 @@ namespace ui
 		QWidget* mainWidget = new QWidget();
 		mainWidget->setObjectName(MAIN_WIDGET_NAME);
 		mainWidget->setStyleSheet(MAIN_WIDGET_STYLE);
+		
 		CreateMenuBar();
+		
 		QHBoxLayout* mainLayout = CreateMainLayout(CreateUsersWidget(), CreateMessagesWidget());
 		mainWidget->setLayout(mainLayout);
 		
 		setCentralWidget(mainWidget);
 		setWindowTitle(MAIN_TITLE);
 		setWindowIcon(QIcon(MAIN_ICON_PATH));
+		
 		resize(MAINFRAME_WIDTH, MAINFRAME_HEIGH);
 	}
 
@@ -225,6 +227,7 @@ namespace ui
 		QMenu* menu = menuBar()->addMenu("Sign_In");
 		menu->setStyleSheet(MENU_STYLE);
 		menu->addAction("Sign_In", this, SLOT(LogIn()));
+		menu->addAction("Sign_In_As", this, SLOT(LogInAs()));
 		menu->addAction("Sign_Out", this, SLOT(LogOut()));
 		menu->addAction("Exit", this, SLOT(close()));
 		menuBar()->addAction("Settings", this, SLOT(OpenSettingsDlg()));
@@ -339,6 +342,15 @@ namespace ui
 
 	void MainFrame::LogIn()
 	{
+		if (!login::LoginManager::Instance()->IsOnline())
+		{
+			login::LoginManager::Instance()->LogIn(this);
+		}
+	}
+
+	void MainFrame::LogInAs()
+	{
+		login::LoginManager::Instance()->LogOut();
 		login::LoginManager::Instance()->LogIn(this);
 	}
 
@@ -363,10 +375,10 @@ namespace ui
 		controls::SettingsDialog dlg(this, sm::SettingsManager::Instance());
 		if(dlg.exec() == QDialog::Accepted)
 		{
-			LogOut();
+			login::LoginManager::Instance()->LogOut();
 			msg::ChatMessagesManager::Instance()->ResetServer();
 			msg::StateMessagesManager::Instance()->ResetServer();
-			LogIn();
+			login::LoginManager::Instance()->LogIn(this);
 		}
 	}
 }
