@@ -56,7 +56,7 @@ namespace settings
 			const QString STATE_LABEL_STYLE("QLabel { background-color: #9ACD32; }");
 			const QString USER_ICON_PATH("user_ico.png");
 			const QString ONLINE_STATE("Online");
-			const QString OFLINE_STATE("Ofline");
+			const QString OFFLINE_STATE("Offline");
 			const QString BUTTON_TEXT("Send Message");
 			const QString USERS_LABEL_TEXT("<h4>Online Users</h4>");
 			const QString MESSAGES_LABEL_TEXT("<h4>Posted Messages</h4>");

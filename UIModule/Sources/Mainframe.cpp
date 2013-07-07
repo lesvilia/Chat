@@ -83,7 +83,7 @@ namespace ui
 		}
 		else
 		{
-			m_stateLabel->setText(OFLINE_STATE);
+			m_stateLabel->setText(OFFLINE_STATE);
 		}
 	}
 
@@ -112,6 +112,7 @@ namespace ui
 		{
 			std::unique_ptr<QListWidgetItem> listItem(m_userListWidget->takeItem(m_userListWidget->row(iter->second.userlistItem)));
 			m_msgBoxStackedWidget->removeWidget(m_msgBoxStackedWidget->widget(iter->second.msgWidgetID));
+			m_userItems.erase(iter);
 		}
 	}
 
@@ -256,7 +257,7 @@ namespace ui
 		sendMsgButton->setMinimumWidth(MIN_BUTTON_WIDTH);
 
 		m_stateLabel = new QLabel();
-		m_stateLabel->setText(OFLINE_STATE);
+		m_stateLabel->setText(OFFLINE_STATE);
 		m_stateLabel->setAlignment(Qt::AlignCenter);
 		m_stateLabel->setStyleSheet(STATE_LABEL_STYLE);
 
