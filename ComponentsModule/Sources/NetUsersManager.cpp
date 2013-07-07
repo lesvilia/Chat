@@ -37,8 +37,11 @@ namespace net
 
 	void NetUsersManager::AddNewUser(const std::wstring& uuid, const std::wstring& name, const std::wstring& addr)
 	{
-		m_netUsers.insert(std::make_pair(uuid, std::make_shared<NetUserData>(name, addr)));
-		UserConnectedNotify(uuid);
+		if (!IsUserExist(uuid))
+		{
+			m_netUsers.insert(std::make_pair(uuid, std::make_shared<NetUserData>(name, addr)));
+			UserConnectedNotify(uuid);
+		}
 	}
 
 	void NetUsersManager::RemoveUser(const std::wstring& uuid)

@@ -160,8 +160,8 @@ namespace ui
 			if (wdgSplitter)
 			{
 				QTextEdit* msgView = static_cast<QTextEdit*>(wdgSplitter->widget(0));
-				QString userName(qthlp::SetFontColor(WStrToQStr(net::NetUsersManager::Instance()->GetNetUserName(uuid)), "blue"));
-				AddMessageToView(userName, WStrToQStr(message), msgView);
+				QString userName(SetFontColor(WStrToQStr(net::NetUsersManager::Instance()->GetNetUserName(uuid)), "blue"));
+				AddMessageToView(qthlp::SetBoldStyle(userName), WStrToQStr(message), msgView);
 			}
 		}
 	}
@@ -188,7 +188,7 @@ namespace ui
 				PrepareMessage(message);
 				if (!message.isEmpty())
 				{
-					AddMessageToView(m_currentUser, message, msgView);
+					AddMessageToView(qthlp::SetBoldStyle(m_currentUser), message, msgView);
 					controls::UserListItem* currentItem = static_cast<controls::UserListItem*>(m_userListWidget->currentItem());
 					if (currentItem)
 					{
@@ -202,9 +202,7 @@ namespace ui
 
 	void MainFrame::AddMessageToView(const QString& userName, const QString& msg, QTextEdit* view)
 	{
-		view->setFontWeight(QFont::Bold);
 		view->append(userName);
-		view->setFontWeight(QFont::Normal);
 		view->append(msg);
 		view->append("");
 	}
