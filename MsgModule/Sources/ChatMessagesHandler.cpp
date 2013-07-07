@@ -34,7 +34,7 @@ namespace msg
 
 	ChatMessagePtr ChatMessagesHandler::GetMsgDataFromXml(const std::wstring& xmlMsg)
 	{
-		ChatMessagePtr chatMsg(std::make_shared<ChatMessage>());
+		ChatMessagePtr chatMsg(nullptr);
 		pugi::xml_document messageDoc;
 		pugi::xml_parse_result result = messageDoc.load(xmlMsg.c_str());
 		if (result)
@@ -42,11 +42,11 @@ namespace msg
 			pugi::xml_node messageNode = messageDoc.first_child();
 
 			pugi::xml_node userNode = messageNode.child(USER_NODE);
-			chatMsg->m_uuid = userNode.child_value(USER_UUID_NODE);
+			std::wstring uuid = userNode.child_value(USER_UUID_NODE);
 			pugi::xml_node dataNode = messageNode.child(DATA_NODE);
-			chatMsg->m_message = dataNode.text().as_string();
-			return chatMsg;
+			std::wstring message = dataNode.text().as_string();
+			chatMsg.reset(new ChatMessage(uuid, message));
 		}
-		return nullptr;
+		return chatMsg;
 	}
 }

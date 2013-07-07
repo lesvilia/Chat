@@ -40,7 +40,7 @@ namespace msg
 
 	StateMessagePtr StateMessagesHandler::GetMsgDataFromXml(const std::wstring& xmlMsg)
 	{
-		StateMessagePtr stateMsg(std::make_shared<StateMessage>());
+		StateMessagePtr stateMsg(nullptr);
 		pugi::xml_document messageDoc;
 		pugi::xml_parse_result result = messageDoc.load(xmlMsg.c_str());
 		if (result)
@@ -48,13 +48,13 @@ namespace msg
 			pugi::xml_node messageNode = messageDoc.first_child();
 			
 			pugi::xml_node userNode = messageNode.child(USER_NODE);
-			stateMsg->m_uuid = userNode.child_value(USER_UUID_NODE);
-			stateMsg->m_username = userNode.child_value(USER_NAME_NODE);
+			std::wstring uuid = userNode.child_value(USER_UUID_NODE);
+			std::wstring username = userNode.child_value(USER_NAME_NODE);
 
 			pugi::xml_node dataNode = messageNode.child(DATA_NODE);
-			stateMsg->m_state = dataNode.text().as_uint();
-			return stateMsg;
+			int state = dataNode.text().as_uint();
+			stateMsg.reset(new StateMessage(state, uuid, username));
 		}
-		return nullptr;
+		return stateMsg;
 	}
 }
