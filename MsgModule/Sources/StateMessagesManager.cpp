@@ -92,14 +92,17 @@ namespace msg
 		}
 	}
 
-	StateMessagesQueue* StateMessagesManager::GetMessagesQueue()
+	StateMessagesQueue* StateMessagesManager::GetMessagesQueue() const
 	{
 		return m_msgQueue.get();
 	}
 
 	void StateMessagesManager::ResetServer()
 	{
+		SendMessageToUsers(DISCONNECT_STATE);
+		net::NetUsersManager::Instance()->ClearOnlineUsers();
 		m_server->Reset();
+		SendBroadcastMessage(CONNECT_REQUEST_STATE);
 	}
 
 	std::wstring StateMessagesManager::CreateMessage(State currentState)
@@ -125,7 +128,7 @@ namespace msg
 		else
 		{
 			SendMessageToUsers(DISCONNECT_STATE);
-			net::NetUsersManager::Instance()->RemoveUsers();
+			net::NetUsersManager::Instance()->ClearOnlineUsers();
 		}
 	}
 }

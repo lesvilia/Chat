@@ -383,7 +383,6 @@ namespace ui
 		{
 			msg::ChatMessagesManager::Instance()->ResetServer();
 			msg::StateMessagesManager::Instance()->ResetServer();
-			LogInAs();
 		}
 	}
 }

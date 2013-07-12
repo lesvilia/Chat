@@ -17,8 +17,10 @@ namespace msg
 	public:
 		static StateMessagesManager* Instance();
 		void SendResponseToConnect(const std::wstring& addr);
+		void SendMessageToUsers(State currentState);
+		void SendBroadcastMessage(State currentState);
 		void Activate(MessagesReceiver* receiver);
-		StateMessagesQueue* GetMessagesQueue();
+		StateMessagesQueue* GetMessagesQueue() const;
 		void ResetServer();
 		virtual void OnlineStateChanged();
 
@@ -26,8 +28,6 @@ namespace msg
 		StateMessagesManager();
 		~StateMessagesManager();
 		std::wstring CreateMessage(State currentState);
-		void SendMessageToUsers(State currentState);
-		void SendBroadcastMessage(State currentState);
 
 	private:
 		std::unique_ptr<StateMessagesQueue> m_msgQueue;

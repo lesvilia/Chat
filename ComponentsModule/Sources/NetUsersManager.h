@@ -27,7 +27,7 @@ namespace net
 		void Subscribe(INetUsersObserver* observer);
 		void AddNewUser(const std::wstring& uuid, const std::wstring& name, const std::wstring& addr);
 		void RemoveUser(const std::wstring& uuid);
-		void RemoveUsers();
+		void ClearOnlineUsers();
 		std::wstring GetNetUserAddress(const std::wstring& uuid);
 		std::vector<std::wstring> GetNetUserAddresses() const;
 		std::wstring GetNetUserName(const std::wstring& uuid);

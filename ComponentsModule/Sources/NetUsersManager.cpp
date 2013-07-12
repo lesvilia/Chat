@@ -46,17 +46,23 @@ namespace net
 
 	void NetUsersManager::RemoveUser(const std::wstring& uuid)
 	{
-		m_netUsers.erase(uuid);
-		UserDisconnectedNotify(uuid);
+		if (IsUserExist(uuid))
+		{
+			m_netUsers.erase(uuid);
+			UserDisconnectedNotify(uuid);
+		}
 	}
 
-	void NetUsersManager::RemoveUsers()
+	void NetUsersManager::ClearOnlineUsers()
 	{
-		for (auto it = m_netUsers.begin(); it != m_netUsers.end(); ++it)
+		if (!m_netUsers.empty())
 		{
-			UserDisconnectedNotify(it->first);
+			for (auto it = m_netUsers.begin(); it != m_netUsers.end(); ++it)
+			{
+				UserDisconnectedNotify(it->first);
+			}
+			m_netUsers.clear();
 		}
-		m_netUsers.clear();
 	}
 
 	std::wstring NetUsersManager::GetNetUserAddress(const std::wstring& uuid)
