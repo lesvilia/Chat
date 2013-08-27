@@ -18,6 +18,7 @@ namespace msg
 		static ChatMessagesManager* Instance();
 		void Send(const std::wstring& uuid, const std::wstring& txtMessage);
 		void Activate(MessagesReceiver* receiver);
+    void Deactivate();
 		ChatMessagesQueue* GetMessagesQueue();
 		void ResetServer();
 		virtual void OnlineStateChanged();
@@ -30,6 +31,7 @@ namespace msg
 	private:
 		std::unique_ptr<ChatMessagesQueue> m_msgQueue;
 		std::unique_ptr<ChatServerSettingsHolder> m_settingsHolder;
+    bool m_activated;
 		std::unique_ptr<ChatMessagesHandler> m_msgHandler;
 		std::unique_ptr<UDPMessageServer> m_server;
 	};

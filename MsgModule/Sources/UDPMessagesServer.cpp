@@ -38,7 +38,10 @@ namespace msg
 
 	UDPMessageServer::~UDPMessageServer()
 	{
-		m_thread->join();
+    if (m_thread->joinable())
+    {
+      m_thread->join();
+    }
 	}
 
 	void UDPMessageServer::Run()
@@ -60,36 +63,26 @@ namespace msg
 					delete[] buffer.iov_base;
 				}
 			}
-			else
-			{
-				WaitForEvents();
-			}
 
 			if (NeedReset())
 			{
 				InitSocket();
 			}
 		}
+
+    m_udpSocket.reset(); // if server should shutdown need close socket
 	}
 
 	void UDPMessageServer::Shutdown()
 	{
-		{
 			Lock lock(m_mutex);
 			m_shouldShutdown = true;
-		}
-		m_condVariable.notify_one();
 	}
 
 	void UDPMessageServer::Reset()
 	{
 		Lock lock(m_mutex);
 		m_needReset = true;
-	}
-
-	void UDPMessageServer::Notify()
-	{
-		m_condVariable.notify_one();
 	}
 
 	void UDPMessageServer::Initialize()
@@ -114,11 +107,5 @@ namespace msg
 	{
 		Lock lock(m_mutex);
 		return m_needReset;
-	}
-	
-	void UDPMessageServer::WaitForEvents()
-	{
-		Lock lock(m_mutex);
-		m_condVariable.wait(lock);
 	}
 }

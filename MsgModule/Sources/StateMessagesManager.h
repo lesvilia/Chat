@@ -20,6 +20,7 @@ namespace msg
 		void SendMessageToUsers(State currentState);
 		void SendBroadcastMessage(State currentState);
 		void Activate(MessagesReceiver* receiver);
+    void Deactivate();
 		StateMessagesQueue* GetMessagesQueue() const;
 		void ResetServer();
 		virtual void OnlineStateChanged();
@@ -32,6 +33,7 @@ namespace msg
 	private:
 		std::unique_ptr<StateMessagesQueue> m_msgQueue;
 		std::unique_ptr<StateServerSettingsHolder> m_settingsHolder;
+    bool m_activated;
 		std::unique_ptr<StateMessagesHandler> m_msgHandler;
 		std::unique_ptr<UDPMessageServer> m_server;
 	};

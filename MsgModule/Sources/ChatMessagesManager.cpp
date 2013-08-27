@@ -26,13 +26,17 @@ namespace msg
 	ChatMessagesManager::ChatMessagesManager()
 		: m_msgQueue(new ChatMessagesQueue())
 		, m_settingsHolder(new ChatServerSettingsHolder(sm::SettingsManager::Instance()))
+    , m_activated(false)
 	{
 		login::LoginManager::Instance()->Subscribe(this);
 	}
 
 	ChatMessagesManager::~ChatMessagesManager()
 	{
-		m_server->Shutdown();
+    if (m_activated)
+    {
+      m_server->Shutdown();
+    }
 	}
 
 	void ChatMessagesManager::Send(const std::wstring& uuid, const std::wstring& txtMessage)
@@ -53,12 +57,19 @@ namespace msg
 
 	void ChatMessagesManager::Activate(MessagesReceiver* receiver)
 	{
-		if (!m_server)
-		{
-			m_msgHandler.reset(new ChatMessagesHandler(receiver, m_msgQueue.get()));
-			m_server.reset(new UDPMessageServer(m_msgHandler.get(), m_settingsHolder.get())); //init socket and run server
-		}
+    if (!m_activated)
+    {
+      m_msgHandler.reset(new ChatMessagesHandler(receiver, m_msgQueue.get()));
+      m_server.reset(new UDPMessageServer(m_msgHandler.get(), m_settingsHolder.get())); //init socket and run server
+      m_activated = true;
+    }
 	}
+
+  void ChatMessagesManager::Deactivate()
+  {
+    m_server->Shutdown();
+    m_activated = false;
+  }
 
 	ChatMessagesQueue* ChatMessagesManager::GetMessagesQueue()
 	{
@@ -85,9 +96,5 @@ namespace msg
 
 	void ChatMessagesManager::OnlineStateChanged()
 	{
-		if (login::LoginManager::Instance()->IsOnline())
-		{
-			m_server->Notify();
-		}
 	}
 }

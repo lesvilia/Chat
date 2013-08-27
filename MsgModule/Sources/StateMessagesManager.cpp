@@ -27,13 +27,17 @@ namespace msg
 	StateMessagesManager::StateMessagesManager()
 		: m_msgQueue(new StateMessagesQueue())
 		, m_settingsHolder(new StateServerSettingsHolder(sm::SettingsManager::Instance()))
+    , m_activated(false)
 	{
 		login::LoginManager::Instance()->Subscribe(this);
 	}
 
 	StateMessagesManager::~StateMessagesManager()
 	{
-		m_server->Shutdown();
+    if (m_activated)
+    {
+      m_server->Shutdown();
+    }
 	}
 
 	void StateMessagesManager::SendResponseToConnect(const std::wstring& addr)
@@ -85,12 +89,20 @@ namespace msg
 
 	void StateMessagesManager::Activate(MessagesReceiver* receiver)
 	{
-		if (!m_server)
-		{
-			m_msgHandler.reset(new StateMessagesHandler(receiver, m_msgQueue.get()));
-			m_server.reset(new UDPMessageServer(m_msgHandler.get(), m_settingsHolder.get())); //init socket and run server
-		}
+    if (!m_activated)
+    {
+      m_msgHandler.reset(new StateMessagesHandler(receiver, m_msgQueue.get()));
+      m_server.reset(new UDPMessageServer(m_msgHandler.get(), m_settingsHolder.get())); //init socket and run server
+      m_activated = true;
+    }
 	}
+
+
+  void StateMessagesManager::Deactivate()
+  {
+    m_server->Shutdown();
+    m_activated = false;
+  }
 
 	StateMessagesQueue* StateMessagesManager::GetMessagesQueue() const
 	{
@@ -123,7 +135,6 @@ namespace msg
 		if (login::LoginManager::Instance()->IsOnline())
 		{
 			SendBroadcastMessage(CONNECT_REQUEST_STATE);
-			m_server->Notify();
 		}
 		else
 		{

@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <QtCore\QString>
+#include <QString>
 
 namespace qthlp
 {

@@ -134,8 +134,16 @@ namespace ui
 		msgViewWidget->addWidget(msgView);
 		msgViewWidget->addWidget(msgEdit);
 
-		QList<int> listSizes;
-		listSizes << TOP_PART_HEIGH << BOTTOM_PART_HEIGH;
+    QList<int> listSizes;
+    if (m_msgBoxStackedWidget->count() > 0) //if users are connected splitter size maybe changed
+    {
+      QSplitter* currentWdgSplitter = static_cast<QSplitter*>(m_msgBoxStackedWidget->currentWidget());
+      listSizes.swap(currentWdgSplitter->sizes());
+    }
+    else
+    {
+      listSizes << TOP_PART_HEIGH << BOTTOM_PART_HEIGH;
+    }
 		msgViewWidget->setSizes(listSizes);
 
 		connect(msgViewWidget, SIGNAL(splitterMoved(int, int)), SLOT(ResizeMessagesView()));
@@ -255,12 +263,10 @@ namespace ui
 		QPushButton* sendMsgButton = new QPushButton(BUTTON_TEXT);
 		connect(sendMsgButton, SIGNAL(clicked(bool)), SLOT(SendMessageToUser()));
 		sendMsgButton->setMinimumWidth(MIN_BUTTON_WIDTH);
-
 		m_stateLabel = new QLabel();
 		m_stateLabel->setText(OFFLINE_STATE);
 		m_stateLabel->setAlignment(Qt::AlignCenter);
 		m_stateLabel->setStyleSheet(STATE_LABEL_STYLE);
-
 		msgBotomWidget->addWidget(sendMsgButton);
 		msgBotomWidget->addWidget(m_stateLabel, 1);
 

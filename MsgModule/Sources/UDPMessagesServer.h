@@ -21,14 +21,12 @@ namespace msg
 		void Run();
 		void Shutdown();
 		void Reset();
-		void Notify();
 
 	private:
 		void Initialize();
 		void InitSocket();
 		bool ShouldShutdown();
 		bool NeedReset();
-		void WaitForEvents();
 
 	private:
 		net::WSAStartupHolder m_startupHolder;
@@ -39,6 +37,5 @@ namespace msg
 		SocketPtr m_udpSocket;
 		ThreadPtr m_thread;
 		Mutex m_mutex;
-		ConditionVariable m_condVariable;
 	};
 }

@@ -17,6 +17,8 @@ namespace msg
 
 	MessagesReceiver::~MessagesReceiver()
 	{
+    StateMessagesManager::Instance()->Deactivate();
+    ChatMessagesManager::Instance()->Deactivate();
 	}
 
 	void MessagesReceiver::ProcessStateMessage()

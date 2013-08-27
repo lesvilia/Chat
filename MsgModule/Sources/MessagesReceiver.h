@@ -8,7 +8,7 @@ namespace msg
 		: private boost::noncopyable
 	{
 	public:
-		MessagesReceiver(UIMessageHandler* uiHandler);
+		explicit MessagesReceiver(UIMessageHandler* uiHandler);
 		~MessagesReceiver();
 		void ProcessStateMessage();
 		void ProcessChatMessage();
