@@ -4,6 +4,9 @@
 #include <QMenuBar>
 #include <QCloseEvent>
 #include <QMessageBox>
+#include <QTableWidget>
+#include <QHeaderView>
+#include <QTime>
 #include "Mainframe.h"
 #include "NetUsersManager.h"
 #include "LoginDialog.h"
@@ -73,12 +76,13 @@ namespace ui
 
 	void MainFrame::OnlineStateChanged()
 	{
-		if (login::LoginManager::Instance()->IsOnline())
+    using namespace login;
+
+    ILoginManager* manager = LoginManager::Instance();
+		if (manager->IsOnline())
 		{
-			login::UserDataPtr user(login::LoginManager::Instance()->GetCurrentUser());
-			QString newUser(qthlp::WStrToQStr(user->name));
-			m_currentUser = newUser;
-			QString stateMessage(tr(STATE_LABEL_FORMAT).arg(qthlp::SetBoldStyle(m_currentUser), ONLINE_STATE));
+			QString stateMessage(tr(STATE_LABEL_FORMAT).arg(SetBoldStyle(WStrToQStr(manager->GetCurrentUser()->name)),
+                                                      ONLINE_STATE));
 			m_stateLabel->setText(stateMessage);
 		}
 		else
@@ -100,7 +104,7 @@ namespace ui
 	void MainFrame::AddNewUser(const std::wstring& uuid)
 	{
 		controls::UserListItem* userItem = AddUserListItem(net::NetUsersManager::Instance()->GetNetUserName(uuid), uuid);
-		int viewID = AddUserMsgView();
+		int viewID = CreateUserMsgView();
 		m_userItems.insert(std::make_pair(uuid, UserItem(userItem, viewID)));
 		m_userListWidget->setCurrentItem(userItem);
 	}
@@ -118,19 +122,29 @@ namespace ui
 
 	controls::UserListItem* MainFrame::AddUserListItem(const std::wstring& userName, const std::wstring& uuid)
 	{
-		controls::UserListItem* userItem = new controls::UserListItem(QIcon(USER_ICON_PATH), qthlp::WStrToQStr(userName), uuid);
+		controls::UserListItem* userItem = new controls::UserListItem(QIcon(USER_ICON_PATH), WStrToQStr(userName), uuid);
 		userItem->setSizeHint(QSize(25, 25));
 		m_userListWidget->addItem(userItem);
 		return userItem;
 	}
 
-	int MainFrame::AddUserMsgView()
+	int MainFrame::CreateUserMsgView()
 	{
 		QSplitter* msgViewWidget = new QSplitter(Qt::Vertical); 
-		QTextEdit* msgView = new QTextEdit();
+		QTableWidget* msgView = new QTableWidget();
+    msgView->setColumnCount(COLUMN_COUNT);
+    
+    QHeaderView* verticalHeader = msgView->verticalHeader();
+    verticalHeader->setVisible(false);
+    verticalHeader->setSectionResizeMode(QHeaderView::ResizeToContents);
+    
+    QHeaderView* horizontalHeader = msgView->horizontalHeader();
+    horizontalHeader->setVisible(false);
+    horizontalHeader->setSectionResizeMode(NAME_COLUMN, QHeaderView::Fixed);
+    horizontalHeader->setSectionResizeMode(MESSAGE_COLUMN, QHeaderView::Stretch);
+    horizontalHeader->setSectionResizeMode(TIME_COLUMN, QHeaderView::Fixed);
+    horizontalHeader->setDefaultSectionSize(DEFAULT_COLUMN_WIDTH);
 		QTextEdit* msgEdit = new QTextEdit();
-		msgView->setReadOnly(true);
-
 		msgViewWidget->addWidget(msgView);
 		msgViewWidget->addWidget(msgEdit);
 
@@ -152,8 +166,6 @@ namespace ui
 
 	void MainFrame::AddNewMessage(const std::wstring& uuid, const std::wstring& message)
 	{
-		using namespace qthlp;
-		
 		auto iter = m_userItems.find(uuid);
 		if (iter != m_userItems.end())
 		{
@@ -168,9 +180,9 @@ namespace ui
 			QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStackedWidget->widget(item.msgWidgetID));
 			if (wdgSplitter)
 			{
-				QTextEdit* msgView = static_cast<QTextEdit*>(wdgSplitter->widget(0));
-				QString userName(SetFontColor(WStrToQStr(net::NetUsersManager::Instance()->GetNetUserName(uuid)), "blue"));
-				AddMessageToView(qthlp::SetBoldStyle(userName), WStrToQStr(message), msgView);
+				QTableWidget* msgView = static_cast<QTableWidget*>(wdgSplitter->widget(0));
+        std::wstring name(net::NetUsersManager::Instance()->GetNetUserName(uuid));
+				AddMessageToView(name, message, msgView, true);
 			}
 		}
 	}
@@ -186,34 +198,56 @@ namespace ui
 
 	void MainFrame::SendMessageToUser()
 	{
-		if (login::LoginManager::Instance()->IsOnline())
+    login::ILoginManager* loginManager = login::LoginManager::Instance();
+		if (loginManager->IsOnline())
 		{
 			QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStackedWidget->currentWidget());
 			if (wdgSplitter)
 			{
-				QTextEdit* msgView = static_cast<QTextEdit*>(wdgSplitter->widget(0));
+				QTableWidget* msgView = static_cast<QTableWidget*>(wdgSplitter->widget(0));
 				QTextEdit* msgEdit = static_cast<QTextEdit*>(wdgSplitter->widget(1));
 				QString message(msgEdit->toPlainText());
 				PrepareMessage(message);
 				if (!message.isEmpty())
 				{
-					AddMessageToView(qthlp::SetBoldStyle(m_currentUser), message, msgView);
+					AddMessageToView(loginManager->GetCurrentUser()->name, message.toStdWString(), msgView, false);
 					controls::UserListItem* currentItem = static_cast<controls::UserListItem*>(m_userListWidget->currentItem());
 					if (currentItem)
 					{
-						msg::ChatMessagesManager::Instance()->Send(currentItem->GetUserID(), qthlp::QStrToWStr(message));
+						msg::ChatMessagesManager::Instance()->Send(currentItem->GetUserID(), QStrToWStr(message));
 					}
 				}
-				msgEdit->clear();
+        msgEdit->clear();
+        msgEdit->document()->clear();
 			}
 		}
 	}
 
-	void MainFrame::AddMessageToView(const QString& userName, const QString& msg, QTextEdit* view)
+	void MainFrame::AddMessageToView(const std::wstring& userName, const std::wstring& msg,
+                                   QTableWidget* view, bool isNetUser)
 	{
-		view->append(userName);
-		view->append(msg);
-		view->append("");
+    const int rowNum = view->rowCount();
+    view->insertRow(rowNum);
+//name item
+    QTableWidgetItem* nameItem = new QTableWidgetItem(WStrToQStr(userName));
+    nameItem->setTextAlignment(Qt::AlignTop);
+    nameItem->setFlags(nameItem->flags() & ~Qt::ItemIsSelectable);
+    if (isNetUser)
+      nameItem->setTextColor(Qt::blue);
+    else
+      nameItem->setTextColor(Qt::gray);
+//time item
+    QTableWidgetItem* timeItem = new QTableWidgetItem(QTime::currentTime().toString("hh:mm"));
+    timeItem->setTextColor(Qt::gray);
+    timeItem->setTextAlignment(Qt::AlignTop);
+    timeItem->setFlags(timeItem->flags() & ~Qt::ItemIsSelectable);
+//message item
+    QTableWidgetItem* messageItem = new QTableWidgetItem(WStrToQStr(msg));
+    messageItem->setFlags(messageItem->flags() & ~Qt::ItemIsSelectable);
+
+    view->setItem(rowNum, NAME_COLUMN, nameItem);
+    view->setItem(rowNum, MESSAGE_COLUMN, messageItem);
+    view->setItem(rowNum, TIME_COLUMN, timeItem);
 	}
 
 	void MainFrame::SetupUI()

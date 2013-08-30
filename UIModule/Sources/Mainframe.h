@@ -12,6 +12,8 @@
 #include "INetUsersObserver.h"
 #include "UserListItem.h"
 
+class QTableWidget;
+
 namespace ui
 {
 	class MainFrame 
@@ -30,6 +32,15 @@ namespace ui
 			controls::UserListItem* userlistItem;
 			int msgWidgetID;
 		};
+
+    enum 
+    {
+      NAME_COLUMN,
+      MESSAGE_COLUMN,
+      TIME_COLUMN,
+
+      COLUMN_COUNT //always last
+    };
 
 	public:
 		MainFrame(QWidget* parent = 0);
@@ -53,9 +64,9 @@ namespace ui
 		void closeEvent(QCloseEvent* event);
 
 	private:
-		int AddUserMsgView();
+		int CreateUserMsgView();
 		controls::UserListItem* AddUserListItem(const std::wstring& userName, const std::wstring& uuid);
-		void AddMessageToView(const QString& userName, const QString& msg, QTextEdit* view);
+		void AddMessageToView(const std::wstring& userName, const std::wstring& msg, QTableWidget* view, bool isNetUser);
 		void AddNewUser(const std::wstring& uuid);
 		void RemoveUser(const std::wstring& uuid);
 		void SetupUI();
@@ -75,10 +86,9 @@ namespace ui
 		void OpenSettingsDlg();
 
 	private:
-		QListWidget*			m_userListWidget;
+		QListWidget*			  m_userListWidget;
 		QStackedWidget*			m_msgBoxStackedWidget;
-		QLabel*					m_stateLabel;
-		QString					m_currentUser;
+		QLabel*					    m_stateLabel;
 		std::map<std::wstring, UserItem> m_userItems;
 	};
 }

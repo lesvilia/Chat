@@ -17,6 +17,7 @@ namespace settings
 			const unsigned TOP_PART_HEIGH = MAINFRAME_HEIGH - BOTTOM_PART_HEIGH;
 
 			const unsigned MIN_BUTTON_WIDTH = 90;
+      const unsigned DEFAULT_COLUMN_WIDTH = 70;
 		}
 
 		namespace colors
@@ -64,7 +65,7 @@ namespace settings
 			const QString ABOUT_TITLE("About LChat");
 			const QString ABOUT_MESSAGE
 			(
-				"This program allows you to exchange messages on a local network."
+				"This program allows you to exchange messages on a local network. "
 				"All right reserved. Ivan Sialiuk."
 			);
 		}
