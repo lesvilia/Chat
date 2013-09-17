@@ -3,23 +3,23 @@
 
 namespace sm
 {
-	class SettingsManager;
+  class SettingsManager;
 }
 
 namespace msg
 {
-	class sm::SettingsManager;
+  class sm::SettingsManager;
 
-	class ChatServerSettingsHolder
-		: public IServerSettingsHolder
-	{
-	public:
-		explicit ChatServerSettingsHolder(sm::SettingsManager* manager);
-		~ChatServerSettingsHolder();
-		virtual std::wstring GetAddress();
-		virtual unsigned short GetPort();
+  class ChatServerSettingsHolder
+    : public IServerSettingsHolder
+  {
+  public:
+    explicit ChatServerSettingsHolder(sm::SettingsManager* manager);
+    ~ChatServerSettingsHolder();
+    virtual std::wstring GetAddress();
+    virtual unsigned short GetPort();
 
-	private:
-		sm::SettingsManager* m_manager;
-	};
+  private:
+    sm::SettingsManager* m_manager;
+  };
 }

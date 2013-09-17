@@ -16,22 +16,22 @@ class QTableWidget;
 
 namespace ui
 {
-	class MainFrame 
-		: public QMainWindow
-		, public msg::UIMessageHandler
-		, public login::ILoginUIHandler
-		, public login::ILoginStateObserver
-		, public net::INetUsersObserver
-	{
-		Q_OBJECT
+  class MainFrame 
+    : public QMainWindow
+    , public msg::UIMessageHandler
+    , public login::ILoginUIHandler
+    , public login::ILoginStateObserver
+    , public net::INetUsersObserver
+  {
+    Q_OBJECT
 
-		struct UserItem
-		{
-			UserItem();
-			UserItem(controls::UserListItem* item, int id);
-			controls::UserListItem* userlistItem;
-			int msgWidgetID;
-		};
+    struct UserItem
+    {
+      UserItem();
+      UserItem(controls::UserListItem* item, int id);
+      controls::UserListItem* userlistItem;
+      int msgWidgetID;
+    };
 
     enum 
     {
@@ -42,53 +42,53 @@ namespace ui
       COLUMN_COUNT //always last
     };
 
-	public:
-		MainFrame(QWidget* parent = 0);
-		~MainFrame();
-		void Show();
+  public:
+    MainFrame(QWidget* parent = 0);
+    ~MainFrame();
+    void Show();
 
-		//ILoginUIHandler interface
-		virtual void EnableLoginUI();
+    //ILoginUIHandler interface
+    virtual void EnableLoginUI();
 
-		//ILoginStateObserver interface
-		virtual void OnlineStateChanged();
+    //ILoginStateObserver interface
+    virtual void OnlineStateChanged();
 
-		//INetUsersObserver interface
-		virtual void OnNetUserConnected(const std::wstring& uuid);
-		virtual void OnNetUserDisconnected(const std::wstring& uuid);
+    //INetUsersObserver interface
+    virtual void OnNetUserConnected(const std::wstring& uuid);
+    virtual void OnNetUserDisconnected(const std::wstring& uuid);
 
-		//UIMessageHandler interface
-		virtual void AddNewMessage(const std::wstring& uuid, const std::wstring& message);
+    //UIMessageHandler interface
+    virtual void AddNewMessage(const std::wstring& uuid, const std::wstring& message);
 
-	protected:
-		void closeEvent(QCloseEvent* event);
+  protected:
+    void closeEvent(QCloseEvent* event);
 
-	private:
-		int CreateUserMsgView();
-		controls::UserListItem* AddUserListItem(const std::wstring& userName, const std::wstring& uuid);
-		void AddMessageToView(const std::wstring& userName, const std::wstring& msg, QTableWidget* view, bool isNetUser);
-		void AddNewUser(const std::wstring& uuid);
-		void RemoveUser(const std::wstring& uuid);
-		void SetupUI();
-		void CreateMenuBar();
-		QWidget* CreateMessagesWidget();
-		QWidget* CreateUsersWidget();
-		QHBoxLayout* CreateMainLayout(QWidget* leftWidget, QWidget* rightWidget);
-	
-	private slots:
-		void ListItemChanged(QListWidgetItem* currentItem, QListWidgetItem* prevItem);
-		void ResizeMessagesView();
-		void SendMessageToUser();
-		void LogIn();
-		void LogInAs();
-		void LogOut();
-		void About();
-		void OpenSettingsDlg();
+  private:
+    int CreateUserMsgView();
+    controls::UserListItem* AddUserListItem(const std::wstring& userName, const std::wstring& uuid);
+    void AddMessageToView(const std::wstring& userName, const std::wstring& msg, QTableWidget* view, bool isNetUser);
+    void AddNewUser(const std::wstring& uuid);
+    void RemoveUser(const std::wstring& uuid);
+    void SetupUI();
+    void CreateMenuBar();
+    QWidget* CreateMessagesWidget();
+    QWidget* CreateUsersWidget();
+    QHBoxLayout* CreateMainLayout(QWidget* leftWidget, QWidget* rightWidget);
+  
+  private slots:
+    void ListItemChanged(QListWidgetItem* currentItem, QListWidgetItem* prevItem);
+    void ResizeMessagesView();
+    void SendMessageToUser();
+    void LogIn();
+    void LogInAs();
+    void LogOut();
+    void About();
+    void OpenSettingsDlg();
 
-	private:
-		QListWidget*			  m_userListWidget;
-		QStackedWidget*			m_msgBoxStackedWidget;
-		QLabel*					    m_stateLabel;
-		std::map<std::wstring, UserItem> m_userItems;
-	};
+  private:
+    QListWidget*        m_userListWidget;
+    QStackedWidget*      m_msgBoxStackedWidget;
+    QLabel*              m_stateLabel;
+    std::map<std::wstring, UserItem> m_userItems;
+  };
 }

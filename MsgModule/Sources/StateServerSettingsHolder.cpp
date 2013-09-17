@@ -4,22 +4,22 @@
 
 namespace msg
 {
-	StateServerSettingsHolder::StateServerSettingsHolder(sm::SettingsManager* manager)
-		: m_manager(manager)
-	{
-	}
+  StateServerSettingsHolder::StateServerSettingsHolder(sm::SettingsManager* manager)
+    : m_manager(manager)
+  {
+  }
 
-	StateServerSettingsHolder::~StateServerSettingsHolder()
-	{
-	}
+  StateServerSettingsHolder::~StateServerSettingsHolder()
+  {
+  }
 
-	std::wstring StateServerSettingsHolder::GetAddress()
-	{
-		return m_manager->GetCurrentNetAddres();
-	}
+  std::wstring StateServerSettingsHolder::GetAddress()
+  {
+    return m_manager->GetCurrentNetAddres();
+  }
 
-	unsigned short StateServerSettingsHolder::GetPort()
-	{
-		return m_manager->GetCurrentStatesPort();
-	}
+  unsigned short StateServerSettingsHolder::GetPort()
+  {
+    return m_manager->GetCurrentStatesPort();
+  }
 }

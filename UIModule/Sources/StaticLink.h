@@ -3,22 +3,22 @@
 
 namespace ui
 {
-	namespace controls
-	{
-		class StaticLink
-			: public QLabel
-		{
-			Q_OBJECT
-		public:
-			StaticLink(QWidget* parent = nullptr);
-			~StaticLink();
+  namespace controls
+  {
+    class StaticLink
+      : public QLabel
+    {
+      Q_OBJECT
+    public:
+      StaticLink(QWidget* parent = nullptr);
+      ~StaticLink();
 
-		signals:
-			void clicked();
+    signals:
+      void clicked();
 
-		protected:
-			virtual void mousePressEvent(QMouseEvent* event);
-		};
+    protected:
+      virtual void mousePressEvent(QMouseEvent* event);
+    };
 
-	}
+  }
 }

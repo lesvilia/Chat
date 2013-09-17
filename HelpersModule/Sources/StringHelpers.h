@@ -3,5 +3,5 @@
 
 namespace strhlp
 {
-	std::wstring StrToWstr(const std::string& str);
+  std::wstring StrToWstr(const std::string& str);
 }

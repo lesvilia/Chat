@@ -5,15 +5,15 @@
 
 namespace net
 {
-	class WSAStartupHolder
-		: private boost::noncopyable
-	{
-	public:
-		WSAStartupHolder(unsigned short version);
-		~WSAStartupHolder();
-		int GetErrorCode() const;
+  class WSAStartupHolder
+    : private boost::noncopyable
+  {
+  public:
+    WSAStartupHolder(unsigned short version);
+    ~WSAStartupHolder();
+    int GetErrorCode() const;
 
-	private:
-		int m_error;
-	};
+  private:
+    int m_error;
+  };
 }

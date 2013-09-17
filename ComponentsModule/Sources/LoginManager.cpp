@@ -4,101 +4,101 @@
 
 namespace login
 {
-	UserData::UserData()
-	{
-	}
+  UserData::UserData()
+  {
+  }
 
-	UserData::UserData(const std::wstring& userName, const std::wstring& userPass, const std::wstring& userID) 
-		: name(userName)
-		, password(userPass)
-		, uuid(userID)
-	{
-	}
+  UserData::UserData(const std::wstring& userName, const std::wstring& userPass, const std::wstring& userID) 
+    : name(userName)
+    , password(userPass)
+    , uuid(userID)
+  {
+  }
 
-	bool UserData::Empty() const
-	{
-		return name.empty() || password.empty() || uuid.empty();  
-	}
+  bool UserData::Empty() const
+  {
+    return name.empty() || password.empty() || uuid.empty();  
+  }
 
 
-	ILoginManager* LoginManager::Instance()
-	{
-		static LoginManager manager;
-		return &manager;
-	}
+  ILoginManager* LoginManager::Instance()
+  {
+    static LoginManager manager;
+    return &manager;
+  }
 
-	
-	LoginManager::LoginManager()
-		: m_impl(new impl::LoginManagerImpl())
-	{
-	}
+  
+  LoginManager::LoginManager()
+    : m_impl(new impl::LoginManagerImpl())
+  {
+  }
 
-	LoginManager::~LoginManager()
-	{
-	}
+  LoginManager::~LoginManager()
+  {
+  }
 
-	void LoginManager::LogIn(ILoginUIHandler* uiHandler)
-	{
-		m_impl->Login(uiHandler);
-	}
+  void LoginManager::LogIn(ILoginUIHandler* uiHandler)
+  {
+    m_impl->Login(uiHandler);
+  }
 
-	void LoginManager::LogOut()
-	{
-		m_impl->Logout();
-	}
+  void LoginManager::LogOut()
+  {
+    m_impl->Logout();
+  }
 
-	bool LoginManager::IsOnline() const
-	{
-		return m_impl->IsOnline();
-	}
-	
-	void LoginManager::Subscribe(ILoginStateObserver* observer)
-	{
-		m_impl->Subscribe(observer);
-	}
+  bool LoginManager::IsOnline() const
+  {
+    return m_impl->IsOnline();
+  }
+  
+  void LoginManager::Subscribe(ILoginStateObserver* observer)
+  {
+    m_impl->Subscribe(observer);
+  }
 
-	ILoginHandler* LoginManager::GetLoginHandler()
-	{
-		return this;
-	}
+  ILoginHandler* LoginManager::GetLoginHandler()
+  {
+    return this;
+  }
 
-	void LoginManager::SetLoginState(bool online)
-	{
-		m_impl->SetLoginState(online);
-	}
+  void LoginManager::SetLoginState(bool online)
+  {
+    m_impl->SetLoginState(online);
+  }
 
-	UserDataPtr LoginManager::GetCurrentUser() const
-	{
-		return m_impl->GetCurrentUser();
-	}
+  UserDataPtr LoginManager::GetCurrentUser() const
+  {
+    return m_impl->GetCurrentUser();
+  }
 
-	void LoginManager::AddNewUserData(const UserDataPtr& data)
-	{
-		m_impl->AddNewUserData(data);
-	}
+  void LoginManager::AddNewUserData(const UserDataPtr& data)
+  {
+    m_impl->AddNewUserData(data);
+  }
 
-	void LoginManager::SetCurrentUser(const std::wstring& name)
-	{
-		m_impl->SetCurrentUser(name);
-	}
+  void LoginManager::SetCurrentUser(const std::wstring& name)
+  {
+    m_impl->SetCurrentUser(name);
+  }
 
-	std::vector<UserDataPtr> LoginManager::GetUsersData() const
-	{
-		return m_impl->GetUsersData();
-	}
+  std::vector<UserDataPtr> LoginManager::GetUsersData() const
+  {
+    return m_impl->GetUsersData();
+  }
 
-	bool LoginManager::IsValidRegistrationData(const UserDataPtr& data)
-	{
-		return m_impl->IsValidRegistrationData(data);
-	}
+  bool LoginManager::IsValidRegistrationData(const UserDataPtr& data)
+  {
+    return m_impl->IsValidRegistrationData(data);
+  }
 
-	bool LoginManager::IsValidLoginData(const UserDataPtr& data)
-	{
-		return m_impl->IsValidLoginData(data);
-	}
+  bool LoginManager::IsValidLoginData(const UserDataPtr& data)
+  {
+    return m_impl->IsValidLoginData(data);
+  }
 
-	unsigned LoginManager::GetUserDataError(const UserDataPtr& data)
-	{
-		return m_impl->GetUserDataError(data);
-	}
+  unsigned LoginManager::GetUserDataError(const UserDataPtr& data)
+  {
+    return m_impl->GetUserDataError(data);
+  }
 }

@@ -4,22 +4,22 @@
 
 namespace msg
 {
-	ChatServerSettingsHolder::ChatServerSettingsHolder(sm::SettingsManager* manager)
-		: m_manager(manager)
-	{
-	}
+  ChatServerSettingsHolder::ChatServerSettingsHolder(sm::SettingsManager* manager)
+    : m_manager(manager)
+  {
+  }
 
-	ChatServerSettingsHolder::~ChatServerSettingsHolder()
-	{
-	}
+  ChatServerSettingsHolder::~ChatServerSettingsHolder()
+  {
+  }
 
-	std::wstring ChatServerSettingsHolder::GetAddress()
-	{
-		return m_manager->GetCurrentNetAddres();
-	}
+  std::wstring ChatServerSettingsHolder::GetAddress()
+  {
+    return m_manager->GetCurrentNetAddres();
+  }
 
-	unsigned short ChatServerSettingsHolder::GetPort()
-	{
-		return m_manager->GetCurrentMessagesPort();
-	}
+  unsigned short ChatServerSettingsHolder::GetPort()
+  {
+    return m_manager->GetCurrentMessagesPort();
+  }
 }
