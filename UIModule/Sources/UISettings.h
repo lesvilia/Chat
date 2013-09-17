@@ -53,6 +53,11 @@ namespace settings
 				"QListWidget::item:selected { background: #007FFF; color: #FFFFFF; }"
 			);
 
+      const QString MESSAGE_WIDGET_STYLE
+      (
+        "QTableView::item { border-bottom: 1px dotted grey; }"
+      );
+
 			const char STATE_LABEL_FORMAT[] = "%1 %2";
 			const QString STATE_LABEL_STYLE("QLabel { background-color: #9ACD32; }");
 			const QString USER_ICON_PATH("user_ico.png");

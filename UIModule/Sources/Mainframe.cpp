@@ -56,6 +56,7 @@ namespace ui
 		SetupUI();
 		login::LoginManager::Instance()->Subscribe(this);
 		net::NetUsersManager::Instance()->Subscribe(this);
+    AddNewUser(L"111");
 	}
 
 	MainFrame::~MainFrame()
@@ -103,7 +104,7 @@ namespace ui
 
 	void MainFrame::AddNewUser(const std::wstring& uuid)
 	{
-		controls::UserListItem* userItem = AddUserListItem(net::NetUsersManager::Instance()->GetNetUserName(uuid), uuid);
+		controls::UserListItem* userItem = AddUserListItem(/*net::NetUsersManager::Instance()->GetNetUserName(uuid)*/L"Babanva Volga", uuid);
 		int viewID = CreateUserMsgView();
 		m_userItems.insert(std::make_pair(uuid, UserItem(userItem, viewID)));
 		m_userListWidget->setCurrentItem(userItem);
@@ -133,7 +134,9 @@ namespace ui
 		QSplitter* msgViewWidget = new QSplitter(Qt::Vertical); 
 		QTableWidget* msgView = new QTableWidget();
     msgView->setColumnCount(COLUMN_COUNT);
-    
+    msgView->setShowGrid(false);
+    msgView->setStyleSheet(MESSAGE_WIDGET_STYLE);
+
     QHeaderView* verticalHeader = msgView->verticalHeader();
     verticalHeader->setVisible(false);
     verticalHeader->setSectionResizeMode(QHeaderView::ResizeToContents);
@@ -144,7 +147,8 @@ namespace ui
     horizontalHeader->setSectionResizeMode(MESSAGE_COLUMN, QHeaderView::Stretch);
     horizontalHeader->setSectionResizeMode(TIME_COLUMN, QHeaderView::Fixed);
     horizontalHeader->setDefaultSectionSize(DEFAULT_COLUMN_WIDTH);
-		QTextEdit* msgEdit = new QTextEdit();
+		
+    QTextEdit* msgEdit = new QTextEdit();
 		msgViewWidget->addWidget(msgView);
 		msgViewWidget->addWidget(msgEdit);
 
@@ -231,7 +235,7 @@ namespace ui
 //name item
     QTableWidgetItem* nameItem = new QTableWidgetItem(WStrToQStr(userName));
     nameItem->setTextAlignment(Qt::AlignTop);
-    nameItem->setFlags(nameItem->flags() & ~Qt::ItemIsSelectable);
+    nameItem->setFlags(nameItem->flags() & ~(Qt::ItemIsEditable | Qt::ItemIsSelectable));
     if (isNetUser)
       nameItem->setTextColor(Qt::blue);
     else
@@ -239,11 +243,12 @@ namespace ui
 //time item
     QTableWidgetItem* timeItem = new QTableWidgetItem(QTime::currentTime().toString("hh:mm"));
     timeItem->setTextColor(Qt::gray);
-    timeItem->setTextAlignment(Qt::AlignTop);
-    timeItem->setFlags(timeItem->flags() & ~Qt::ItemIsSelectable);
+    timeItem->setTextAlignment(Qt::AlignTop | Qt::AlignHCenter);
+    timeItem->setFlags(timeItem->flags() & ~(Qt::ItemIsEditable | Qt::ItemIsSelectable));
 //message item
     QTableWidgetItem* messageItem = new QTableWidgetItem(WStrToQStr(msg));
-    messageItem->setFlags(messageItem->flags() & ~Qt::ItemIsSelectable);
+    messageItem->setTextAlignment(Qt::AlignTop);
+    messageItem->setFlags(messageItem->flags() & ~(Qt::ItemIsEditable | Qt::ItemIsSelectable));
 
     view->setItem(rowNum, NAME_COLUMN, nameItem);
     view->setItem(rowNum, MESSAGE_COLUMN, messageItem);
