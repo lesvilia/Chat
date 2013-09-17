@@ -55,7 +55,7 @@ namespace settings
 
       const QString MESSAGE_WIDGET_STYLE
       (
-        "QTableView{ padding: 5px; }"
+        "QTableView { padding: 5px; }"
         "QTableView::item { margin-bottom: 10px; }"
       );
 
