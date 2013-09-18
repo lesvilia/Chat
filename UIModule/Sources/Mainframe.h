@@ -58,6 +58,7 @@ namespace ui
 
   private:
     int CreateUserMsgView();
+    QList<int> GetMsgViewSizes();
     controls::UserListItem* AddUserListItem(const std::wstring& userName, const std::wstring& uuid);
     void AddNewUser(const std::wstring& uuid);
     void RemoveUser(const std::wstring& uuid);

@@ -42,78 +42,76 @@ namespace ui
   {
   }
 
-namespace controls
-{
-    UsersMessageView::UsersMessageView()
-      : QSplitter(Qt::Vertical)
+  UsersMessageView::UsersMessageView()
+    : QSplitter(Qt::Vertical)
+    , m_msgView(nullptr)
+    , m_msgEdit(nullptr)
+  {
+    CreateSubControls();
+  }
+
+  UsersMessageView::~UsersMessageView()
+  {
+  }
+
+  void UsersMessageView::CreateSubControls()
+  {
+    m_msgView = new QTableWidget();
+    m_msgView->setColumnCount(COLUMN_COUNT);
+    m_msgView->setShowGrid(false);
+    m_msgView->setStyleSheet(MESSAGE_WIDGET_STYLE);
+
+    QHeaderView* verticalHeader = m_msgView->verticalHeader();
+    verticalHeader->setVisible(false);
+    verticalHeader->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+    QHeaderView* horizontalHeader = m_msgView->horizontalHeader();
+    horizontalHeader->setVisible(false);
+    horizontalHeader->setSectionResizeMode(NAME_COLUMN, QHeaderView::Fixed);
+    horizontalHeader->setSectionResizeMode(MESSAGE_COLUMN, QHeaderView::Stretch);
+    horizontalHeader->setSectionResizeMode(TIME_COLUMN, QHeaderView::Fixed);
+    horizontalHeader->setDefaultSectionSize(DEFAULT_COLUMN_WIDTH);
+    
+    m_msgEdit = new QTextEdit();
+    
+    addWidget(m_msgView);
+    addWidget(m_msgEdit);
+  }
+
+  void UsersMessageView::ClearMessageEdit()
+  {
+    m_msgEdit->clear();
+    m_msgEdit->document()->clear();
+  }
+
+  bool UsersMessageView::GetTextFromEdit(std::wstring* msg)
+  {
+    QString text(m_msgEdit->toPlainText());
+    PrepareMessage(text);
+    ClearMessageEdit();
+    if (!text.isEmpty())
     {
-      CreateSubControls();
+      msg->assign(text.toStdWString());
+      return true;
     }
+    return false;
+  }
 
-    UsersMessageView::~UsersMessageView()
-    {
-    }
+  void UsersMessageView::AppendMessage(const MessageInfo& msg)
+  {
+    const int rowNum = m_msgView->rowCount();
+    InsertMessage(msg, rowNum);
+  }
 
-    void UsersMessageView::CreateSubControls()
-    {
-      QTableWidget* msgView = new QTableWidget();
-      msgView->setColumnCount(COLUMN_COUNT);
-      msgView->setShowGrid(false);
-      msgView->setStyleSheet(MESSAGE_WIDGET_STYLE);
+  void UsersMessageView::InsertMessage(const MessageInfo& msg, int rowNum)
+  {
+    m_msgView->insertRow(rowNum);
+    QTableWidgetItem* nameItem = CreateTableItem(msg.m_username, msg.m_isNetUser ? Qt::blue : Qt::gray);
+    QTableWidgetItem* messageItem = CreateTableItem(msg.m_message, Qt::black);
+    QTableWidgetItem* timeItem = CreateTableItem(msg.m_time, Qt::gray, Qt::AlignTop | Qt::AlignHCenter);
 
-      QHeaderView* verticalHeader = msgView->verticalHeader();
-      verticalHeader->setVisible(false);
-      verticalHeader->setSectionResizeMode(QHeaderView::ResizeToContents);
-
-      QHeaderView* horizontalHeader = msgView->horizontalHeader();
-      horizontalHeader->setVisible(false);
-      horizontalHeader->setSectionResizeMode(NAME_COLUMN, QHeaderView::Fixed);
-      horizontalHeader->setSectionResizeMode(MESSAGE_COLUMN, QHeaderView::Stretch);
-      horizontalHeader->setSectionResizeMode(TIME_COLUMN, QHeaderView::Fixed);
-      horizontalHeader->setDefaultSectionSize(DEFAULT_COLUMN_WIDTH);
-
-      QTextEdit* msgEdit = new QTextEdit();
-      addWidget(msgView);
-      addWidget(msgEdit);
-    }
-
-    bool UsersMessageView::GetTextFromEdit(std::wstring* msg)
-    {
-      QTextEdit* msgEdit = static_cast<QTextEdit*>(widget(EDIT_SECTION_ID));
-      if (msgEdit)
-      {
-        QString message(msgEdit->toPlainText());
-        PrepareMessage(message);
-
-        msgEdit->clear();
-        msgEdit->document()->clear();
-
-        if (!message.isEmpty())
-        {
-          msg->assign(message.toStdWString());
-          return true;
-        }
-      }
-      return false;
-    }
-
-    void UsersMessageView::AppendMessage(const MessageInfo& msg)
-    {
-      QTableWidget* msgView = static_cast<QTableWidget*>(widget(VIEW_SECTION_ID));
-      const int rowNum = msgView->rowCount();
-      msgView->insertRow(rowNum);
-      QTableWidgetItem* nameItem = CreateTableItem(msg.m_username, msg.m_isNetUser ? Qt::blue : Qt::gray);
-      QTableWidgetItem* messageItem = CreateTableItem(msg.m_message, Qt::black);
-      QTableWidgetItem* timeItem = CreateTableItem(msg.m_time, Qt::gray, Qt::AlignTop | Qt::AlignHCenter);
-
-      msgView->setItem(rowNum, NAME_COLUMN, nameItem);
-      msgView->setItem(rowNum, MESSAGE_COLUMN, messageItem);
-      msgView->setItem(rowNum, TIME_COLUMN, timeItem);
-    }
-
-    void UsersMessageView::InsertMessage(const MessageInfo& msg, int row)
-    {
-
-    }
+    m_msgView->setItem(rowNum, NAME_COLUMN, nameItem);
+    m_msgView->setItem(rowNum, MESSAGE_COLUMN, messageItem);
+    m_msgView->setItem(rowNum, TIME_COLUMN, timeItem);
   }
 }

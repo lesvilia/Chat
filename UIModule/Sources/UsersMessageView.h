@@ -3,6 +3,9 @@
 
 #include <QSplitter>
 
+class QTableWidget;
+class QTextEdit;
+
 namespace ui
 {
   struct MessageInfo
@@ -19,35 +22,29 @@ namespace ui
   {
   };
 
-  namespace controls
+  class UsersMessageView
+    : public QSplitter
   {
-    class UsersMessageView
-      : public QSplitter
+    enum
     {
-      enum
-      {
-        VIEW_SECTION_ID,
-        EDIT_SECTION_ID,
-      };
-
-      enum
-      {
-        NAME_COLUMN,
-        MESSAGE_COLUMN,
-        TIME_COLUMN,
-
-        COLUMN_COUNT //always last
-      };
-
-    public:
-      UsersMessageView();
-      virtual ~UsersMessageView();
-      bool GetTextFromEdit(std::wstring* msg);
-      void AppendMessage(const MessageInfo& msg);
-      void InsertMessage(const MessageInfo& msg, int row);
-
-    private:
-      void CreateSubControls();
+      NAME_COLUMN,
+      MESSAGE_COLUMN,
+      TIME_COLUMN,
+      COLUMN_COUNT //always last
     };
-  }
+
+  public:
+    UsersMessageView();
+    virtual ~UsersMessageView();
+    bool GetTextFromEdit(std::wstring* msg);
+    void AppendMessage(const MessageInfo& msg);
+    void InsertMessage(const MessageInfo& msg, int rowNum);
+
+  private:
+    void CreateSubControls();
+    void ClearMessageEdit();
+  private:
+    QTableWidget* m_msgView;
+    QTextEdit* m_msgEdit;
+  };
 }

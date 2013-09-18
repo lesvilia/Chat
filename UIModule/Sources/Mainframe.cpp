@@ -23,7 +23,7 @@
 
 namespace
 {
-  std::wstring GetCurrentTimeStr(const char* format)
+  std::wstring CurrentTimeToStr(const char* format)
   {
     return QTime::currentTime().toString(format).toStdWString();
   }
@@ -54,7 +54,7 @@ namespace ui
     SetupUI();
     login::LoginManager::Instance()->Subscribe(this);
     net::NetUsersManager::Instance()->Subscribe(this);
-    AddNewUser(L"123");
+    //AddNewUser(L"123");
   }
 
   MainFrame::~MainFrame()
@@ -130,23 +130,28 @@ namespace ui
     return userItem;
   }
 
-  int MainFrame::CreateUserMsgView()
+  QList<int> MainFrame::GetMsgViewSizes()
   {
-    controls::UsersMessageView* msgViewWidget = new controls::UsersMessageView();
     QList<int> listSizes;
     if (m_msgBoxStackedWidget->count() > 0) //if users are connected splitter size maybe changed
     {
-      controls::UsersMessageView* currentMsgViewWidget = static_cast<controls::UsersMessageView*>(
+      UsersMessageView* currentMsgView = static_cast<UsersMessageView*>(
         m_msgBoxStackedWidget->currentWidget());
-      listSizes.swap(currentMsgViewWidget->sizes());
+      listSizes.swap(currentMsgView->sizes());
     }
     else
     {
       listSizes << TOP_PART_HEIGH << BOTTOM_PART_HEIGH;
     }
-    msgViewWidget->setSizes(listSizes);
-    connect(msgViewWidget, SIGNAL(splitterMoved(int, int)), SLOT(ResizeMessagesView()));
-    return m_msgBoxStackedWidget->addWidget(msgViewWidget);
+    return listSizes;
+  }
+
+  int MainFrame::CreateUserMsgView()
+  {
+    UsersMessageView* msgView = new UsersMessageView();
+    msgView->setSizes(GetMsgViewSizes());
+    connect(msgView, SIGNAL(splitterMoved(int, int)), SLOT(ResizeMessagesView()));
+    return m_msgBoxStackedWidget->addWidget(msgView);
   }
 
   void MainFrame::AddNewMessage(const std::wstring& uuid, const std::wstring& message)
@@ -162,13 +167,13 @@ namespace ui
         item.userlistItem->EnableNotifyStyle();
       }
 
-      controls::UsersMessageView* msgViewWidget = static_cast<controls::UsersMessageView*>(
+      UsersMessageView* msgView = static_cast<UsersMessageView*>(
         m_msgBoxStackedWidget->widget(item.msgWidgetID));
-      if (msgViewWidget)
+      if (msgView)
       {
         std::wstring name(net::NetUsersManager::Instance()->GetNetUserName(uuid));
-        MessageInfo msg(name, message, GetCurrentTimeStr("hh:mm"), true);
-        msgViewWidget->AppendMessage(msg);
+        MessageInfo msg(name, message, CurrentTimeToStr("hh:mm"), true);
+        msgView->AppendMessage(msg);
       }
     }
   }
@@ -185,21 +190,19 @@ namespace ui
   void MainFrame::SendMessageToUser()
   {
     login::ILoginManager* loginManager = login::LoginManager::Instance();
-    if (loginManager->IsOnline())
+    if (loginManager->IsOnline() && m_msgBoxStackedWidget->count() > 0)
     {
-      controls::UsersMessageView* msgViewWidget = static_cast<controls::UsersMessageView*>(
+      UsersMessageView* msgView = static_cast<UsersMessageView*>(
         m_msgBoxStackedWidget->currentWidget());
-      if (msgViewWidget)
+
+      std::wstring text;
+      if (msgView->GetTextFromEdit(&text))
       {
-        std::wstring text;
-        if (msgViewWidget->GetTextFromEdit(&text))
-        {
-          MessageInfo msg(loginManager->GetCurrentUser()->name, text, GetCurrentTimeStr("hh:mm"));
-          msgViewWidget->AppendMessage(msg);
-          controls::UserListItem* currentItem = static_cast<controls::UserListItem*>(
-            m_userListWidget->currentItem());
-          msg::ChatMessagesManager::Instance()->Send(currentItem->GetUserID(), text);
-        }
+        MessageInfo msg(loginManager->GetCurrentUser()->name, text, CurrentTimeToStr("hh:mm"));
+        msgView->AppendMessage(msg);
+        controls::UserListItem* currentItem = static_cast<controls::UserListItem*>(
+          m_userListWidget->currentItem());
+        msg::ChatMessagesManager::Instance()->Send(currentItem->GetUserID(), text);
       }
     }
   }
@@ -325,14 +328,14 @@ namespace ui
 
   void MainFrame::ResizeMessagesView()
   {
-    controls::UsersMessageView* currentWdgSplitter = static_cast<controls::UsersMessageView*>(
+    UsersMessageView* currentWdgSplitter = static_cast<UsersMessageView*>(
       m_msgBoxStackedWidget->currentWidget());
     if (currentWdgSplitter)
     {
       QList<int> newSizesWdg(currentWdgSplitter->sizes());
       for(auto it = m_userItems.begin(); it != m_userItems.end(); ++it)
       {
-        controls::UsersMessageView* wdgSplitter = static_cast<controls::UsersMessageView*>(
+        UsersMessageView* wdgSplitter = static_cast<UsersMessageView*>(
           m_msgBoxStackedWidget->widget(it->second.msgWidgetID));
         wdgSplitter->setSizes(newSizesWdg);
       }
