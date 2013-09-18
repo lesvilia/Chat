@@ -55,6 +55,12 @@
     <Filter Include="UIControls\SettingsDialog\src">
       <UniqueIdentifier>{b4da376b-57ef-418d-b6fd-71c1c1d17057}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UIControls\UsersMessageView">
+      <UniqueIdentifier>{18129a55-a1d4-4c38-a635-6a9ece8aa632}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UIControls\UsersMessageView\src">
+      <UniqueIdentifier>{f5d0aab9-e9a9-4f32-8ca7-3318c68418c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_Mainframe.cpp">
@@ -97,6 +103,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_SettingsDialog.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\UsersMessageView.cpp">
+      <Filter>UIControls\UsersMessageView\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="chat_icon.png">
@@ -132,6 +141,9 @@
     </ClInclude>
     <ClInclude Include="Sources\UISettings.h">
       <Filter>Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\UsersMessageView.h">
+      <Filter>UIControls\UsersMessageView</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -17,7 +17,6 @@ namespace settings
       const unsigned TOP_PART_HEIGH = MAINFRAME_HEIGH - BOTTOM_PART_HEIGH;
 
       const unsigned MIN_BUTTON_WIDTH = 90;
-      const unsigned DEFAULT_COLUMN_WIDTH = 70;
     }
 
     namespace colors
@@ -53,12 +52,6 @@ namespace settings
         "QListWidget::item:selected { background: #007FFF; color: #FFFFFF; }"
       );
 
-      const QString MESSAGE_WIDGET_STYLE
-      (
-        "QTableView { padding: 5px; }"
-        "QTableView::item { margin-bottom: 10px; }"
-      );
-
       const char STATE_LABEL_FORMAT[] = "%1 %2";
       const QString STATE_LABEL_STYLE("QLabel { background-color: #9ACD32; }");
       const QString USER_ICON_PATH("user_ico.png");
@@ -75,6 +68,16 @@ namespace settings
         "All right reserved. Ivan Sialiuk."
       );
     }
+  }
+
+  namespace MessageView
+  {
+    const QString MESSAGE_WIDGET_STYLE
+    (
+      "QTableView { padding: 5px; }"
+      "QTableView::item { margin-bottom: 10px; }"
+    );
+    const unsigned DEFAULT_COLUMN_WIDTH = 70;
   }
 
   namespace logindialog

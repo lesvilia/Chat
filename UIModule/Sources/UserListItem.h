@@ -12,7 +12,7 @@ namespace ui
     public:
       UserListItem();
       UserListItem(const QIcon& icon, const QString& name, const std::wstring& uuid);
-      ~UserListItem();
+      virtual ~UserListItem();
       void EnableNotifyStyle();
       void EnableNormalStyle();
       std::wstring GetUserID() const;

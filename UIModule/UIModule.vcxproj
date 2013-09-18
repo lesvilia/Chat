@@ -112,6 +112,7 @@
     <ClCompile Include="Sources\SettingsDialog.cpp" />
     <ClCompile Include="Sources\StaticLink.cpp" />
     <ClCompile Include="Sources\UserListItem.cpp" />
+    <ClCompile Include="Sources\UsersMessageView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="chat_icon.png" />
@@ -132,6 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\UISettings.h" />
+    <ClInclude Include="Sources\UsersMessageView.h" />
     <CustomBuild Include="Sources\SettingsDialog.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing SettingsDialog.h...</Message>

@@ -19,6 +19,5 @@ namespace ui
     protected:
       virtual void mousePressEvent(QMouseEvent* event);
     };
-
   }
 }

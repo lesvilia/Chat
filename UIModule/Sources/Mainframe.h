@@ -1,5 +1,6 @@
 #pragma once
 #include <map>
+
 #include <QMainWindow>
 #include <QHBoxLayout>
 #include <QListWidget>
@@ -7,6 +8,7 @@
 #include <QStackedWidget>
 #include <QPushButton>
 #include <QLabel>
+
 #include "UIMessageHandler.h"
 #include "LoginHandlers.h"
 #include "INetUsersObserver.h"
@@ -33,15 +35,6 @@ namespace ui
       int msgWidgetID;
     };
 
-    enum 
-    {
-      NAME_COLUMN,
-      MESSAGE_COLUMN,
-      TIME_COLUMN,
-
-      COLUMN_COUNT //always last
-    };
-
   public:
     MainFrame(QWidget* parent = 0);
     ~MainFrame();
@@ -66,7 +59,6 @@ namespace ui
   private:
     int CreateUserMsgView();
     controls::UserListItem* AddUserListItem(const std::wstring& userName, const std::wstring& uuid);
-    void AddMessageToView(const std::wstring& userName, const std::wstring& msg, QTableWidget* view, bool isNetUser);
     void AddNewUser(const std::wstring& uuid);
     void RemoveUser(const std::wstring& uuid);
     void SetupUI();

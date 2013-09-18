@@ -13,7 +13,8 @@ namespace login
   struct UserData
   {
     UserData();
-    UserData(const std::wstring& userName, const std::wstring& userPass, const std::wstring& userID = std::wstring()); 
+    UserData(const std::wstring& userName, const std::wstring& userPass,
+             const std::wstring& userID = std::wstring());
     bool Empty() const;
 
     std::wstring name;
@@ -49,7 +50,7 @@ namespace login
   private:
     LoginManager();
     ~LoginManager();
-    
+
   private:
     std::unique_ptr<impl::LoginManagerImpl> m_impl;
   };

@@ -2,10 +2,9 @@
 #include "Sources/Mainframe.h"
 #include "MessagesReceiver.h"
 
-namespace 
+namespace
 {
   const wchar_t MUTEX_NAME[] = { L"4BEC4994-AEF4-48F4-A2EA-294563154342" };
-    
 }
 
 

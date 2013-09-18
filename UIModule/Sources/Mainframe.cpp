@@ -1,3 +1,5 @@
+#include "Mainframe.h"
+
 #include <QSplitter>
 #include <QLabel>
 #include <QVBoxLayout>
@@ -7,7 +9,8 @@
 #include <QTableWidget>
 #include <QHeaderView>
 #include <QTime>
-#include "Mainframe.h"
+
+#include "UsersMessageView.h"
 #include "NetUsersManager.h"
 #include "LoginDialog.h"
 #include "SettingsDialog.h"
@@ -20,23 +23,9 @@
 
 namespace
 {
-  void PrepareMessage(QString& msg)
+  std::wstring GetCurrentTimeStr(const char* format)
   {
-    QString temp(msg);
-    temp.remove("\n");
-    if (temp.isEmpty())
-    {
-      msg.clear();
-    }
-  }
-
-  QTableWidgetItem* CreateTableItem(const std::wstring& text, const QColor& color, int alignment = Qt::AlignTop)
-  {
-    QTableWidgetItem* item = new QTableWidgetItem(WStrToQStr(text));
-    item->setTextColor(color);
-    item->setTextAlignment(alignment);
-    item->setFlags(item->flags() & ~(Qt::ItemIsEditable | Qt::ItemIsSelectable));
-    return item;
+    return QTime::currentTime().toString(format).toStdWString();
   }
 }
 
@@ -134,7 +123,8 @@ namespace ui
 
   controls::UserListItem* MainFrame::AddUserListItem(const std::wstring& userName, const std::wstring& uuid)
   {
-    controls::UserListItem* userItem = new controls::UserListItem(QIcon(USER_ICON_PATH), WStrToQStr(userName), uuid);
+    controls::UserListItem* userItem = new controls::UserListItem(QIcon(USER_ICON_PATH),
+                                                                  WStrToQStr(userName), uuid);
     userItem->setSizeHint(QSize(25, 25));
     m_userListWidget->addItem(userItem);
     return userItem;
@@ -142,39 +132,19 @@ namespace ui
 
   int MainFrame::CreateUserMsgView()
   {
-    QSplitter* msgViewWidget = new QSplitter(Qt::Vertical); 
-    QTableWidget* msgView = new QTableWidget();
-    msgView->setColumnCount(COLUMN_COUNT);
-    msgView->setShowGrid(false);
-    msgView->setStyleSheet(MESSAGE_WIDGET_STYLE);
-
-    QHeaderView* verticalHeader = msgView->verticalHeader();
-    verticalHeader->setVisible(false);
-    verticalHeader->setSectionResizeMode(QHeaderView::ResizeToContents);
-    
-    QHeaderView* horizontalHeader = msgView->horizontalHeader();
-    horizontalHeader->setVisible(false);
-    horizontalHeader->setSectionResizeMode(NAME_COLUMN, QHeaderView::Fixed);
-    horizontalHeader->setSectionResizeMode(MESSAGE_COLUMN, QHeaderView::Stretch);
-    horizontalHeader->setSectionResizeMode(TIME_COLUMN, QHeaderView::Fixed);
-    horizontalHeader->setDefaultSectionSize(DEFAULT_COLUMN_WIDTH);
-    
-    QTextEdit* msgEdit = new QTextEdit();
-    msgViewWidget->addWidget(msgView);
-    msgViewWidget->addWidget(msgEdit);
-
+    controls::UsersMessageView* msgViewWidget = new controls::UsersMessageView();
     QList<int> listSizes;
     if (m_msgBoxStackedWidget->count() > 0) //if users are connected splitter size maybe changed
     {
-      QSplitter* currentWdgSplitter = static_cast<QSplitter*>(m_msgBoxStackedWidget->currentWidget());
-      listSizes.swap(currentWdgSplitter->sizes());
+      controls::UsersMessageView* currentMsgViewWidget = static_cast<controls::UsersMessageView*>(
+        m_msgBoxStackedWidget->currentWidget());
+      listSizes.swap(currentMsgViewWidget->sizes());
     }
     else
     {
       listSizes << TOP_PART_HEIGH << BOTTOM_PART_HEIGH;
     }
     msgViewWidget->setSizes(listSizes);
-
     connect(msgViewWidget, SIGNAL(splitterMoved(int, int)), SLOT(ResizeMessagesView()));
     return m_msgBoxStackedWidget->addWidget(msgViewWidget);
   }
@@ -185,19 +155,20 @@ namespace ui
     if (iter != m_userItems.end())
     {
       UserItem item(iter->second);
-      
-      controls::UserListItem* curentItem = static_cast<controls::UserListItem*>(m_userListWidget->currentItem());
+      controls::UserListItem* curentItem = static_cast<controls::UserListItem*>(
+        m_userListWidget->currentItem());
       if (uuid != curentItem->GetUserID())
       {
         item.userlistItem->EnableNotifyStyle();
       }
 
-      QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStackedWidget->widget(item.msgWidgetID));
-      if (wdgSplitter)
+      controls::UsersMessageView* msgViewWidget = static_cast<controls::UsersMessageView*>(
+        m_msgBoxStackedWidget->widget(item.msgWidgetID));
+      if (msgViewWidget)
       {
-        QTableWidget* msgView = static_cast<QTableWidget*>(wdgSplitter->widget(0));
         std::wstring name(net::NetUsersManager::Instance()->GetNetUserName(uuid));
-        AddMessageToView(name, message, msgView, true);
+        MessageInfo msg(name, message, GetCurrentTimeStr("hh:mm"), true);
+        msgViewWidget->AppendMessage(msg);
       }
     }
   }
@@ -216,42 +187,21 @@ namespace ui
     login::ILoginManager* loginManager = login::LoginManager::Instance();
     if (loginManager->IsOnline())
     {
-      QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStackedWidget->currentWidget());
-      if (wdgSplitter)
+      controls::UsersMessageView* msgViewWidget = static_cast<controls::UsersMessageView*>(
+        m_msgBoxStackedWidget->currentWidget());
+      if (msgViewWidget)
       {
-        QTableWidget* msgView = static_cast<QTableWidget*>(wdgSplitter->widget(0));
-        QTextEdit* msgEdit = static_cast<QTextEdit*>(wdgSplitter->widget(1));
-        QString message(msgEdit->toPlainText());
-        PrepareMessage(message);
-        if (!message.isEmpty())
+        std::wstring text;
+        if (msgViewWidget->GetTextFromEdit(&text))
         {
-          AddMessageToView(loginManager->GetCurrentUser()->name, message.toStdWString(), msgView, false);
-          controls::UserListItem* currentItem = static_cast<controls::UserListItem*>(m_userListWidget->currentItem());
-          if (currentItem)
-          {
-            msg::ChatMessagesManager::Instance()->Send(currentItem->GetUserID(), QStrToWStr(message));
-          }
+          MessageInfo msg(loginManager->GetCurrentUser()->name, text, GetCurrentTimeStr("hh:mm"));
+          msgViewWidget->AppendMessage(msg);
+          controls::UserListItem* currentItem = static_cast<controls::UserListItem*>(
+            m_userListWidget->currentItem());
+          msg::ChatMessagesManager::Instance()->Send(currentItem->GetUserID(), text);
         }
-        msgEdit->clear();
-        msgEdit->document()->clear();
       }
     }
-  }
-
-  void MainFrame::AddMessageToView(const std::wstring& userName, const std::wstring& msg,
-                                   QTableWidget* view, bool isNetUser)
-  {
-    const int rowNum = view->rowCount();
-    view->insertRow(rowNum);
-
-    QTableWidgetItem* nameItem = CreateTableItem(userName, isNetUser ? Qt::blue : Qt::gray);
-    QTableWidgetItem* messageItem = CreateTableItem(msg, Qt::black);
-    const std::wstring currentTime(QTime::currentTime().toString("hh:mm").toStdWString());
-    QTableWidgetItem* timeItem = CreateTableItem(currentTime, Qt::gray, Qt::AlignTop | Qt::AlignHCenter);
-
-    view->setItem(rowNum, NAME_COLUMN, nameItem);
-    view->setItem(rowNum, MESSAGE_COLUMN, messageItem);
-    view->setItem(rowNum, TIME_COLUMN, timeItem);
   }
 
   void MainFrame::SetupUI()
@@ -375,17 +325,16 @@ namespace ui
 
   void MainFrame::ResizeMessagesView()
   {
-    QSplitter* currentWdgSplitter = static_cast<QSplitter*>(m_msgBoxStackedWidget->currentWidget());
+    controls::UsersMessageView* currentWdgSplitter = static_cast<controls::UsersMessageView*>(
+      m_msgBoxStackedWidget->currentWidget());
     if (currentWdgSplitter)
     {
       QList<int> newSizesWdg(currentWdgSplitter->sizes());
       for(auto it = m_userItems.begin(); it != m_userItems.end(); ++it)
       {
-        QSplitter* wdgSplitter = static_cast<QSplitter*>(m_msgBoxStackedWidget->widget(it->second.msgWidgetID));
-        if (wdgSplitter != currentWdgSplitter)
-        {
-          wdgSplitter->setSizes(newSizesWdg);
-        }
+        controls::UsersMessageView* wdgSplitter = static_cast<controls::UsersMessageView*>(
+          m_msgBoxStackedWidget->widget(it->second.msgWidgetID));
+        wdgSplitter->setSizes(newSizesWdg);
       }
     }
   }
