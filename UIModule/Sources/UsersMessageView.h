@@ -4,14 +4,19 @@
 #include <QSplitter>
 
 class QTableWidget;
-class IDropResultHandler;
+class QWidget;
+class QProgressBar;
 
 namespace ui
 {
+  class IDropResultHandler;
+  class IProgressUIObserver;
+
   namespace controls
   {
     class DnDTextEdit;
   }
+
   struct MessageInfo
   {
     MessageInfo(const std::wstring& username, const std::wstring& message,
@@ -22,9 +27,31 @@ namespace ui
     bool m_isNetUser;
   };
 
-  struct FileMessageInfo
+  namespace internal
   {
-  };
+    class TableItemCreator
+    {
+    public:
+      TableItemCreator();
+      virtual QWidget* CreateNameItem(const std::wstring& text, const QColor& color);
+      virtual QWidget* CreateMessageItem(const std::wstring& text);
+      virtual QWidget* CreateTimeItem(const std::wstring& text);
+    private:
+      QWidget* CreateTextCellItem(const std::wstring& text, const QColor& color,
+        QFlags<Qt::AlignmentFlag> alignment = Qt::AlignTop);
+    };
+
+    class TableFileItemCreator
+      : public TableItemCreator
+    {
+    public:
+      TableFileItemCreator();
+      virtual QWidget* CreateMessageItem(const std::wstring& text);
+      QProgressBar* GetProgressObserver() const;
+    private:
+      QProgressBar* m_observer; //TODO: need to IProgressUIObserver replace
+    };                          //after implement progress bar control
+  }
 
   class UsersMessageView
     : public QSplitter
@@ -41,12 +68,17 @@ namespace ui
     explicit UsersMessageView(IDropResultHandler* dropHandler);
     virtual ~UsersMessageView();
     bool GetTextFromEdit(std::wstring* msg);
-    void AppendMessage(const MessageInfo& msg);
-    void InsertMessage(const MessageInfo& msg, int rowNum);
+    void AppendTxtMessage(const MessageInfo& msg);
+    void InsertTxtMessage(const MessageInfo& msg, int rowNum);
+    QProgressBar* AppendFileMessage(const MessageInfo& msg);
+
+    void InsertMessageFromDB(const MessageInfo& msg);
 
   private:
+    void InsertMessageImpl(const MessageInfo& msg, int rowNum, internal::TableItemCreator& creator);
     void CreateSubControls(IDropResultHandler* dropHandler);
     void ClearMessageEdit();
+
   private:
     QTableWidget* m_msgView;
     controls::DnDTextEdit* m_msgEdit;

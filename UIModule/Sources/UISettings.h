@@ -75,9 +75,13 @@ namespace settings
     const QString MESSAGE_WIDGET_STYLE
     (
       "QTableView { padding: 5px; }"
-      "QTableView::item { margin-bottom: 10px; }"
     );
     const unsigned DEFAULT_COLUMN_WIDTH = 70;
+    const QString TABLE_ITEM_STYLE_TEMPLATE
+    (
+      "QLabel { color: %1; padding-top: 5px; }"
+    );
+    const QString FILE_ICON_PATH("file_icon.png");
   }
 
   namespace logindialog

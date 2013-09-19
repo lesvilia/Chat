@@ -179,7 +179,7 @@ namespace ui
       {
         std::wstring name(net::NetUsersManager::Instance()->GetNetUserName(uuid));
         MessageInfo msg(name, message, CurrentTimeToStr("hh:mm"), true);
-        msgView->AppendMessage(msg);
+        msgView->AppendTxtMessage(msg);
       }
     }
   }
@@ -205,7 +205,7 @@ namespace ui
       if (msgView->GetTextFromEdit(&text))
       {
         MessageInfo msg(loginManager->GetCurrentUser()->name, text, CurrentTimeToStr("hh:mm"));
-        msgView->AppendMessage(msg);
+        msgView->AppendTxtMessage(msg);
         controls::UserListItem* currentItem = static_cast<controls::UserListItem*>(
           m_userListWidget->currentItem());
         msg::ChatMessagesManager::Instance()->Send(currentItem->GetUserID(), text);

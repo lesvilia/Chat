@@ -2,10 +2,13 @@
 
 #include <string>
 
-class IDropResultHandler
+namespace ui
 {
-public:
-  virtual void HandleDropFileResult(const std::wstring& path) = 0;
-protected:
-  virtual ~IDropResultHandler() {}
-};
+  class IDropResultHandler
+  {
+  public:
+    virtual void HandleDropFileResult(const std::wstring& path) = 0;
+  protected:
+    ~IDropResultHandler() {}
+  };
+}

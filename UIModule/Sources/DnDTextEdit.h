@@ -1,12 +1,13 @@
 #pragma once
 #include <QTextEdit>
 
-class IDropResultHandler;
 class QDragEnterEvent;
 class QDropEvent;
 
 namespace ui
 {
+  class IDropResultHandler;
+
   namespace controls
   {
     class DnDTextEdit

@@ -154,6 +154,9 @@
     <ClInclude Include="Sources\IDropResultHandler.h">
       <Filter>MainFrame</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\IFileTransferUIHandler.h">
+      <Filter>MainFrame</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="UIModule.rc">
