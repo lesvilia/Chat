@@ -12,18 +12,24 @@
 #include "UIMessageHandler.h"
 #include "LoginHandlers.h"
 #include "INetUsersObserver.h"
-#include "UserListItem.h"
+#include "IDropResultHandler.h"
 
 class QTableWidget;
 
 namespace ui
 {
+  namespace controls
+  {
+    class UserListItem;
+  }
+
   class MainFrame 
     : public QMainWindow
     , public msg::UIMessageHandler
     , public login::ILoginUIHandler
     , public login::ILoginStateObserver
     , public net::INetUsersObserver
+    , public IDropResultHandler
   {
     Q_OBJECT
 
@@ -49,6 +55,9 @@ namespace ui
     //INetUsersObserver interface
     virtual void OnNetUserConnected(const std::wstring& uuid);
     virtual void OnNetUserDisconnected(const std::wstring& uuid);
+
+    //IDropResultHandler interface
+    virtual void HandleDropFileResult(const std::wstring& path);
 
     //UIMessageHandler interface
     virtual void AddNewMessage(const std::wstring& uuid, const std::wstring& message);

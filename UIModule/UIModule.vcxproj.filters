@@ -55,11 +55,11 @@
     <Filter Include="UIControls\SettingsDialog\src">
       <UniqueIdentifier>{b4da376b-57ef-418d-b6fd-71c1c1d17057}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UIControls\UsersMessageView">
-      <UniqueIdentifier>{18129a55-a1d4-4c38-a635-6a9ece8aa632}</UniqueIdentifier>
+    <Filter Include="UIControls\DnDTextEdit">
+      <UniqueIdentifier>{b4bb06e8-88c5-447a-8456-0b4950c01253}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UIControls\UsersMessageView\src">
-      <UniqueIdentifier>{f5d0aab9-e9a9-4f32-8ca7-3318c68418c6}</UniqueIdentifier>
+    <Filter Include="UIControls\DnDTextEdit\src">
+      <UniqueIdentifier>{3cbf9a26-3408-4d34-ae0a-c513f4437889}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -104,7 +104,10 @@
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="Sources\UsersMessageView.cpp">
-      <Filter>UIControls\UsersMessageView\src</Filter>
+      <Filter>MainFrame\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\DnDTextEdit.cpp">
+      <Filter>UIControls\DnDTextEdit\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -143,7 +146,13 @@
       <Filter>Settings</Filter>
     </ClInclude>
     <ClInclude Include="Sources\UsersMessageView.h">
-      <Filter>UIControls\UsersMessageView</Filter>
+      <Filter>MainFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\DnDTextEdit.h">
+      <Filter>UIControls\DnDTextEdit</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\IDropResultHandler.h">
+      <Filter>MainFrame</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

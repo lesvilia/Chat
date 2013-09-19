@@ -2,8 +2,9 @@
 
 #include <QHeaderView>
 #include <QTableWidget>
-#include <QTextEdit>
 
+#include "DnDTextEdit.h"
+#include "IDropResultHandler.h"
 #include "UISettings.h"
 #include "QtHelpers.h"
 
@@ -42,19 +43,19 @@ namespace ui
   {
   }
 
-  UsersMessageView::UsersMessageView()
+  UsersMessageView::UsersMessageView(IDropResultHandler* dropHandler)
     : QSplitter(Qt::Vertical)
     , m_msgView(nullptr)
     , m_msgEdit(nullptr)
   {
-    CreateSubControls();
+    CreateSubControls(dropHandler);
   }
 
   UsersMessageView::~UsersMessageView()
   {
   }
 
-  void UsersMessageView::CreateSubControls()
+  void UsersMessageView::CreateSubControls(IDropResultHandler* dropHandler)
   {
     m_msgView = new QTableWidget();
     m_msgView->setColumnCount(COLUMN_COUNT);
@@ -72,7 +73,7 @@ namespace ui
     horizontalHeader->setSectionResizeMode(TIME_COLUMN, QHeaderView::Fixed);
     horizontalHeader->setDefaultSectionSize(DEFAULT_COLUMN_WIDTH);
     
-    m_msgEdit = new QTextEdit();
+    m_msgEdit = new controls::DnDTextEdit(dropHandler);
     
     addWidget(m_msgView);
     addWidget(m_msgEdit);

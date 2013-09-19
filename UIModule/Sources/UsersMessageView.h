@@ -4,10 +4,14 @@
 #include <QSplitter>
 
 class QTableWidget;
-class QTextEdit;
+class IDropResultHandler;
 
 namespace ui
 {
+  namespace controls
+  {
+    class DnDTextEdit;
+  }
   struct MessageInfo
   {
     MessageInfo(const std::wstring& username, const std::wstring& message,
@@ -34,17 +38,17 @@ namespace ui
     };
 
   public:
-    UsersMessageView();
+    explicit UsersMessageView(IDropResultHandler* dropHandler);
     virtual ~UsersMessageView();
     bool GetTextFromEdit(std::wstring* msg);
     void AppendMessage(const MessageInfo& msg);
     void InsertMessage(const MessageInfo& msg, int rowNum);
 
   private:
-    void CreateSubControls();
+    void CreateSubControls(IDropResultHandler* dropHandler);
     void ClearMessageEdit();
   private:
     QTableWidget* m_msgView;
-    QTextEdit* m_msgEdit;
+    controls::DnDTextEdit* m_msgEdit;
   };
 }

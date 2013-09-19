@@ -18,6 +18,7 @@
 #include "LoginManager.h"
 #include "ChatMessagesManager.h"
 #include "StateMessagesManager.h"
+#include "UserListItem.h"
 #include "UISettings.h"
 #include "QtHelpers.h"
 
@@ -54,7 +55,7 @@ namespace ui
     SetupUI();
     login::LoginManager::Instance()->Subscribe(this);
     net::NetUsersManager::Instance()->Subscribe(this);
-    //AddNewUser(L"123");
+    AddNewUser(L"123");
   }
 
   MainFrame::~MainFrame()
@@ -98,6 +99,11 @@ namespace ui
   void MainFrame::OnNetUserDisconnected(const std::wstring& uuid)
   {
     RemoveUser(uuid);
+  }
+
+  void MainFrame::HandleDropFileResult(const std::wstring& path)
+  {
+    //TODO: need implement server logic for sending files.
   }
 
   void MainFrame::AddNewUser(const std::wstring& uuid)
@@ -148,7 +154,7 @@ namespace ui
 
   int MainFrame::CreateUserMsgView()
   {
-    UsersMessageView* msgView = new UsersMessageView();
+    UsersMessageView* msgView = new UsersMessageView(this);
     msgView->setSizes(GetMsgViewSizes());
     connect(msgView, SIGNAL(splitterMoved(int, int)), SLOT(ResizeMessagesView()));
     return m_msgBoxStackedWidget->addWidget(msgView);
