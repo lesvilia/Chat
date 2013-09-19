@@ -11,43 +11,12 @@
 
 #include "DnDTextEdit.h"
 #include "IDropResultHandler.h"
+#include "TableItemCreator.h"
 #include "UISettings.h"
 #include "QtHelpers.h"
 
-using namespace settings::MessageView;
-
 namespace
 {
-  QWidget* CreateTextCellItem(const std::wstring& text, const QColor& color,
-                               QFlags<Qt::AlignmentFlag> alignment = Qt::AlignTop)
-  {
-    QLabel* item = new QLabel(WStrToQStr(text));
-    item->setStyleSheet(TABLE_ITEM_STYLE_TEMPLATE.arg(color.name()));
-    item->setAlignment(alignment);
-    return item;
-  }
-
-  QWidget* CreateFileCellItem(const std::wstring& text, QProgressBar* progressBar)
-  {
-    QWidget* infoWidget = new QWidget();
-    QVBoxLayout* infoLayout = new QVBoxLayout();
-    QLabel* message = new QLabel(WStrToQStr(text));
-    infoLayout->addWidget(message);
-    infoLayout->addWidget(progressBar);
-    infoWidget->setLayout(infoLayout);
-    infoWidget->setMaximumHeight(50);
-
-    QHBoxLayout* cellLayout = new QHBoxLayout();
-    QLabel* picture = new QLabel();
-    picture->setPixmap(QPixmap(FILE_ICON_PATH));
-    cellLayout->addWidget(picture);
-    cellLayout->addWidget(infoWidget);
-    
-    QWidget* item = new QWidget();
-    item->setLayout(cellLayout);
-    return item;
-  }
-
   void PrepareMessage(QString& msg)
   {
     QString temp(msg);
@@ -57,12 +26,12 @@ namespace
       msg.clear();
     }
   }
-
-  
 }
 
 namespace ui
 {
+  using namespace settings::MessageView;
+
   MessageInfo::MessageInfo(const std::wstring& username, const std::wstring& message,
                            const std::wstring& time, bool isNetUser)
     : m_username(username)
@@ -71,67 +40,6 @@ namespace ui
     , m_isNetUser(isNetUser)
   {
   }
-
-  internal::TableItemCreator::TableItemCreator()
-  {
-  }
-
-  QWidget* internal::TableItemCreator::CreateNameItem(const std::wstring& text, const QColor& color)
-  {
-    return CreateTextCellItem(text, color);
-  }
-
-  QWidget* internal::TableItemCreator::CreateMessageItem(const std::wstring& text)
-  {
-    return CreateTextCellItem(text, Qt::black);
-  }
-
-  QWidget* internal::TableItemCreator::CreateTimeItem(const std::wstring& text)
-  {
-    return CreateTextCellItem(text, Qt::gray, Qt::AlignTop | Qt::AlignHCenter);
-  }
-
-  QWidget* internal::TableItemCreator::CreateTextCellItem(const std::wstring& text, const QColor& color,
-                                                             QFlags<Qt::AlignmentFlag> alignment)
-  {
-    QLabel* item = new QLabel(WStrToQStr(text));
-    item->setStyleSheet(TABLE_ITEM_STYLE_TEMPLATE.arg(color.name()));
-    item->setAlignment(alignment);
-    return item;
-  }
-
-  internal::TableFileItemCreator::TableFileItemCreator()
-    : m_observer(nullptr)
-  {
-  }
-
-  QWidget* internal::TableFileItemCreator::CreateMessageItem(const std::wstring& text)
-  {
-    QWidget* infoWidget = new QWidget();
-    QVBoxLayout* infoLayout = new QVBoxLayout();
-    QLabel* message = new QLabel(WStrToQStr(text));
-    infoLayout->addWidget(message);
-    m_observer = new QProgressBar();
-    infoLayout->addWidget(m_observer);
-    infoWidget->setLayout(infoLayout);
-    infoWidget->setMaximumHeight(50);
-
-    QHBoxLayout* cellLayout = new QHBoxLayout();
-    QLabel* picture = new QLabel();
-    picture->setPixmap(QPixmap(FILE_ICON_PATH));
-    cellLayout->addWidget(picture);
-    cellLayout->addWidget(infoWidget);
-
-    QWidget* item = new QWidget();
-    item->setLayout(cellLayout);
-    return item;
-  }
-
-  QProgressBar* internal::TableFileItemCreator::GetProgressObserver() const
-  {
-    return m_observer;
-  }
-
 
   UsersMessageView::UsersMessageView(IDropResultHandler* dropHandler)
     : QSplitter(Qt::Vertical)
@@ -190,28 +98,33 @@ namespace ui
 
   void UsersMessageView::AppendTxtMessage(const MessageInfo& msg)
   {
-    InsertTxtMessage(msg, m_msgView->rowCount());
-  }
-
-  void UsersMessageView::InsertTxtMessage(const MessageInfo& msg, int rowNum)
-  {
-    InsertMessageImpl(msg, rowNum, internal::TableItemCreator());
+    InsertMessageImpl(msg, m_msgView->rowCount(), ItemCreator());
   }
 
   QProgressBar* UsersMessageView::AppendFileMessage(const MessageInfo& msg)
   {
-    internal::TableFileItemCreator creator;
+    FileItemCreator creator;
     InsertMessageImpl(msg, m_msgView->rowCount(), creator);
     return creator.GetProgressObserver();
   }
 
+  void UsersMessageView::InsertTxtMessageFromDB(const MessageInfo& msg, int rowNum)
+  {
+    InsertMessageImpl(msg, rowNum, ItemCreator());
+  }
+
+  void UsersMessageView::InsertFileMessageFromDB(const MessageInfo& msg, int rowNum)
+  {
+    InsertMessageImpl(msg, rowNum, DBFileItemCreator());
+  }
+
   void UsersMessageView::InsertMessageImpl(const MessageInfo& msg, int rowNum,
-                                           internal::TableItemCreator& creator)
+                                           const ItemCreator& creator)
   {
     m_msgView->insertRow(rowNum);
     QWidget* nameItem = creator.CreateNameItem(msg.m_username, msg.m_isNetUser ? Qt::blue : Qt::gray);
-    QWidget* timeItem = creator.CreateMessageItem(msg.m_message);
-    QWidget* messageItem = creator.CreateTimeItem(msg.m_time);
+    QWidget* messageItem = creator.CreateMessageItem(msg.m_message);
+    QWidget* timeItem = creator.CreateTimeItem(msg.m_time);
 
     m_msgView->setCellWidget(rowNum, NAME_COLUMN, nameItem);
     m_msgView->setCellWidget(rowNum, MESSAGE_COLUMN, messageItem);

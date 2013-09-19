@@ -109,6 +109,9 @@
     <ClCompile Include="Sources\DnDTextEdit.cpp">
       <Filter>UIControls\DnDTextEdit\src</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\TableItemCreator.cpp">
+      <Filter>MainFrame\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="chat_icon.png">
@@ -155,6 +158,9 @@
       <Filter>MainFrame</Filter>
     </ClInclude>
     <ClInclude Include="Sources\IFileTransferUIHandler.h">
+      <Filter>MainFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\TableItemCreator.h">
       <Filter>MainFrame</Filter>
     </ClInclude>
   </ItemGroup>

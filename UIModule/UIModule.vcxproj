@@ -112,6 +112,7 @@
     <ClCompile Include="Sources\Mainframe.cpp" />
     <ClCompile Include="Sources\SettingsDialog.cpp" />
     <ClCompile Include="Sources\StaticLink.cpp" />
+    <ClCompile Include="Sources\TableItemCreator.cpp" />
     <ClCompile Include="Sources\UserListItem.cpp" />
     <ClCompile Include="Sources\UsersMessageView.cpp" />
   </ItemGroup>
@@ -136,6 +137,7 @@
     <ClInclude Include="Sources\DnDTextEdit.h" />
     <ClInclude Include="Sources\IDropResultHandler.h" />
     <ClInclude Include="Sources\IFileTransferUIHandler.h" />
+    <ClInclude Include="Sources\TableItemCreator.h" />
     <ClInclude Include="Sources\UISettings.h" />
     <ClInclude Include="Sources\UsersMessageView.h" />
     <CustomBuild Include="Sources\SettingsDialog.h">

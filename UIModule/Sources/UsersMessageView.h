@@ -11,6 +11,7 @@ namespace ui
 {
   class IDropResultHandler;
   class IProgressUIObserver;
+  class ItemCreator;
 
   namespace controls
   {
@@ -26,32 +27,6 @@ namespace ui
     std::wstring m_time;
     bool m_isNetUser;
   };
-
-  namespace internal
-  {
-    class TableItemCreator
-    {
-    public:
-      TableItemCreator();
-      virtual QWidget* CreateNameItem(const std::wstring& text, const QColor& color);
-      virtual QWidget* CreateMessageItem(const std::wstring& text);
-      virtual QWidget* CreateTimeItem(const std::wstring& text);
-    private:
-      QWidget* CreateTextCellItem(const std::wstring& text, const QColor& color,
-        QFlags<Qt::AlignmentFlag> alignment = Qt::AlignTop);
-    };
-
-    class TableFileItemCreator
-      : public TableItemCreator
-    {
-    public:
-      TableFileItemCreator();
-      virtual QWidget* CreateMessageItem(const std::wstring& text);
-      QProgressBar* GetProgressObserver() const;
-    private:
-      QProgressBar* m_observer; //TODO: need to IProgressUIObserver replace
-    };                          //after implement progress bar control
-  }
 
   class UsersMessageView
     : public QSplitter
@@ -69,13 +44,12 @@ namespace ui
     virtual ~UsersMessageView();
     bool GetTextFromEdit(std::wstring* msg);
     void AppendTxtMessage(const MessageInfo& msg);
-    void InsertTxtMessage(const MessageInfo& msg, int rowNum);
     QProgressBar* AppendFileMessage(const MessageInfo& msg);
-
-    void InsertMessageFromDB(const MessageInfo& msg);
+    void InsertTxtMessageFromDB(const MessageInfo& msg, int rowNum);
+    void InsertFileMessageFromDB(const MessageInfo& msg, int rowNum);
 
   private:
-    void InsertMessageImpl(const MessageInfo& msg, int rowNum, internal::TableItemCreator& creator);
+    void InsertMessageImpl(const MessageInfo& msg, int rowNum, const ItemCreator& creator);
     void CreateSubControls(IDropResultHandler* dropHandler);
     void ClearMessageEdit();
 
