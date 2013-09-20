@@ -75,7 +75,6 @@ namespace settings
     const QString MESSAGE_WIDGET_STYLE
     (
       "QTableView { padding: 5px; }"
-      "QTableView:item { padding: 5px; }"
     );
     const unsigned DEFAULT_COLUMN_WIDTH = 70;
     const QString FILE_ICON_PATH("file_icon.png");

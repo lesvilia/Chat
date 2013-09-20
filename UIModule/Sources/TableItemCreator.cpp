@@ -28,6 +28,8 @@ namespace
     item->setFlags(item->flags() & ~(Qt::ItemIsEditable | Qt::ItemIsSelectable));
     return item;
   }
+
+  const QString IMAGE_TEMPLATE("QWidget {background-image: url(%1); }");
 }
 
 namespace ui
@@ -81,19 +83,23 @@ namespace ui
     controls::ProgressUIHandler* handler = new controls::ProgressUIHandler();
     m_observer = handler;
 
-    QWidget* infoWidget = new QWidget();
     QVBoxLayout* infoLayout = new QVBoxLayout();
     QLabel* message = new QLabel(WStrToQStr(msg.m_message));
-    infoLayout->addWidget(message);
-    infoLayout->addWidget(handler);
+    handler->setFixedHeight(10);
+    infoLayout->setContentsMargins(0, 0, 0, 5);
+    infoLayout->addWidget(message, 1);
+    infoLayout->addWidget(handler, 1);
+    QWidget* infoWidget = new QWidget();
     infoWidget->setLayout(infoLayout);
-    infoWidget->setMaximumHeight(50);
 
     QHBoxLayout* cellLayout = new QHBoxLayout();
-    QLabel* picture = new QLabel();
-    picture->setPixmap(QPixmap(FILE_ICON_PATH));
+    QWidget* picture = new QWidget();
+    picture->setFixedHeight(24);
+    picture->setFixedWidth(24);
+    picture->setStyleSheet(IMAGE_TEMPLATE.arg(FILE_ICON_PATH));
+    cellLayout->setContentsMargins(0, 0, 0, 5);
     cellLayout->addWidget(picture);
-    cellLayout->addWidget(infoWidget);
+    cellLayout->addWidget(infoWidget, 3);
 
     QWidget* item = new QWidget();
     item->setLayout(cellLayout);
@@ -116,17 +122,25 @@ namespace ui
 
   void DBFileMessageItemCreator::CreateMessageItem(const MessageInfo& msg, Columns column)
   {
+    QVBoxLayout* infoLayout = new QVBoxLayout();
     QLabel* message = new QLabel(WStrToQStr(msg.m_message));
-    QLabel* picture = new QLabel();
-    picture->setPixmap(QPixmap(FILE_ICON_PATH));
+    infoLayout->setContentsMargins(0, 0, 0, 5);
+    infoLayout->addWidget(message, 1);
+    infoLayout->addStretch(1);
+    QWidget* infoWidget = new QWidget();
+    infoWidget->setLayout(infoLayout);
 
     QHBoxLayout* cellLayout = new QHBoxLayout();
+    QWidget* picture = new QWidget();
+    picture->setFixedHeight(24);
+    picture->setFixedWidth(24);
+    picture->setStyleSheet(IMAGE_TEMPLATE.arg(FILE_ICON_PATH));
+    cellLayout->setContentsMargins(0, 0, 0, 0);
     cellLayout->addWidget(picture);
-    cellLayout->addWidget(message);
+    cellLayout->addWidget(infoWidget, 3);
 
     QWidget* item = new QWidget();
     item->setLayout(cellLayout);
-    item->setMaximumHeight(50);
     m_msgView->setCellWidget(m_rowNum, column, item);
   }
 }
