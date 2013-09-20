@@ -2,6 +2,7 @@
 
 #include <QSplitter>
 #include <QLabel>
+#include <QFileInfo>
 #include <QVBoxLayout>
 #include <QMenuBar>
 #include <QCloseEvent>
@@ -55,6 +56,8 @@ namespace ui
     SetupUI();
     login::LoginManager::Instance()->Subscribe(this);
     net::NetUsersManager::Instance()->Subscribe(this);
+    connect(this, SIGNAL(FileMessageReceived(const std::wstring&, const std::wstring&, const CompletionCallback&)),
+            this, SLOT(AddNewFileMessage(const std::wstring&, const std::wstring&, const CompletionCallback&)));
     AddNewUser(L"123");
   }
 
@@ -103,7 +106,21 @@ namespace ui
 
   void MainFrame::HandleDropFileResult(const std::wstring& path)
   {
-    //TODO: need implement server logic for sending files.
+    login::ILoginManager* loginManager = login::LoginManager::Instance();
+    if (loginManager->IsOnline())
+    {
+      QFileInfo file(WStrToQStr(path));
+      MessageInfo msg(loginManager->GetCurrentUser()->name, file.fileName().toStdWString(),
+                      CurrentTimeToStr("hh:mm"));
+      UsersMessageView* msgView = static_cast<UsersMessageView*>(
+        m_msgBoxStackedWidget->currentWidget());
+      IProgressUIObserver* observer = msgView->AppendFileMessage(msg);
+
+      controls::UserListItem* currentItem = static_cast<controls::UserListItem*>(
+        m_userListWidget->currentItem());
+      //msg::FileTransferManager->Instance()->SendFile(currentItem->GetUserID(), path, observer);
+      //TODO: need implement server logic for sending files.
+    }
   }
 
   void MainFrame::AddNewUser(const std::wstring& uuid)
@@ -160,8 +177,9 @@ namespace ui
     return m_msgBoxStackedWidget->addWidget(msgView);
   }
 
-  void MainFrame::AddNewMessage(const std::wstring& uuid, const std::wstring& message)
+  UsersMessageView* MainFrame::GetUsersMessageView(const std::wstring& uuid)
   {
+    UsersMessageView* view = nullptr;
     auto iter = m_userItems.find(uuid);
     if (iter != m_userItems.end())
     {
@@ -172,15 +190,38 @@ namespace ui
       {
         item.userlistItem->EnableNotifyStyle();
       }
+      view = static_cast<UsersMessageView*>(m_msgBoxStackedWidget->widget(item.msgWidgetID));
+    }
+    return view;
+  }
 
-      UsersMessageView* msgView = static_cast<UsersMessageView*>(
-        m_msgBoxStackedWidget->widget(item.msgWidgetID));
-      if (msgView)
-      {
-        std::wstring name(net::NetUsersManager::Instance()->GetNetUserName(uuid));
-        MessageInfo msg(name, message, CurrentTimeToStr("hh:mm"), true);
-        msgView->AppendTxtMessage(msg);
-      }
+  void MainFrame::AddNewMessage(const std::wstring& uuid, const std::wstring& message)
+  {
+    UsersMessageView* msgView = GetUsersMessageView(uuid);
+    if (msgView)
+    {
+      std::wstring name(net::NetUsersManager::Instance()->GetNetUserName(uuid));
+      MessageInfo msg(name, message, CurrentTimeToStr("hh:mm"), true);
+      msgView->AppendTxtMessage(msg);
+    }
+  }
+
+  void MainFrame::OnFileMessageReceived(const std::wstring& uuid, const std::wstring& fileName,
+                                        const CompletionCallback& callback)
+  {
+    emit FileMessageReceived(uuid, fileName, callback);
+  }
+
+  void MainFrame::AddNewFileMessage(const std::wstring& uuid, const std::wstring& fileName,
+                                    const CompletionCallback& callback)
+  {
+    UsersMessageView* msgView = GetUsersMessageView(uuid);
+    if (msgView)
+    {
+      std::wstring name(net::NetUsersManager::Instance()->GetNetUserName(uuid));
+      MessageInfo msg(name, fileName, CurrentTimeToStr("hh:mm"), true);
+      IProgressUIObserver* observer = msgView->AppendFileMessage(msg);
+      callback(observer);
     }
   }
 

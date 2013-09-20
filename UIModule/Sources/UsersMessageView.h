@@ -11,7 +11,7 @@ namespace ui
 {
   class IDropResultHandler;
   class IProgressUIObserver;
-  class ItemCreator;
+  class MessageItemCreator;
 
   namespace controls
   {
@@ -31,25 +31,17 @@ namespace ui
   class UsersMessageView
     : public QSplitter
   {
-    enum
-    {
-      NAME_COLUMN,
-      MESSAGE_COLUMN,
-      TIME_COLUMN,
-      COLUMN_COUNT //always last
-    };
-
   public:
     explicit UsersMessageView(IDropResultHandler* dropHandler);
     virtual ~UsersMessageView();
     bool GetTextFromEdit(std::wstring* msg);
     void AppendTxtMessage(const MessageInfo& msg);
-    QProgressBar* AppendFileMessage(const MessageInfo& msg);
+    IProgressUIObserver* AppendFileMessage(const MessageInfo& msg);
     void InsertTxtMessageFromDB(const MessageInfo& msg, int rowNum);
     void InsertFileMessageFromDB(const MessageInfo& msg, int rowNum);
 
   private:
-    void InsertMessageImpl(const MessageInfo& msg, int rowNum, const ItemCreator& creator);
+    void InsertMessageImpl(const MessageInfo& msg, int rowNum, MessageItemCreator& creator);
     void CreateSubControls(IDropResultHandler* dropHandler);
     void ClearMessageEdit();
 

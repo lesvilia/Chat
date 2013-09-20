@@ -5,42 +5,61 @@
 #include <QFlags>
 
 class QWidget;
-class QProgressBar;
+class QTableWidget;
+class QTableWidgetItem;
 
 namespace ui
 {
-  class ItemCreator
+  class IProgressUIObserver;
+  struct MessageInfo;
+
+  class MessageItemCreator
   {
   public:
-    ItemCreator();
-    ~ItemCreator();
-    virtual QWidget* CreateNameItem(const std::wstring& text, const QColor& color) const;
-    virtual QWidget* CreateMessageItem(const std::wstring& text) const;
-    virtual QWidget* CreateTimeItem(const std::wstring& text) const;
+    enum Columns
+    {
+      NAME_COLUMN,
+      MESSAGE_COLUMN,
+      TIME_COLUMN,
+      COLUMN_COUNT //always last
+    };
+
+    MessageItemCreator(QTableWidget* msgView, int rowNum);
+    ~MessageItemCreator();
+    void CreateItems(const MessageInfo& msg);
+
   private:
-    static QWidget* CreateTextCellItem(const std::wstring& text, const QColor& color,
-                                QFlags<Qt::AlignmentFlag> alignment = Qt::AlignTop);
+    virtual void CreateNameItem(const MessageInfo& msg, Columns column);
+    virtual void CreateMessageItem(const MessageInfo& msg, Columns column);
+    virtual void CreateTimeItem(const MessageInfo& msg, Columns column);
+
+  protected:
+    QTableWidget* m_msgView;
+    const int m_rowNum;
   };
 
-  class FileItemCreator
-    : public ItemCreator
+  class FileMessageItemCreator
+    : public MessageItemCreator
   {
   public:
-    FileItemCreator();
-    ~FileItemCreator();
-    virtual QWidget* CreateMessageItem(const std::wstring& text) const;
-    QProgressBar* GetProgressObserver() const;
+    FileMessageItemCreator(QTableWidget* msgView, int rowNum);
+    ~FileMessageItemCreator();
+    IProgressUIObserver* GetProgressObserver() const;
 
   private:
-    mutable QProgressBar* m_observer; //TODO: need to IProgressUIObserver replace
+    virtual void CreateMessageItem(const MessageInfo& msg, Columns column);
+
+  private:
+    IProgressUIObserver* m_observer; //TODO: need to IProgressUIObserver replace
   };                                  //after implement progress bar control
 
-  class DBFileItemCreator
-    : public ItemCreator
+  class DBFileMessageItemCreator
+    : public MessageItemCreator
   {
   public:
-    DBFileItemCreator();
-    ~DBFileItemCreator();
-    virtual QWidget* CreateMessageItem(const std::wstring& text) const;
+    DBFileMessageItemCreator(QTableWidget* msgView, int rowNum);
+    ~DBFileMessageItemCreator();
+  private:
+    virtual void CreateMessageItem(const MessageInfo& msg, Columns column);
   };
 }

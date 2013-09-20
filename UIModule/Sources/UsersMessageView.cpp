@@ -56,7 +56,7 @@ namespace ui
   void UsersMessageView::CreateSubControls(IDropResultHandler* dropHandler)
   {
     m_msgView = new QTableWidget();
-    m_msgView->setColumnCount(COLUMN_COUNT);
+    m_msgView->setColumnCount(MessageItemCreator::COLUMN_COUNT);
     m_msgView->setShowGrid(false);
     m_msgView->setStyleSheet(MESSAGE_WIDGET_STYLE);
 
@@ -66,9 +66,9 @@ namespace ui
 
     QHeaderView* horizontalHeader = m_msgView->horizontalHeader();
     horizontalHeader->setVisible(false);
-    horizontalHeader->setSectionResizeMode(NAME_COLUMN, QHeaderView::Fixed);
-    horizontalHeader->setSectionResizeMode(MESSAGE_COLUMN, QHeaderView::Stretch);
-    horizontalHeader->setSectionResizeMode(TIME_COLUMN, QHeaderView::Fixed);
+    horizontalHeader->setSectionResizeMode(MessageItemCreator::NAME_COLUMN, QHeaderView::Fixed);
+    horizontalHeader->setSectionResizeMode(MessageItemCreator::MESSAGE_COLUMN, QHeaderView::Stretch);
+    horizontalHeader->setSectionResizeMode(MessageItemCreator::TIME_COLUMN, QHeaderView::Fixed);
     horizontalHeader->setDefaultSectionSize(DEFAULT_COLUMN_WIDTH);
     
     m_msgEdit = new controls::DnDTextEdit(dropHandler);
@@ -98,36 +98,32 @@ namespace ui
 
   void UsersMessageView::AppendTxtMessage(const MessageInfo& msg)
   {
-    InsertMessageImpl(msg, m_msgView->rowCount(), ItemCreator());
+    const int rowNum = m_msgView->rowCount();
+    InsertMessageImpl(msg, rowNum, MessageItemCreator(m_msgView, rowNum));
   }
 
-  QProgressBar* UsersMessageView::AppendFileMessage(const MessageInfo& msg)
+  IProgressUIObserver* UsersMessageView::AppendFileMessage(const MessageInfo& msg)
   {
-    FileItemCreator creator;
-    InsertMessageImpl(msg, m_msgView->rowCount(), creator);
+    const int rowNum = m_msgView->rowCount();
+    FileMessageItemCreator creator(m_msgView, rowNum);
+    InsertMessageImpl(msg, rowNum, creator);
     return creator.GetProgressObserver();
   }
 
   void UsersMessageView::InsertTxtMessageFromDB(const MessageInfo& msg, int rowNum)
   {
-    InsertMessageImpl(msg, rowNum, ItemCreator());
+    InsertMessageImpl(msg, rowNum, MessageItemCreator(m_msgView, rowNum));
   }
 
   void UsersMessageView::InsertFileMessageFromDB(const MessageInfo& msg, int rowNum)
   {
-    InsertMessageImpl(msg, rowNum, DBFileItemCreator());
+    InsertMessageImpl(msg, rowNum, DBFileMessageItemCreator(m_msgView, rowNum));
   }
 
   void UsersMessageView::InsertMessageImpl(const MessageInfo& msg, int rowNum,
-                                           const ItemCreator& creator)
+                                           MessageItemCreator& creator)
   {
     m_msgView->insertRow(rowNum);
-    QWidget* nameItem = creator.CreateNameItem(msg.m_username, msg.m_isNetUser ? Qt::blue : Qt::gray);
-    QWidget* messageItem = creator.CreateMessageItem(msg.m_message);
-    QWidget* timeItem = creator.CreateTimeItem(msg.m_time);
-
-    m_msgView->setCellWidget(rowNum, NAME_COLUMN, nameItem);
-    m_msgView->setCellWidget(rowNum, MESSAGE_COLUMN, messageItem);
-    m_msgView->setCellWidget(rowNum, TIME_COLUMN, timeItem);
+    creator.CreateItems(msg);
   }
 }
