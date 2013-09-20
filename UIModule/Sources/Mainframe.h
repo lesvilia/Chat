@@ -34,7 +34,6 @@ namespace ui
     , public login::ILoginStateObserver
     , public net::INetUsersObserver
     , public IDropResultHandler
-    , public IFileTransferUIHandler
   {
     Q_OBJECT
 
@@ -65,11 +64,9 @@ namespace ui
     virtual void HandleDropFileResult(const std::wstring& path);
 
     //UIMessageHandler interface
-    virtual void AddNewMessage(const std::wstring& uuid, const std::wstring& message);
-   
-    //IFileTransferUIHandler interface
+    virtual void OnTextMessageReceived(const std::wstring& uuid, const std::wstring& message);
     virtual void OnFileMessageReceived(const std::wstring& uuid, const std::wstring& fileName,
-                                       const CompletionCallback& callback);
+                                       const msg::CompletionCallback& callback);
 
   protected:
     void closeEvent(QCloseEvent* event);
@@ -91,7 +88,7 @@ namespace ui
   private slots:
     void ListItemChanged(QListWidgetItem* currentItem, QListWidgetItem* prevItem);
     void AddNewFileMessage(const std::wstring& uuid, const std::wstring& fileName,
-                           const CompletionCallback& callback);
+                           const msg::CompletionCallback& callback);
     void ResizeMessagesView();
     void SendMessageToUser();
     void LogIn();
@@ -101,7 +98,7 @@ namespace ui
     void OpenSettingsDlg();
 
   signals:
-    void FileMessageReceived(const std::wstring&, const std::wstring&, const CompletionCallback&);
+    void FileMessageReceived(const std::wstring&, const std::wstring&, const msg::CompletionCallback&);
 
   private:
     QListWidget*        m_userListWidget;

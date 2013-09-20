@@ -51,7 +51,7 @@ namespace msg
     if (chatMsg)
     {
       ChatMessagePtr msg(chatMsg->m_userMessage);
-      m_uiHandler->AddNewMessage(msg->m_uuid, msg->m_message);
+      m_uiHandler->OnTextMessageReceived(msg->m_uuid, msg->m_message);
     }
   }
 

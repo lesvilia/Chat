@@ -56,8 +56,8 @@ namespace ui
     SetupUI();
     login::LoginManager::Instance()->Subscribe(this);
     net::NetUsersManager::Instance()->Subscribe(this);
-    connect(this, SIGNAL(FileMessageReceived(const std::wstring&, const std::wstring&, const CompletionCallback&)),
-            this, SLOT(AddNewFileMessage(const std::wstring&, const std::wstring&, const CompletionCallback&)));
+    connect(this, SIGNAL(FileMessageReceived(const std::wstring&, const std::wstring&, const msg::CompletionCallback&)),
+            this, SLOT(AddNewFileMessage(const std::wstring&, const std::wstring&, const msg::CompletionCallback&)));
     AddNewUser(L"123");
   }
 
@@ -195,7 +195,7 @@ namespace ui
     return view;
   }
 
-  void MainFrame::AddNewMessage(const std::wstring& uuid, const std::wstring& message)
+  void MainFrame::OnTextMessageReceived(const std::wstring& uuid, const std::wstring& message)
   {
     UsersMessageView* msgView = GetUsersMessageView(uuid);
     if (msgView)
@@ -207,13 +207,13 @@ namespace ui
   }
 
   void MainFrame::OnFileMessageReceived(const std::wstring& uuid, const std::wstring& fileName,
-                                        const CompletionCallback& callback)
+                                        const msg::CompletionCallback& callback)
   {
     emit FileMessageReceived(uuid, fileName, callback);
   }
 
   void MainFrame::AddNewFileMessage(const std::wstring& uuid, const std::wstring& fileName,
-                                    const CompletionCallback& callback)
+                                    const msg::CompletionCallback& callback)
   {
     UsersMessageView* msgView = GetUsersMessageView(uuid);
     if (msgView)
