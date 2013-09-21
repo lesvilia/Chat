@@ -23,6 +23,7 @@ namespace ui
       , m_addressWidget(nullptr)
       , m_statePortEdit(nullptr)
       , m_chatPortEdit(nullptr)
+      , m_filePortEdit(nullptr)
     {
       InitDialog();
     }
@@ -48,6 +49,7 @@ namespace ui
       QLabel* labelAddres = new QLabel(LABEL_ADDRESS); 
       QLabel* labelStatePort = new QLabel(LABEL_STATE_PORT);
       QLabel* labelChatPort = new QLabel(LABEL_CHAT_PORT);
+      QLabel* labelFilePort = new QLabel(LABEL_FILE_PORT);
 
       StaticLink* link = new StaticLink();
       link->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
@@ -64,8 +66,11 @@ namespace ui
       m_statePortEdit->setText(QString::number(m_settingsMngr->GetCurrentStatesPort()));
       m_chatPortEdit = new QLineEdit();
       m_chatPortEdit->setText(QString::number(m_settingsMngr->GetCurrentMessagesPort()));
+      m_filePortEdit = new QLineEdit();
+      m_filePortEdit->setText(QString::number(m_settingsMngr->GetCurrentFileMessagesPort()));
       connect(m_statePortEdit, SIGNAL(textEdited(const QString&)), SLOT(EnableOkButton()));
       connect(m_chatPortEdit, SIGNAL(textEdited(const QString&)), SLOT(EnableOkButton()));
+      connect(m_filePortEdit, SIGNAL(textEdited(const QString&)), SLOT(EnableOkButton()));
 
       QGridLayout* mainLayot = new QGridLayout();
       mainLayot->addWidget(labelAddres, 0, 0, 1, 2);
@@ -74,9 +79,11 @@ namespace ui
       mainLayot->addWidget(m_statePortEdit, 1, 2, 1, 3);
       mainLayot->addWidget(labelChatPort, 2, 0, 1, 2);
       mainLayot->addWidget(m_chatPortEdit, 2, 2, 1, 3);
-      mainLayot->addWidget(link, 3, 0, 1, 1);
-      mainLayot->addWidget(buttonCancel, 3, 2, 1, 1);
-      mainLayot->addWidget(m_buttonOK, 3, 4, 1, 1);
+      mainLayot->addWidget(labelFilePort, 3, 0, 1, 2);
+      mainLayot->addWidget(m_filePortEdit, 3, 2, 1, 3);
+      mainLayot->addWidget(link, 4, 0, 1, 1);
+      mainLayot->addWidget(buttonCancel, 4, 2, 1, 1);
+      mainLayot->addWidget(m_buttonOK, 4, 4, 1, 1);
       setLayout(mainLayot);
     }
 
@@ -85,6 +92,7 @@ namespace ui
       m_settingsMngr->SetCurrentAddress(QStrToWStr(m_addressWidget->currentText()));
       m_settingsMngr->SetCurrentStatesPort(m_statePortEdit->text().toULong());
       m_settingsMngr->SetCurrentMessagesPort(m_chatPortEdit->text().toULong());
+      m_settingsMngr->SetCurrentFileMessagesPort(m_filePortEdit->text().toULong());
       accept();
     }
 
@@ -93,6 +101,7 @@ namespace ui
       m_addressWidget->setCurrentText(m_appropriateAddress);
       m_statePortEdit->setText(QString::number(sm::DEFAULT_STATE_MSG_PORT));
       m_chatPortEdit->setText(QString::number(sm::DEFAULT_CHAT_MSG_PORT));
+      m_filePortEdit->setText(QString::number(sm::DEFAULT_FILE_MSG_PORT));
     }
 
     void SettingsDialog::InitAddressesValues()
@@ -108,7 +117,9 @@ namespace ui
 
     void SettingsDialog::EnableOkButton()
     {
-      if (!m_statePortEdit->text().isEmpty() && !m_chatPortEdit->text().isEmpty())
+      if (!m_statePortEdit->text().isEmpty() 
+          && !m_chatPortEdit->text().isEmpty()
+          && !m_filePortEdit->text().isEmpty())
       {
         m_buttonOK->setEnabled(true);
       }

@@ -1,7 +1,8 @@
 #pragma once
 #include <QProgressBar>
 
-#include "IFileTransferUIHandler.h"
+#include "IProgressUIObserver.h"
+
 namespace ui
 {
   namespace controls

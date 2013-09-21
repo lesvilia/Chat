@@ -21,9 +21,11 @@ namespace sm
     std::wstring GetCurrentNetAddres() const;
     unsigned short GetCurrentStatesPort() const;
     unsigned short GetCurrentMessagesPort() const;
+    unsigned short GetCurrentFileMessagesPort() const;
     void SetCurrentAddress(const std::wstring& addr);
     void SetCurrentStatesPort(unsigned short statePort);
     void SetCurrentMessagesPort(unsigned short chatPort);
+    void SetCurrentFileMessagesPort(unsigned short filePort);
     std::vector<std::wstring> GetActiveAddresses() const;
 
   private:
@@ -38,6 +40,7 @@ namespace sm
     std::wstring m_currentNetAddress;
     unsigned short m_stateMsgPort;
     unsigned short m_chatMsgPort;
+    unsigned short m_fileMsgPort;
     mutable Mutex m_mutex;
   };
 }

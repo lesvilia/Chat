@@ -1,11 +1,12 @@
 #include "stdafx.h"
-#include <vector>
 #include "UDPMessagesServer.h"
+
+#include <vector>
 #include "ace/INET_Addr.h"
 #include "ace/Time_Value.h"
 #include "SettingsManager.h"
 #include "LoginManager.h"
-#include "IMessagesHahdler.h"
+#include "IMessagesHandler.h"
 #include "IServerSettingsHolder.h"
 
 namespace msg
@@ -22,24 +23,20 @@ namespace msg
   }
 
   UDPMessageServer::UDPMessageServer(IMessagesHandler* handler, IServerSettingsHolder* settingsHolder)
-    : m_startupHolder(MAKEWORD(2, 2))
-    , m_msgHandler(handler)
-    , m_settingsHolder(settingsHolder)
+    : MessageServer(handler, settingsHolder)
     , m_shouldShutdown(false)
     , m_needReset(false)
     , m_udpSocket(nullptr, DeleteSocket)
     , m_thread(nullptr)
   {
-    if (m_startupHolder.GetErrorCode() == 0)
-    {
       Initialize();
-    }
   }
 
   UDPMessageServer::~UDPMessageServer()
   {
     if (m_thread->joinable())
     {
+      Shutdown();
       m_thread->join();
     }
   }
@@ -58,7 +55,7 @@ namespace msg
           std::wstring message((wchar_t*)buffer.iov_base, (wchar_t*)(buffer.iov_base + buffer.iov_len));
           if (!message.empty())
           {
-            m_msgHandler->HandleMessage(message, userAddr);
+            Handler()->HandleMessage(message, userAddr);
           }
           delete[] buffer.iov_base;
         }
@@ -93,7 +90,7 @@ namespace msg
 
   void UDPMessageServer::InitSocket()
   {
-    ACE_INET_Addr serverAddr(m_settingsHolder->GetPort(), m_settingsHolder->GetAddress().c_str());
+    ACE_INET_Addr serverAddr(Port(), IPAddress().c_str());
     m_udpSocket.reset(new ACE_SOCK_Dgram(serverAddr));
   }
 

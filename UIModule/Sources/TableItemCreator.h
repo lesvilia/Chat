@@ -50,8 +50,8 @@ namespace ui
     virtual void CreateMessageItem(const MessageInfo& msg, Columns column);
 
   private:
-    IProgressUIObserver* m_observer; //TODO: need to IProgressUIObserver replace
-  };                                  //after implement progress bar control
+    IProgressUIObserver* m_observer;
+  };
 
   class DBFileMessageItemCreator
     : public MessageItemCreator

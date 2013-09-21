@@ -5,6 +5,7 @@
 #include "LoginManager.h"
 #include "StringHelpers.h"
 #include "pugixml.hpp"
+#include "ace/INET_Addr.h"
 
 namespace msg
 {

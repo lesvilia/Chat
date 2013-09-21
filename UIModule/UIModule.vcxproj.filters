@@ -175,10 +175,10 @@
     <ClInclude Include="Sources\IDropResultHandler.h">
       <Filter>MainFrame</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\IFileTransferUIHandler.h">
+    <ClInclude Include="Sources\TableItemCreator.h">
       <Filter>MainFrame</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\TableItemCreator.h">
+    <ClInclude Include="Sources\IProgressUIObserver.h">
       <Filter>MainFrame</Filter>
     </ClInclude>
   </ItemGroup>

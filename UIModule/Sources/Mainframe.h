@@ -13,7 +13,6 @@
 #include "LoginHandlers.h"
 #include "INetUsersObserver.h"
 #include "IDropResultHandler.h"
-#include "IFileTransferUIHandler.h"
 
 class QTableWidget;
 

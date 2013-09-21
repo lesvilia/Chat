@@ -10,12 +10,12 @@ namespace msg
 {
   class sm::SettingsManager;
 
-  class StateServerSettingsHolder
+  class FileServerSettingsHolder
     : public IServerSettingsHolder
   {
   public:
-    explicit StateServerSettingsHolder(sm::SettingsManager* manager);
-    virtual ~StateServerSettingsHolder();
+    explicit FileServerSettingsHolder(sm::SettingsManager* manager);
+    virtual ~FileServerSettingsHolder();
     virtual std::wstring GetAddress() const;
     virtual unsigned short GetPort() const;
 

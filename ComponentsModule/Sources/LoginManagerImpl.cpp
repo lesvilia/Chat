@@ -122,14 +122,14 @@ namespace login
 
     bool LoginManagerImpl::IsOnline() const
     {
-      Lock lock(m_mutex);
+      ReadLock lock(m_mutex);
       return m_isOnline;
     }
 
     void LoginManagerImpl::SetLoginState(bool online)
     {
       {
-        Lock lock(m_mutex);
+        WriteLock lock(m_mutex);
         m_isOnline = online;
       }
       NotifyObservers();

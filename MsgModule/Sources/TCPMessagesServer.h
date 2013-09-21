@@ -1,25 +1,25 @@
 #pragma once
 #include <memory>
-#include "ace/SOCK_Dgram.h"
 #include "MessagesServer.h"
 #include "Typedefs.h"
 
+class ACE_SOCK_Acceptor;
 
 namespace msg
 {
   class IMessagesHandler;
   class IServerSettingsHolder;
 
-  class UDPMessageServer
+  class TCPMessageServer
     : public MessageServer
   {
-    typedef void (*SocketDeleter)(ACE_SOCK_Dgram*);
-    typedef std::unique_ptr<ACE_SOCK_Dgram, SocketDeleter> SocketPtr;
+    typedef void (*SocketDeleter)(ACE_SOCK_Acceptor*);
+    typedef std::unique_ptr<ACE_SOCK_Acceptor, SocketDeleter> SocketAcceptor;
     typedef std::unique_ptr<Thread> ThreadPtr;
 
   public:
-    UDPMessageServer(IMessagesHandler* handler, IServerSettingsHolder* settingsHolder);
-    virtual ~UDPMessageServer();
+    TCPMessageServer(IMessagesHandler* handler, IServerSettingsHolder* settingsHolder);
+    virtual ~TCPMessageServer();
     virtual void Shutdown();
     virtual void Reset();
 
@@ -33,7 +33,7 @@ namespace msg
   private:
     bool m_shouldShutdown;
     bool m_needReset;
-    SocketPtr m_udpSocket;
+    SocketAcceptor m_acceptor;
     ThreadPtr m_thread;
     Mutex m_mutex;
   };

@@ -13,12 +13,12 @@ namespace msg
   {
   }
 
-  std::wstring ChatServerSettingsHolder::GetAddress()
+  std::wstring ChatServerSettingsHolder::GetAddress() const
   {
     return m_manager->GetCurrentNetAddres();
   }
 
-  unsigned short ChatServerSettingsHolder::GetPort()
+  unsigned short ChatServerSettingsHolder::GetPort() const
   {
     return m_manager->GetCurrentMessagesPort();
   }

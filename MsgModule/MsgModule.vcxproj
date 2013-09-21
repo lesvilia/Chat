@@ -44,7 +44,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ACE_ROOT);$(ProjectDir)Include;$(BOOST_ROOT);..\HelpersModule\Sources;..\ComponentsModule\Sources;$(PUGIXML_ROOT)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ACE_ROOT);$(ProjectDir)Include;$(BOOST_ROOT);..\HelpersModule\Sources;..\ComponentsModule\Sources;$(PUGIXML_ROOT)src;..\UIModule\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
@@ -63,7 +63,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ACE_ROOT);$(ProjectDir)Include;$(BOOST_ROOT);..\HelpersModule\Sources;..\ComponentsModule\Sources;$(PUGIXML_ROOT)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ACE_ROOT);$(ProjectDir)Include;$(BOOST_ROOT);..\HelpersModule\Sources;..\ComponentsModule\Sources;$(PUGIXML_ROOT)src;..\UIModule\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
@@ -85,9 +85,13 @@
     <ClCompile Include="Sources\ChatMessagesHandler.cpp" />
     <ClCompile Include="Sources\ChatMessagesManager.cpp" />
     <ClCompile Include="Sources\ChatServerSettingsHolder.cpp" />
+    <ClCompile Include="Sources\FileMessagesHandler.cpp" />
+    <ClCompile Include="Sources\FileServerSettingsHolder.cpp" />
+    <ClCompile Include="Sources\FileTransferManager.cpp" />
     <ClCompile Include="Sources\Messages.cpp" />
     <ClCompile Include="Sources\MessagesQueue.cpp" />
     <ClCompile Include="Sources\MessagesReceiver.cpp" />
+    <ClCompile Include="Sources\MessagesServer.cpp" />
     <ClCompile Include="Sources\MessagesWindow.cpp" />
     <ClCompile Include="Sources\StateMessagesHandler.cpp" />
     <ClCompile Include="Sources\StateMessagesManager.cpp" />
@@ -96,17 +100,22 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Sources\TCPMessagesServer.cpp" />
     <ClCompile Include="Sources\UDPMessagesServer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\ChatMessagesHandler.h" />
     <ClInclude Include="Sources\ChatMessagesManager.h" />
     <ClInclude Include="Sources\ChatServerSettingsHolder.h" />
-    <ClInclude Include="Sources\IMessagesHahdler.h" />
+    <ClInclude Include="Sources\FileMessagesHandler.h" />
+    <ClInclude Include="Sources\FileServerSettingsHolder.h" />
+    <ClInclude Include="Sources\FileTransferManager.h" />
+    <ClInclude Include="Sources\IMessagesHandler.h" />
     <ClInclude Include="Sources\IServerSettingsHolder.h" />
     <ClInclude Include="Sources\Messages.h" />
     <ClInclude Include="Sources\MessagesQueue.h" />
     <ClInclude Include="Sources\MessagesReceiver.h" />
+    <ClInclude Include="Sources\MessagesServer.h" />
     <ClInclude Include="Sources\MessagesTemplates.h" />
     <ClInclude Include="Sources\MessagesWindow.h" />
     <ClInclude Include="Sources\StateMessagesHandler.h" />
@@ -114,6 +123,7 @@
     <ClInclude Include="Sources\StateServerSettingsHolder.h" />
     <ClInclude Include="Sources\stdafx.h" />
     <ClInclude Include="Sources\targetver.h" />
+    <ClInclude Include="Sources\TCPMessagesServer.h" />
     <ClInclude Include="Sources\Typedefs.h" />
     <ClInclude Include="Sources\UDPMessagesServer.h" />
     <ClInclude Include="Sources\UIMessageHandler.h" />

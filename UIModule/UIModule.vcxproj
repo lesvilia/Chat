@@ -143,7 +143,6 @@
   <ItemGroup>
     <ClInclude Include="Sources\DnDTextEdit.h" />
     <ClInclude Include="Sources\IDropResultHandler.h" />
-    <ClInclude Include="Sources\IFileTransferUIHandler.h" />
     <CustomBuild Include="Sources\ProgressHandler.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing ProgressHandler.h...</Message>
@@ -154,6 +153,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -D_CRT_NONSTDC_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(ACE_ROOT)\." "-I$(BOOST_ROOT)\." "-I.\..\MsgModule\Sources" "-I.\..\HelpersModule\Sources" "-I.\..\ComponentsModule\Sources" "-I$(NOINHERIT)\."</Command>
     </CustomBuild>
+    <ClInclude Include="Sources\IProgressUIObserver.h" />
     <ClInclude Include="Sources\TableItemCreator.h" />
     <ClInclude Include="Sources\UISettings.h" />
     <ClInclude Include="Sources\UsersMessageView.h" />

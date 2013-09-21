@@ -13,12 +13,12 @@ namespace msg
   {
   }
 
-  std::wstring StateServerSettingsHolder::GetAddress()
+  std::wstring StateServerSettingsHolder::GetAddress() const
   {
     return m_manager->GetCurrentNetAddres();
   }
 
-  unsigned short StateServerSettingsHolder::GetPort()
+  unsigned short StateServerSettingsHolder::GetPort() const
   {
     return m_manager->GetCurrentStatesPort();
   }

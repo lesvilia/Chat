@@ -41,6 +41,12 @@
     <Filter Include="ChatMessageManager\src">
       <UniqueIdentifier>{b636ca02-bec9-4545-b364-d47ed7a08296}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FileTransferManager">
+      <UniqueIdentifier>{a2ad1fd6-6ac6-4784-b5fd-c9631cffce05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FileTransferManager\src">
+      <UniqueIdentifier>{03d5982e-67e4-4207-b97c-64d620708ec3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -82,6 +88,21 @@
     <ClCompile Include="Sources\ChatMessagesHandler.cpp">
       <Filter>ChatMessageManager\src</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\MessagesServer.cpp">
+      <Filter>MessagesServer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\FileMessagesHandler.cpp">
+      <Filter>FileTransferManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\FileServerSettingsHolder.cpp">
+      <Filter>FileTransferManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\FileTransferManager.cpp">
+      <Filter>FileTransferManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\TCPMessagesServer.cpp">
+      <Filter>MessagesServer\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\Messages.h">
@@ -100,9 +121,6 @@
       <Filter>Typedefs</Filter>
     </ClInclude>
     <ClInclude Include="Sources\IServerSettingsHolder.h">
-      <Filter>MessagesServer</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\IMessagesHahdler.h">
       <Filter>MessagesServer</Filter>
     </ClInclude>
     <ClInclude Include="Sources\UDPMessagesServer.h">
@@ -137,6 +155,24 @@
     </ClInclude>
     <ClInclude Include="Sources\UIMessageHandler.h">
       <Filter>MessagesReceiver</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\MessagesServer.h">
+      <Filter>MessagesServer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\IMessagesHandler.h">
+      <Filter>MessagesServer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\FileTransferManager.h">
+      <Filter>FileTransferManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\FileMessagesHandler.h">
+      <Filter>FileTransferManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\FileServerSettingsHolder.h">
+      <Filter>FileTransferManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\TCPMessagesServer.h">
+      <Filter>MessagesServer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -33,10 +33,6 @@ namespace msg
 
   ChatMessagesManager::~ChatMessagesManager()
   {
-    if (m_activated)
-    {
-      m_server->Shutdown();
-    }
   }
 
   void ChatMessagesManager::Send(const std::wstring& uuid, const std::wstring& txtMessage)

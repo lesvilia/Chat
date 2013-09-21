@@ -4,7 +4,8 @@
 #include <map>
 #include <vector>
 #include "boost\noncopyable.hpp"
-#include "boost/thread/mutex.hpp"
+#include "boost\thread\shared_mutex.hpp"
+#include "boost\thread\locks.hpp"
 #include "LoginHandlers.h"
 
 namespace login
@@ -14,8 +15,9 @@ namespace login
     class LoginManagerImpl
       : private boost::noncopyable
     {
-      typedef boost::mutex Mutex;
-      typedef boost::unique_lock<Mutex> Lock;
+      typedef boost::shared_mutex SharedMutex;
+      typedef boost::shared_lock<SharedMutex> ReadLock;
+      typedef boost::unique_lock<SharedMutex> WriteLock;
 
     public:
       explicit LoginManagerImpl();
@@ -43,7 +45,7 @@ namespace login
     private:
       std::map<std::wstring, UserDataPtr> m_users;
       std::vector<ILoginStateObserver*> m_obsrevers;
-      mutable Mutex m_mutex;
+      mutable SharedMutex m_mutex;
       bool m_isOnline;
       UserDataPtr m_currentUser;
     };

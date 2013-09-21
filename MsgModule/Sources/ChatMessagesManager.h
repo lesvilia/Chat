@@ -6,9 +6,9 @@
 namespace msg
 {
   class MessagesReceiver;
-  class ChatMessagesHandler;
-  class UDPMessageServer;
-  class ChatServerSettingsHolder;
+  class IMessagesHandler;
+  class MessageServer;
+  class IServerSettingsHolder;
 
   class ChatMessagesManager
     : private boost::noncopyable
@@ -30,9 +30,9 @@ namespace msg
 
   private:
     std::unique_ptr<ChatMessagesQueue> m_msgQueue;
-    std::unique_ptr<ChatServerSettingsHolder> m_settingsHolder;
+    std::unique_ptr<IServerSettingsHolder> m_settingsHolder;
     bool m_activated;
-    std::unique_ptr<ChatMessagesHandler> m_msgHandler;
-    std::unique_ptr<UDPMessageServer> m_server;
+    std::unique_ptr<IMessagesHandler> m_msgHandler;
+    std::unique_ptr<MessageServer> m_server;
   };
 }

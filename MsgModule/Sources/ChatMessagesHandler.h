@@ -1,5 +1,5 @@
 #pragma once
-#include "IMessagesHahdler.h"
+#include "IMessagesHandler.h"
 #include "MessagesQueue.h"
 
 namespace msg
@@ -11,7 +11,7 @@ namespace msg
   {
   public:
     ChatMessagesHandler(MessagesReceiver* msgReciever, ChatMessagesQueue* msgQueue);
-    ~ChatMessagesHandler();
+    virtual ~ChatMessagesHandler();
     virtual void HandleMessage(const std::wstring& message, const ACE_INET_Addr& addr);
   private:
     ChatMessagePtr GetMsgDataFromXml(const std::wstring& xmlMsg);

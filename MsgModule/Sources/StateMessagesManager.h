@@ -6,9 +6,9 @@
 namespace msg
 {
   class MessagesReceiver;
-  class StateMessagesHandler;
-  class UDPMessageServer;
-  class StateServerSettingsHolder;
+  class IMessagesHandler;
+  class MessageServer;
+  class IServerSettingsHolder;
 
   class StateMessagesManager
     : private boost::noncopyable
@@ -32,9 +32,9 @@ namespace msg
 
   private:
     std::unique_ptr<StateMessagesQueue> m_msgQueue;
-    std::unique_ptr<StateServerSettingsHolder> m_settingsHolder;
+    std::unique_ptr<IServerSettingsHolder> m_settingsHolder;
     bool m_activated;
-    std::unique_ptr<StateMessagesHandler> m_msgHandler;
-    std::unique_ptr<UDPMessageServer> m_server;
+    std::unique_ptr<IMessagesHandler> m_msgHandler;
+    std::unique_ptr<MessageServer> m_server;
   };
 }

@@ -15,9 +15,9 @@ namespace msg
   {
   public:
     explicit ChatServerSettingsHolder(sm::SettingsManager* manager);
-    ~ChatServerSettingsHolder();
-    virtual std::wstring GetAddress();
-    virtual unsigned short GetPort();
+    virtual ~ChatServerSettingsHolder();
+    virtual std::wstring GetAddress() const;
+    virtual unsigned short GetPort() const;
 
   private:
     sm::SettingsManager* m_manager;

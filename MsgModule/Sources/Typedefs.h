@@ -8,5 +8,6 @@ namespace msg
   typedef boost::mutex Mutex;
   typedef boost::condition_variable ConditionVariable;
   typedef boost::unique_lock<Mutex> Lock;
+  typedef boost::lock_guard<Mutex> LockGuard;
   typedef boost::thread Thread;
 }

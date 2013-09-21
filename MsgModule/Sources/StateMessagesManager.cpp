@@ -34,10 +34,6 @@ namespace msg
 
   StateMessagesManager::~StateMessagesManager()
   {
-    if (m_activated)
-    {
-      m_server->Shutdown();
-    }
   }
 
   void StateMessagesManager::SendResponseToConnect(const std::wstring& addr)

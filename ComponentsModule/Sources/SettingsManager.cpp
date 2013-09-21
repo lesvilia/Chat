@@ -13,6 +13,7 @@ namespace sm
     const wchar_t CURRENT_NET_ADDRESS[] = L"IPAddress";
     const wchar_t CURRENT_STATE_MSG_PORT[] = L"SPort";
     const wchar_t CURRENT_CHAT_MSG_PORT[] = L"MPort";
+    const wchar_t CURRENT_FILE_MSG_PORT[] = L"FPort";
   }
 
   SettingsManager* SettingsManager::Instance()
@@ -25,6 +26,7 @@ namespace sm
     : m_addressHolder(new impl::AdaptersAddressHolder())
     , m_stateMsgPort(0)
     , m_chatMsgPort(0)
+    , m_fileMsgPort(0)
   {
     Initialize();
   }
@@ -53,6 +55,12 @@ namespace sm
     return m_chatMsgPort;
   }
 
+  unsigned short SettingsManager::GetCurrentFileMessagesPort() const
+  {
+    Lock lock(m_mutex);
+    return m_fileMsgPort;
+  }
+
   void SettingsManager::Initialize()
   {
     CRegKey key;
@@ -61,6 +69,7 @@ namespace sm
       SetCurrentAddress(reghlp::GetStringValue(key, CURRENT_NET_ADDRESS));
       SetCurrentStatesPort((unsigned short)reghlp::GetDWORDValue(key, CURRENT_STATE_MSG_PORT));
       SetCurrentMessagesPort((unsigned short)reghlp::GetDWORDValue(key, CURRENT_CHAT_MSG_PORT));
+      SetCurrentFileMessagesPort((unsigned short)reghlp::GetDWORDValue(key, CURRENT_FILE_MSG_PORT));
     }
     else
     {
@@ -96,6 +105,12 @@ namespace sm
     m_chatMsgPort = chatPort ? chatPort : DEFAULT_CHAT_MSG_PORT;
   }
 
+  void SettingsManager::SetCurrentFileMessagesPort(unsigned short filePort)
+  {
+    Lock lock(m_mutex);
+    m_fileMsgPort = filePort ? filePort : DEFAULT_FILE_MSG_PORT;
+  }
+
   std::vector<std::wstring> SettingsManager::GetActiveAddresses() const
   {
     return m_addressHolder->GetLocalAddresses();
@@ -106,6 +121,7 @@ namespace sm
     m_currentNetAddress = m_addressHolder->GetAppropriateAddress();
     m_stateMsgPort = DEFAULT_STATE_MSG_PORT;
     m_chatMsgPort =  DEFAULT_CHAT_MSG_PORT;
+    m_fileMsgPort = DEFAULT_FILE_MSG_PORT;
   }
 
   void SettingsManager::SaveSettings()
@@ -116,6 +132,7 @@ namespace sm
       key.SetStringValue(CURRENT_NET_ADDRESS, m_currentNetAddress.c_str());
       key.SetDWORDValue(CURRENT_STATE_MSG_PORT, m_stateMsgPort);
       key.SetDWORDValue(CURRENT_CHAT_MSG_PORT, m_chatMsgPort);
+      key.SetDWORDValue(CURRENT_FILE_MSG_PORT, m_fileMsgPort);
     }
   }
 }

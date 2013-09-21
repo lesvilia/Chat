@@ -38,6 +38,7 @@ namespace ui
       QComboBox* m_addressWidget;
       QLineEdit* m_statePortEdit;
       QLineEdit* m_chatPortEdit;
+      QLineEdit* m_filePortEdit;
       QPushButton* m_buttonOK;
     };
   }
