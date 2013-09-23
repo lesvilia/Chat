@@ -16,7 +16,7 @@ namespace msg
   public:
     virtual void OnTextMessageReceived(const std::wstring& uuid, const std::wstring& message) = 0;
     virtual void OnFileMessageReceived(const std::wstring& uuid, const std::wstring& fileName,
-                                       const CompletionCallback& callback) = 0;
+                                       const CompletionCallback& callback) = 0; //thread safe operation
   protected:
     ~UIMessageHandler(){}
   };

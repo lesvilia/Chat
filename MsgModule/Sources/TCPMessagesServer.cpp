@@ -3,6 +3,7 @@
 
 #include "ace/INET_Addr.h"
 #include "ace/SOCK_Acceptor.h"
+#include "ace/SOCK_Stream.h"
 #include "ace/Time_Value.h"
 #include "SettingsManager.h"
 #include "LoginManager.h"
@@ -11,12 +12,18 @@
 
 namespace
 {
-  const ACE_Time_Value TIMEOUT(1); // 1 second
+  ACE_Time_Value TIMEOUT(1); // 1 second
 
   void DeleteAcceptor(ACE_SOCK_Acceptor* acceptor)
   {
     acceptor->close();
     delete acceptor;
+  }
+
+  void DeleteStream(ACE_SOCK_Stream* stream)
+  {
+    stream->close();
+    delete stream;
   }
 }
 
@@ -46,7 +53,13 @@ namespace msg
     {
       if (login::LoginManager::Instance()->IsOnline())
       {
-       
+        ACE_Time_Value timeOut(1); // 1 second
+        ACE_INET_Addr userAddr;
+        SocketStream socketStream(new ACE_SOCK_Stream(), DeleteStream);
+        if (m_acceptor->accept(*socketStream, &userAddr, &timeOut) != -1)
+        {
+          Handler()->HandleConnect(std::move(socketStream));
+        }
       }
 
       if (NeedReset())
