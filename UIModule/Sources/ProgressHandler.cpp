@@ -10,6 +10,7 @@ namespace ui
     {
       connect(this, SIGNAL(IncrementProgress(int)), this, SLOT(setValue(int)));
       connect(this, SIGNAL(TransferFinished()), this, SLOT(HideProgressBar()));
+      connect(this, SIGNAL(TransferError()), this, SLOT(ShowMessageBox()));
     }
 
     ProgressUIHandler::~ProgressUIHandler()
@@ -28,18 +29,22 @@ namespace ui
 
      void ProgressUIHandler::OnError()
      {
-       emit TransferFinished();
-       QMessageBox messageBox(this);
-       messageBox.setWindowTitle("Error transferring file.");
-       messageBox.setText("Error transferring file");
-       messageBox.setMaximumHeight(150);
-       messageBox.setMaximumWidth(200);
-       messageBox.exec();
+       emit TransferError();
      }
 
     void ProgressUIHandler::HideProgressBar()
     {
       hide();
+    }
+
+    void ProgressUIHandler::ShowMessageBox()
+    {
+      QMessageBox messageBox(this);
+      messageBox.setWindowTitle("Error transferring file.");
+      messageBox.setText("Error transferring file");
+      messageBox.setMaximumHeight(150);
+      messageBox.setMaximumWidth(200);
+      messageBox.exec();
     }
   }
 }

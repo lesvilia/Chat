@@ -24,10 +24,12 @@ namespace ui
 
     private slots:
       void HideProgressBar();
+      void ShowMessageBox();
 
     signals:
       void IncrementProgress(int);
       void TransferFinished();
+      void TransferError();
     };
   }
 }

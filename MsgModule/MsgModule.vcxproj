@@ -87,6 +87,7 @@
     <ClCompile Include="Sources\ChatServerSettingsHolder.cpp" />
     <ClCompile Include="Sources\FileMessagesHandler.cpp" />
     <ClCompile Include="Sources\FileServerSettingsHolder.cpp" />
+    <ClCompile Include="Sources\FileTransferHelpers.cpp" />
     <ClCompile Include="Sources\FileTransferManager.cpp" />
     <ClCompile Include="Sources\Messages.cpp" />
     <ClCompile Include="Sources\MessagesQueue.cpp" />
@@ -109,6 +110,7 @@
     <ClInclude Include="Sources\ChatServerSettingsHolder.h" />
     <ClInclude Include="Sources\FileMessagesHandler.h" />
     <ClInclude Include="Sources\FileServerSettingsHolder.h" />
+    <ClInclude Include="Sources\FileTransferHelpers.h" />
     <ClInclude Include="Sources\FileTransferManager.h" />
     <ClInclude Include="Sources\IMessagesHandler.h" />
     <ClInclude Include="Sources\IServerSettingsHolder.h" />

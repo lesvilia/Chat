@@ -13,6 +13,7 @@
 #include "IProgressUIObserver.h"
 #include "LoginManager.h"
 #include "MessagesTemplates.h"
+#include "FileTransferHelpers.h"
 #include "pugixml.hpp"
 #include "StringHelpers.h"
 #include "Typedefs.h"
@@ -21,76 +22,21 @@ namespace
 {
   const size_t MTU_SIZE = 1400;
   const ACE_Time_Value TIMEOUT(2);
-
-  class ObserverIniter
+  ACE_Message_Block* LinksMessageBlocks(std::vector<std::unique_ptr<ACE_Message_Block> >& blocks)
   {
-  public:
-    ObserverIniter()
-    : m_progressObserver(nullptr) { }
-
-    void SetObserver(ui::IProgressUIObserver* observer) 
+    ACE_Message_Block *head = nullptr, *message = nullptr;
+    if (!blocks.empty())
     {
-      m_progressObserver = observer;
-      m_cond.notify_one();
-    }
-
-    ui::IProgressUIObserver* GetObserver() const 
-    {
-      return m_progressObserver;
-    }
-
-    void WaitForInit()
-    {
-      msg::Lock lock(m_mutex);
-      m_cond.timed_wait(lock, boost::posix_time::milliseconds(5000));
-    }
-
-  private:
-    ui::IProgressUIObserver* m_progressObserver;
-    msg::Mutex m_mutex;
-    msg::ConditionVariable m_cond;
-  };
-
-  class ProgressUpdater
-  {
-  public:
-    ProgressUpdater(ui::IProgressUIObserver* observer, size_t fileSize)
-      : m_fileSize(fileSize)
-      , m_transferedSize(0)
-      , m_progressObserver(observer) { }
-    
-    void Update(size_t size)
-    {
-      if (m_progressObserver)
+      head = (*blocks.begin()).release();
+      message = head;
+      for (auto it = blocks.begin() + 1; it != blocks.end(); ++it)
       {
-        m_transferedSize += size;
-        float result = ((float)m_transferedSize / m_fileSize) * 100;
-        m_progressObserver->UpdateProgress(static_cast<int>(result));
+        message->cont((*it).release());
+        message = message->cont();
       }
     }
-
-    void Finished()
-    {
-      if (m_progressObserver)
-      {
-        m_progressObserver->UpdateProgress(100);
-        m_progressObserver->OnFinished();
-      }
-    }
-
-    void Error()
-    {
-      if (m_progressObserver)
-      {
-        m_progressObserver->OnError();
-      }
-    }
-
-  private:
-    size_t m_fileSize;
-    size_t m_transferedSize;
-    ui::IProgressUIObserver* m_progressObserver;
-  };
+    return head;
+  }
 }
 
 namespace msg
@@ -111,36 +57,45 @@ namespace msg
   {
   }
 
-  void FileMessagesHandler::HandleConnect(SocketStream sockStream)
+  void FileMessagesHandler::HandleConnect(const SocketStream& sockStream)
   {
     RunAsyncHandler(sockStream);
   }
 
-  void FileMessagesHandler::HandleConnectImpl(SocketStream sockStream)
+  void FileMessagesHandler::HandleConnectImpl(const SocketStream& sockStream)
   {
-    FileMessagesHandler::FileInfoPtr fileInfo(GetFileInfo(sockStream));
-    if (fileInfo)
+    if (login::LoginManager::Instance()->IsOnline())
     {
-      ObserverIniter initer;
-      m_msgHandler->OnFileMessageReceived(fileInfo->m_uuid, fileInfo->m_name,
-        [&initer](ui::IProgressUIObserver* observer) { initer.SetObserver(observer); });
-      initer.WaitForInit();
-      ui::IProgressUIObserver* observer = initer.GetObserver();
-      if (observer)
+      FileMessagesHandler::FileInfoPtr fileInfo(GetFileInfo(sockStream));
+      if (fileInfo && fileInfo->m_size > 0)
       {
-        ACE_Message_Block* head = nullptr;
-        RecvMessageBlocks(sockStream, fileInfo->m_size, head, observer);
-        if (head)
+        ObserverIniter initer;
+        m_msgHandler->OnFileMessageReceived(fileInfo->m_uuid, fileInfo->m_name,
+                                            boost::bind(&ObserverIniter::SetObserver, boost::ref(initer), _1));
+        ui::IProgressUIObserver* observer = initer.GetObserver();
+        if (observer)
         {
-          SaveMessageBlockToFile(fileInfo->m_name, head);
-          head->release();
+          try
+          {
+            ACE_Message_Block* head = RecvMessageBlocks(sockStream, fileInfo->m_size, observer);
+            if (head)
+            {
+              SaveMessageBlocksToFile(fileInfo->m_name, head);
+              head->release();
+            }
+          }
+          catch (const TransferringError&)
+          {
+          }
+          catch (const LogOutError&)
+          {
+          }
         }
       }
     }
-    sockStream->close();
   }
 
-  void FileMessagesHandler::RunAsyncHandler(SocketStream sockStream)
+  void FileMessagesHandler::RunAsyncHandler(const SocketStream& sockStream)
   {
     Thread newThread(&FileMessagesHandler::HandleConnectImpl, this, sockStream);
     newThread.detach();
@@ -181,71 +136,49 @@ namespace msg
   }
 
 
-  void FileMessagesHandler::RecvMessageBlocks(const SocketStream& sockStream, size_t fileSize,
-                                              ACE_Message_Block*& head, ui::IProgressUIObserver* observer)
+  ACE_Message_Block* FileMessagesHandler::RecvMessageBlocks(const SocketStream& sockStream, size_t fileSize,
+                                                            ui::IProgressUIObserver* observer)
   {
-    if (fileSize > 0)
+    const size_t MTUChunkCount = fileSize / MTU_SIZE;
+    const size_t residualSize = fileSize % MTU_SIZE;
+
+    std::vector<MessageBlockPtr> blocks;
+    ProgressUpdater updater(observer, fileSize);
+
+    for (size_t count = 0; count != MTUChunkCount; ++count)
     {
-      const size_t MTUChunkCount = fileSize / MTU_SIZE;
-      const size_t residualSize = fileSize % MTU_SIZE;
-
-      bool onError = false;
-      std::vector<ACE_Message_Block*> blocks;
-      ProgressUpdater updater(observer, fileSize);
-
-      for (size_t count = 0; (count != MTUChunkCount) && !onError; ++count)
+      MessageBlockPtr MTUBlock(new ACE_Message_Block(MTU_SIZE));
+      if (sockStream->recv_n(MTUBlock->wr_ptr(), MTU_SIZE, &TIMEOUT) == MTU_SIZE)
       {
-        ACE_Message_Block* MTUBlock = new ACE_Message_Block(MTU_SIZE);
-        if (sockStream->recv_n(MTUBlock->wr_ptr(), MTU_SIZE, &TIMEOUT) == MTU_SIZE)
-        {
-          MTUBlock->wr_ptr(MTU_SIZE);
-          updater.Update(MTU_SIZE);
-        }
-        else
-        {
-          onError = true;
-          updater.Error();
-        }
-        blocks.push_back(MTUBlock);
+        MTUBlock->wr_ptr(MTU_SIZE);
+        updater.Update(MTU_SIZE);
       }
-
-      if (residualSize > 0 && !onError)
+      else
       {
-        ACE_Message_Block* residualBlock = new ACE_Message_Block(residualSize);
-        if (sockStream->recv_n(residualBlock->wr_ptr(), residualSize, &TIMEOUT) == residualSize)
-        {
-          residualBlock->wr_ptr(residualSize);
-          updater.Update(residualSize);
-          updater.Finished();
-        }
-        else
-        {
-          onError = true;
-          updater.Error();
-        }
-        blocks.push_back(residualBlock);
+        updater.Error();
       }
-
-      if (!blocks.empty())
-      {
-        ACE_Message_Block* message = *blocks.begin();
-        head = message;
-        for (auto it = blocks.begin() + 1; it != blocks.end(); ++it)
-        {
-          message->cont(*it);
-          message = message->cont();
-        }
-
-        if (onError)
-        {
-          head->release();
-          head = nullptr;
-        }
-      }
+      blocks.push_back(std::move(MTUBlock));
     }
+
+    if (residualSize > 0)
+    {
+      MessageBlockPtr residualBlock(new ACE_Message_Block(residualSize));
+      if (sockStream->recv_n(residualBlock->wr_ptr(), residualSize, &TIMEOUT) == residualSize)
+      {
+        residualBlock->wr_ptr(residualSize);
+        updater.Update(residualSize);
+        updater.Finished();
+      }
+      else
+      {
+        updater.Error();
+      }
+      blocks.push_back(std::move(residualBlock));
+    }
+    return LinksMessageBlocks(blocks);
   }
 
-  void FileMessagesHandler::SaveMessageBlockToFile(const std::wstring& fileName, ACE_Message_Block* message)
+  void FileMessagesHandler::SaveMessageBlocksToFile(const std::wstring& fileName, ACE_Message_Block* message)
   {
     ACE_FILE_IO file;
     ACE_FILE_Connector connector;

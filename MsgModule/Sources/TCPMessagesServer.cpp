@@ -58,7 +58,7 @@ namespace msg
         SocketStream socketStream(new ACE_SOCK_Stream(), DeleteStream);
         if (m_acceptor->accept(*socketStream, &userAddr, &timeOut) != -1)
         {
-          Handler()->HandleConnect(std::move(socketStream));
+          Handler()->HandleConnect(socketStream);
         }
       }
 
