@@ -1,5 +1,7 @@
 #include "ProgressHandler.h"
 
+#include <QMessageBox>
+
 namespace ui
 {
   namespace controls
@@ -23,6 +25,17 @@ namespace ui
     {
       emit TransferFinished();
     }
+
+     void ProgressUIHandler::OnError()
+     {
+       emit TransferFinished();
+       QMessageBox messageBox(this);
+       messageBox.setWindowTitle("Error transferring file.");
+       messageBox.setText("Error transferring file");
+       messageBox.setMaximumHeight(150);
+       messageBox.setMaximumWidth(200);
+       messageBox.exec();
+     }
 
     void ProgressUIHandler::HideProgressBar()
     {

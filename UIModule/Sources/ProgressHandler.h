@@ -20,6 +20,7 @@ namespace ui
       //IProgressUIObserver interface
       virtual void UpdateProgress(int count);
       virtual void OnFinished();
+      virtual void OnError();
 
     private slots:
       void HideProgressBar();

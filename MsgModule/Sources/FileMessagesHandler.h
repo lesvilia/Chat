@@ -24,7 +24,8 @@ namespace msg
       std::wstring m_name;
       std::wstring m_uuid;
     };
-    typedef std::shared_ptr<FileInfo> FileInfoPtr;
+    typedef std::unique_ptr<FileInfo> FileInfoPtr;
+    typedef std::shared_ptr<ACE_Message_Block> MessageBlockPtr;
 
   public:
     FileMessagesHandler(UIMessageHandler* msgHandler);
@@ -34,7 +35,8 @@ namespace msg
   private:
     void HandleConnectImpl(SocketStream sockStream);
     void RunAsyncHandler(SocketStream sockStream);
-    FileInfoPtr GetFileInfo(const std::wstring& msgHeader) const;
+    FileInfoPtr GetFileInfo(SocketStream sockStream) const;
+    FileInfoPtr ParseMessageHeader(const std::wstring& msgHeader) const;
     void RecvMessageBlocks(const SocketStream& sockStream, size_t fileSize,
                            ACE_Message_Block*& head, ui::IProgressUIObserver* observer);
     void SaveMessageBlockToFile(const std::wstring& fileName, ACE_Message_Block* message);
