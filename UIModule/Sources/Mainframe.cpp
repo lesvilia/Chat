@@ -17,6 +17,7 @@
 #include "SettingsDialog.h"
 #include "SettingsManager.h"
 #include "LoginManager.h"
+#include "FileTransferManager.h"
 #include "ChatMessagesManager.h"
 #include "StateMessagesManager.h"
 #include "UserListItem.h"
@@ -118,8 +119,8 @@ namespace ui
 
       controls::UserListItem* currentItem = static_cast<controls::UserListItem*>(
         m_userListWidget->currentItem());
-      //msg::FileTransferManager->Instance()->SendFile(currentItem->GetUserID(), path, observer);
-      //TODO: need implement server logic for sending files.
+
+      msg::FileTransferManager::Instance()->SendFile(currentItem->GetUserID(), path, observer);
     }
   }
 

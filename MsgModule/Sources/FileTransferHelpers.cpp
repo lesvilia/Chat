@@ -36,7 +36,7 @@ namespace msg
 
   void ProgressUpdater::Update(size_t size)
   {
-    if (login::LoginManager::Instance()->IsOnline())
+    if (login::LoginManager::Instance()->IsOnline() && m_progressObserver)
     {
       m_transferedSize += size;
       float result = ((float)m_transferedSize / m_fileSize) * 100;
@@ -50,13 +50,19 @@ namespace msg
 
   void ProgressUpdater::Finished()
   {
-    m_progressObserver->UpdateProgress(100);
-    m_progressObserver->OnFinished();
+    if (m_progressObserver)
+    {
+      m_progressObserver->UpdateProgress(100);
+      m_progressObserver->OnFinished();
+    }
+    else
+    {
+      throw LogOutError();
+    }
   }
 
   void ProgressUpdater::Error()
   {
-    m_progressObserver->OnError();
     throw TransferringError();
   }
 }

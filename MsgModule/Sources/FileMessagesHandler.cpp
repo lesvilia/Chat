@@ -22,7 +22,11 @@ namespace
 {
   const size_t MTU_SIZE = 1400;
   const ACE_Time_Value TIMEOUT(2);
-  ACE_Message_Block* LinksMessageBlocks(std::vector<std::unique_ptr<ACE_Message_Block> >& blocks)
+}
+
+namespace msg
+{
+  ACE_Message_Block* LinksMessageBlocks(std::vector<MessageBlockPtr>& blocks)
   {
     ACE_Message_Block *head = nullptr, *message = nullptr;
     if (!blocks.empty())
@@ -37,13 +41,11 @@ namespace
     }
     return head;
   }
-}
 
-namespace msg
-{
-  FileMessagesHandler::FileInfo::FileInfo(size_t size, const std::wstring& name, const std::wstring& uuid)
+  FileInfo::FileInfo(size_t size, const std::wstring& name, const std::wstring& uuid)
     : m_size(size)
     , m_name(name)
+    , m_uuid(uuid)
   {
   }
 
@@ -66,7 +68,7 @@ namespace msg
   {
     if (login::LoginManager::Instance()->IsOnline())
     {
-      FileMessagesHandler::FileInfoPtr fileInfo(GetFileInfo(sockStream));
+      FileInfoPtr fileInfo(GetFileInfo(sockStream));
       if (fileInfo && fileInfo->m_size > 0)
       {
         ObserverIniter initer;
@@ -86,6 +88,10 @@ namespace msg
           }
           catch (const TransferringError&)
           {
+            if (observer)
+            {
+              observer->OnError();
+            }
           }
           catch (const LogOutError&)
           {
@@ -101,7 +107,7 @@ namespace msg
     newThread.detach();
   }
 
-  FileMessagesHandler::FileInfoPtr FileMessagesHandler::GetFileInfo(SocketStream sockStream) const
+  FileInfoPtr FileMessagesHandler::GetFileInfo(SocketStream sockStream) const
   {
     std::vector<char> buff(MTU_SIZE + 1, '\0');
     if (sockStream->recv_n(&buff[0], MTU_SIZE, &TIMEOUT) > 0)
@@ -115,9 +121,9 @@ namespace msg
     return nullptr;
   }
 
-  FileMessagesHandler::FileInfoPtr FileMessagesHandler::ParseMessageHeader(const std::wstring& msgHeader) const
+  FileInfoPtr FileMessagesHandler::ParseMessageHeader(const std::wstring& msgHeader) const
   {
-    FileMessagesHandler::FileInfoPtr fileInfo(nullptr);
+    FileInfoPtr fileInfo(nullptr);
     pugi::xml_document messageDoc;
     pugi::xml_parse_result result = messageDoc.load(msgHeader.c_str());
     if (result)
@@ -130,7 +136,7 @@ namespace msg
       pugi::xml_node dataNode = messageNode.child(DATA_NODE);
       std::wstring fileSize(dataNode.child_value(FILE_SIZE_NODE));
       std::wstring fileName(dataNode.child_value(FILE_NAME_NODE));
-      fileInfo.reset(new  FileMessagesHandler::FileInfo(std::stoi(fileSize), fileName, uuid));
+      fileInfo.reset(new  FileInfo(std::stoi(fileSize), fileName, uuid));
     }
     return fileInfo;
   }

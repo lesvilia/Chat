@@ -33,14 +33,12 @@ namespace msg
   };
 
   class ProgressUpdater
-    : private login::ILoginStateObserver
   {
   public:
     ProgressUpdater(ui::IProgressUIObserver* observer, size_t fileSize);
     void Update(size_t size);
     void Finished();
     void Error();
-    virtual void OnlineStateChanged();
 
   private:
     size_t m_fileSize;

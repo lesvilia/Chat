@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include<vector>
 
 #include "IMessagesHandler.h"
 
@@ -14,19 +15,23 @@ namespace msg
 {
   class UIMessageHandler;
 
+  struct FileInfo
+  {
+    FileInfo(size_t size, const std::wstring& name, const std::wstring& uuid);
+    size_t m_size;
+    std::wstring m_name;
+    std::wstring m_uuid;
+  };
+
+  typedef std::unique_ptr<FileInfo> FileInfoPtr;
+  typedef void (*MessageBlockDeleter)(ACE_Message_Block*);
+  typedef std::unique_ptr<ACE_Message_Block> MessageBlockPtr;
+  typedef std::unique_ptr<ACE_Message_Block, MessageBlockDeleter> MessageBlockHolder;
+  ACE_Message_Block* LinksMessageBlocks(std::vector<MessageBlockPtr>& blocks);
+
   class FileMessagesHandler
     : public IMessagesHandler
   {
-    struct FileInfo
-    {
-      FileInfo(size_t size, const std::wstring& name, const std::wstring& uuid);
-      size_t m_size;
-      std::wstring m_name;
-      std::wstring m_uuid;
-    };
-    typedef std::unique_ptr<FileInfo> FileInfoPtr;
-    typedef std::unique_ptr<ACE_Message_Block> MessageBlockPtr;
-
   public:
     FileMessagesHandler(UIMessageHandler* msgHandler);
     virtual ~FileMessagesHandler();

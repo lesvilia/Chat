@@ -3,6 +3,7 @@
 #include "StateMessagesManager.h"
 #include "ChatMessagesManager.h"
 #include "NetUsersManager.h"
+#include "FileTransferManager.h"
 
 namespace msg
 {
@@ -13,12 +14,14 @@ namespace msg
     m_window.reset(new MessagesWindow(this));
     StateMessagesManager::Instance()->Activate(this);
     ChatMessagesManager::Instance()->Activate(this);
+    FileTransferManager::Instance()->Activate(m_uiHandler);
   }
 
   MessagesReceiver::~MessagesReceiver()
   {
     StateMessagesManager::Instance()->Deactivate();
     ChatMessagesManager::Instance()->Deactivate();
+    FileTransferManager::Instance()->Deactivate();
   }
 
   void MessagesReceiver::ProcessStateMessage()
