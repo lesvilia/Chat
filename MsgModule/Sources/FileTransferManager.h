@@ -2,7 +2,7 @@
 #include <memory>
 #include <string>
 #include "boost/noncopyable.hpp"
-#include "FileMessagesHandler.h"
+#include "FileInfo.h"
 #include "LoginHandlers.h"
 
 class ACE_Message_Block;
@@ -34,16 +34,7 @@ namespace msg
     void ResetServer();
 
   private:
-    void SendFileImpl(const ACE_INET_Addr& userAddr, const std::wstring& filePath, size_t size,
-                      const std::wstring& header, ui::IProgressUIObserver* observer);
-    void RunAsyncSender(const ACE_INET_Addr& userAddr, const std::wstring& filePath, size_t size,
-                        const std::wstring& header, ui::IProgressUIObserver* observer);
-    void SendMessageBlock(const SocketStream& socket, ACE_Message_Block* message,
-                          ProgressUpdater& updater);
     FileInfoPtr GetFileInfo(const std::wstring& filePath);
-    ACE_Message_Block* MakeMessageBlock(const std::wstring& header, const std::wstring& filePath,
-                                        size_t fileSize);
-    std::wstring MakeMessageHeader(const FileInfoPtr& fileInfo);
     FileTransferManager();
     ~FileTransferManager();
 

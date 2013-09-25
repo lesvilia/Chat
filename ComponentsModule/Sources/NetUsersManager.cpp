@@ -32,7 +32,18 @@ namespace net
 
   void NetUsersManager::Subscribe(INetUsersObserver* observer)
   {
+    Lock lock(m_observerMutex);
     m_observers.push_back(observer);
+  }
+
+  void NetUsersManager::Unsubscribe(INetUsersObserver* observer)
+  {
+    Lock lock(m_observerMutex);
+    auto iter = std::find(m_observers.begin(), m_observers.end(), observer);
+    if (iter != m_observers.end())
+    {
+      m_observers.erase(iter);
+    }
   }
 
   void NetUsersManager::AddNewUser(const std::wstring& uuid, const std::wstring& name, const std::wstring& addr)
@@ -108,19 +119,35 @@ namespace net
 
   void NetUsersManager::UserConnectedNotify(const std::wstring& uuid)
   {
-    std::for_each(m_observers.cbegin(), m_observers.cend(),
+    std::vector<INetUsersObserver*> observers(CopyObservers());
+
+    std::for_each(observers.cbegin(), observers.cend(),
       [&uuid](INetUsersObserver* observer)
-    {
-      observer->OnNetUserConnected(uuid);
-    });
+      {
+        if (observer)
+        {
+          observer->OnNetUserConnected(uuid);
+        }
+      });
   }
 
   void NetUsersManager::UserDisconnectedNotify(const std::wstring& uuid)
   {
-    std::for_each(m_observers.cbegin(), m_observers.cend(),
+    std::vector<INetUsersObserver*> observers(CopyObservers());
+
+    std::for_each(observers.cbegin(), observers.cend(),
       [&uuid](INetUsersObserver* observer)
-    {
-      observer->OnNetUserDisconnected(uuid);
-    });
+      {
+        if (observer)
+        {
+          observer->OnNetUserDisconnected(uuid);
+        }
+      });
+  }
+
+  std::vector<INetUsersObserver*> NetUsersManager::CopyObservers() const
+  {
+     Lock lock(m_observerMutex);
+     return std::vector<INetUsersObserver*>(m_observers.begin(), m_observers.end());
   }
 }

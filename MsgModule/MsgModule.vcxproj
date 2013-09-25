@@ -85,6 +85,9 @@
     <ClCompile Include="Sources\ChatMessagesHandler.cpp" />
     <ClCompile Include="Sources\ChatMessagesManager.cpp" />
     <ClCompile Include="Sources\ChatServerSettingsHolder.cpp" />
+    <ClCompile Include="Sources\FileAsyncReceiver.cpp" />
+    <ClCompile Include="Sources\FileAsyncSender.cpp" />
+    <ClCompile Include="Sources\FileInfo.cpp" />
     <ClCompile Include="Sources\FileMessagesHandler.cpp" />
     <ClCompile Include="Sources\FileServerSettingsHolder.cpp" />
     <ClCompile Include="Sources\FileTransferHelpers.cpp" />
@@ -108,6 +111,9 @@
     <ClInclude Include="Sources\ChatMessagesHandler.h" />
     <ClInclude Include="Sources\ChatMessagesManager.h" />
     <ClInclude Include="Sources\ChatServerSettingsHolder.h" />
+    <ClInclude Include="Sources\FileAsyncReceiver.h" />
+    <ClInclude Include="Sources\FileAsyncSender.h" />
+    <ClInclude Include="Sources\FileInfo.h" />
     <ClInclude Include="Sources\FileMessagesHandler.h" />
     <ClInclude Include="Sources\FileServerSettingsHolder.h" />
     <ClInclude Include="Sources\FileTransferHelpers.h" />

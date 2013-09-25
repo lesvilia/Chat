@@ -3,8 +3,10 @@
 #include <vector>
 #include <memory>
 #include <string>
-#include "ace/INET_Addr.h"
-#include "boost/noncopyable.hpp"
+#include "ace\INET_Addr.h"
+#include "boost\noncopyable.hpp"
+#include "boost\thread\mutex.hpp"
+#include "boost\thread\locks.hpp"
 
 namespace net
 {
@@ -20,11 +22,15 @@ namespace net
       std::wstring name;
       std::wstring address;
     };
+
     typedef std::shared_ptr<NetUserData> NetUserDataPtr;
+    typedef boost::mutex Mutex;
+    typedef boost::unique_lock<Mutex> Lock;
 
   public:
     static NetUsersManager* Instance();
     void Subscribe(INetUsersObserver* observer);
+    void Unsubscribe(INetUsersObserver* observer);
     void AddNewUser(const std::wstring& uuid, const std::wstring& name, const std::wstring& addr);
     void RemoveUser(const std::wstring& uuid);
     void ClearOnlineUsers();
@@ -38,9 +44,10 @@ namespace net
     ~NetUsersManager();
     void UserConnectedNotify(const std::wstring& uuid);
     void UserDisconnectedNotify(const std::wstring& uuid);
-
+    std::vector<INetUsersObserver*> CopyObservers() const;
   private:
     std::map<std::wstring, NetUserDataPtr> m_netUsers;
     std::vector<INetUsersObserver*> m_observers;
+    mutable Mutex m_observerMutex;
   };
 }

@@ -11,6 +11,7 @@ namespace login
     virtual UserDataPtr GetCurrentUser() const = 0;
     virtual bool IsOnline() const = 0;
     virtual void Subscribe(ILoginStateObserver* observer) = 0;
+    virtual void Unsubscribe(ILoginStateObserver* observer) = 0;
     virtual ILoginHandler* GetLoginHandler() = 0;
   protected:
     ~ILoginManager() {}

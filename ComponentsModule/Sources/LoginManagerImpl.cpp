@@ -135,9 +135,11 @@ namespace login
       NotifyObservers();
     }
 
-    void LoginManagerImpl::NotifyObservers()
+    void LoginManagerImpl::NotifyObservers() const
     {
-      std::for_each(m_obsrevers.begin(), m_obsrevers.end(),
+      std::vector<ILoginStateObserver*> observers(CopyObservers());
+
+      std::for_each(observers.begin(), observers.end(),
       [](ILoginStateObserver* observer)
       {
         if (observer)
@@ -147,9 +149,26 @@ namespace login
       });
     }
 
+    std::vector<ILoginStateObserver*> LoginManagerImpl::CopyObservers() const
+    {
+      Lock lock(m_observerMutex);
+      return std::vector<ILoginStateObserver*>(m_obsrevers.begin(), m_obsrevers.end());
+    }
+
     void LoginManagerImpl::Subscribe(ILoginStateObserver* observer)
     {
+      Lock lock(m_observerMutex);
       m_obsrevers.push_back(observer);
+    }
+
+    void LoginManagerImpl::Unsubscribe(ILoginStateObserver* observer)
+    {
+      Lock lock(m_observerMutex);
+      auto iter = std::find(m_obsrevers.begin(), m_obsrevers.end(), observer);
+      if (iter != m_obsrevers.end())
+      {
+        m_obsrevers.erase(iter);
+      }
     }
 
     void LoginManagerImpl::AddNewUserData(const UserDataPtr& data)

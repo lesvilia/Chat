@@ -36,6 +36,7 @@ namespace login
     virtual bool IsOnline() const;
     virtual UserDataPtr GetCurrentUser() const;
     virtual void Subscribe(ILoginStateObserver* observer);
+    virtual void Unsubscribe(ILoginStateObserver* observer);
     virtual ILoginHandler* GetLoginHandler();
 
     //ILoginHandler interface

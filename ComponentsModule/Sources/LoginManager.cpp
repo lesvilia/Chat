@@ -57,6 +57,11 @@ namespace login
     m_impl->Subscribe(observer);
   }
 
+  void LoginManager::Unsubscribe(ILoginStateObserver* observer)
+  {
+    m_impl->Unsubscribe(observer);
+  }
+
   ILoginHandler* LoginManager::GetLoginHandler()
   {
     return this;

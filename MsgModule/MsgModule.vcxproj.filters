@@ -106,6 +106,15 @@
     <ClCompile Include="Sources\FileTransferHelpers.cpp">
       <Filter>FileTransferManager\src</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\FileAsyncSender.cpp">
+      <Filter>FileTransferManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\FileInfo.cpp">
+      <Filter>FileTransferManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\FileAsyncReceiver.cpp">
+      <Filter>FileTransferManager\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\Messages.h">
@@ -178,6 +187,15 @@
       <Filter>MessagesServer</Filter>
     </ClInclude>
     <ClInclude Include="Sources\FileTransferHelpers.h">
+      <Filter>FileTransferManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\FileAsyncSender.h">
+      <Filter>FileTransferManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\FileInfo.h">
+      <Filter>FileTransferManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\FileAsyncReceiver.h">
       <Filter>FileTransferManager\src</Filter>
     </ClInclude>
   </ItemGroup>
