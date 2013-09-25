@@ -17,7 +17,6 @@ namespace
 {
   const size_t MTU_SIZE = 1400;
   const ACE_Time_Value TIMEOUT(2);
-  const unsigned short TEMP_PORT = 0;
 
   void MessageDeleter(ACE_Message_Block* block)
   {
