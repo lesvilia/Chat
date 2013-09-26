@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
-
 #include <QSplitter>
+#include "DataBaseUIHandler.h"
 
 class QTableWidget;
 class QWidget;
@@ -18,18 +18,9 @@ namespace ui
     class DnDTextEdit;
   }
 
-  struct MessageInfo
-  {
-    MessageInfo(const std::wstring& username, const std::wstring& message,
-      const std::wstring& time, bool isNetUser = false);
-    std::wstring m_username;
-    std::wstring m_message;
-    std::wstring m_time;
-    bool m_isNetUser;
-  };
-
   class UsersMessageView
     : public QSplitter
+    , public db::DataBaseUIHandler
   {
   public:
     explicit UsersMessageView(IDropResultHandler* dropHandler);
@@ -37,10 +28,13 @@ namespace ui
     bool GetTextFromEdit(std::wstring* msg);
     void AppendTxtMessage(const MessageInfo& msg);
     IProgressUIObserver* AppendFileMessage(const MessageInfo& msg);
-    void InsertTxtMessageFromDB(const MessageInfo& msg, int rowNum);
-    void InsertFileMessageFromDB(const MessageInfo& msg, int rowNum);
+
+    //DataBaseUIHandler interface
+    virtual void AddLastConversations(db::MessageListPtr messages);
 
   private:
+    void InsertTxtMessageFromDB(const MessageInfo& msg, int rowNum);
+    void InsertFileMessageFromDB(const MessageInfo& msg, int rowNum);
     void InsertMessageImpl(const MessageInfo& msg, int rowNum, MessageItemCreator& creator);
     void CreateSubControls(IDropResultHandler* dropHandler);
     void ClearMessageEdit();

@@ -32,15 +32,6 @@ namespace ui
 {
   using namespace settings::MessageView;
 
-  MessageInfo::MessageInfo(const std::wstring& username, const std::wstring& message,
-                           const std::wstring& time, bool isNetUser)
-    : m_username(username)
-    , m_message(message)
-    , m_time(time)
-    , m_isNetUser(isNetUser)
-  {
-  }
-
   UsersMessageView::UsersMessageView(IDropResultHandler* dropHandler)
     : QSplitter(Qt::Vertical)
     , m_msgView(nullptr)
@@ -125,5 +116,23 @@ namespace ui
   {
     m_msgView->insertRow(rowNum);
     creator.CreateItems(msg);
+  }
+
+  void UsersMessageView::AddLastConversations(db::MessageListPtr messages)
+  {
+    //need implement sort by time
+    for (auto iter = messages->begin(); iter != messages->end(); ++iter)
+    {
+      switch (iter->first)
+      {
+        case db::TEXT_MSG:
+          InsertTxtMessageFromDB(iter->second, 0);
+          break;
+
+        case db::FILE_MSG:
+          InsertFileMessageFromDB(iter->second, 0);
+          break;
+      }
+    }
   }
 }

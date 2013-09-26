@@ -44,7 +44,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(BOOST_ROOT);$(ACE_ROOT);..\HelpersModule\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(BOOST_ROOT);$(ACE_ROOT);..\HelpersModule\Sources;..\MsgModule\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -63,7 +63,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(BOOST_ROOT);$(ACE_ROOT);..\HelpersModule\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(BOOST_ROOT);$(ACE_ROOT);..\HelpersModule\Sources;..\MsgModule\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
@@ -82,6 +82,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\AdaptersAddressHolder.cpp" />
+    <ClCompile Include="Sources\CreateTableDBHandler.cpp" />
+    <ClCompile Include="Sources\DataBaseManager.cpp" />
+    <ClCompile Include="Sources\DataBaseService.cpp" />
+    <ClCompile Include="Sources\GetTableContentsDBHandler.cpp" />
+    <ClCompile Include="Sources\InsertMessageDBHandler.cpp" />
     <ClCompile Include="Sources\LoginManager.cpp" />
     <ClCompile Include="Sources\LoginManagerImpl.cpp" />
     <ClCompile Include="Sources\NetUsersManager.cpp" />
@@ -91,9 +96,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\AdaptersAddressHolder.h" />
+    <ClInclude Include="Sources\CreateTableDBHandler.h" />
+    <ClInclude Include="Sources\DataBaseManager.h" />
+    <ClInclude Include="Sources\DataBaseService.h" />
+    <ClInclude Include="Sources\DataBaseUIHandler.h" />
+    <ClInclude Include="Sources\DBResponseHandler.h" />
     <ClInclude Include="Sources\DefaultSettings.h" />
+    <ClInclude Include="Sources\GetTableContentsDBHandler.h" />
     <ClInclude Include="Sources\ILoginManager.h" />
     <ClInclude Include="Sources\INetUsersObserver.h" />
+    <ClInclude Include="Sources\InsertMessageDBHandler.h" />
     <ClInclude Include="Sources\LoginHandlers.h" />
     <ClInclude Include="Sources\LoginManager.h" />
     <ClInclude Include="Sources\LoginManagerImpl.h" />

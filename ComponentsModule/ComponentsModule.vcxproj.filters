@@ -28,6 +28,12 @@
     <Filter Include="WSAHolder\src">
       <UniqueIdentifier>{c654a9d0-f84a-4a66-82f4-cd30e03a364b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DataBaseManager">
+      <UniqueIdentifier>{8f1371f4-665f-4228-a6ce-56d35471f885}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataBaseManager\src">
+      <UniqueIdentifier>{c58054f2-888b-4b47-ba5c-11af455d0539}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -53,6 +59,21 @@
     </ClCompile>
     <ClCompile Include="Sources\AdaptersAddressHolder.cpp">
       <Filter>SettingsManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\DataBaseManager.cpp">
+      <Filter>DataBaseManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\DataBaseService.cpp">
+      <Filter>DataBaseManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\CreateTableDBHandler.cpp">
+      <Filter>DataBaseManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GetTableContentsDBHandler.cpp">
+      <Filter>DataBaseManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\InsertMessageDBHandler.cpp">
+      <Filter>DataBaseManager\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +112,27 @@
     </ClInclude>
     <ClInclude Include="Sources\AdaptersAddressHolder.h">
       <Filter>SettingsManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\DataBaseManager.h">
+      <Filter>DataBaseManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\DataBaseService.h">
+      <Filter>DataBaseManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\DBResponseHandler.h">
+      <Filter>DataBaseManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\CreateTableDBHandler.h">
+      <Filter>DataBaseManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GetTableContentsDBHandler.h">
+      <Filter>DataBaseManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\InsertMessageDBHandler.h">
+      <Filter>DataBaseManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\DataBaseUIHandler.h">
+      <Filter>DataBaseManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
