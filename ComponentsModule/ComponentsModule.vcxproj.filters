@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="stdafx">
-      <UniqueIdentifier>{6ac374c0-00f9-4f9d-808d-7a8878568e8a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="LoginManager">
       <UniqueIdentifier>{e589fe4c-b370-4590-9c60-277567ef9379}</UniqueIdentifier>
     </Filter>
@@ -39,9 +36,6 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\stdafx.cpp">
-      <Filter>stdafx</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\LoginManager.cpp">
       <Filter>LoginManager\src</Filter>
     </ClCompile>
@@ -75,14 +69,11 @@
     <ClCompile Include="Sources\InsertMessageDBHandler.cpp">
       <Filter>DataBaseManager\src</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\DataBaseHolder.cpp">
+      <Filter>DataBaseManager\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sources\stdafx.h">
-      <Filter>stdafx</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\targetver.h">
-      <Filter>stdafx</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\ILoginManager.h">
       <Filter>LoginManager</Filter>
     </ClInclude>
@@ -133,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="Sources\DataBaseUIHandler.h">
       <Filter>DataBaseManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\DataBaseHolder.h">
+      <Filter>DataBaseManager\src</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

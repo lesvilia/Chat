@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include <algorithm>
 #include "StateMessagesManager.h"
 #include "StateMessagesHandler.h"

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "StringHelpers.h"
 #include <vector>
 #include <Windows.h>

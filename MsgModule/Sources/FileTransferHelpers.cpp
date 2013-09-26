@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "FileTransferHelpers.h"
 
 #include "LoginManager.h"
@@ -97,7 +97,7 @@ namespace msg
   ui::IProgressUIObserver* ObserverIniter::GetObserver()
   {
     Lock lock(m_mutex);
-    m_cond.timed_wait(lock, boost::posix_time::milliseconds(3000));
+    m_cond.wait(lock, [this]()->bool { return m_observer ? true : false; });
     return m_observer;
   }
 

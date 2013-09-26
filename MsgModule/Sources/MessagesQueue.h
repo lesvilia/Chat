@@ -37,6 +37,7 @@ namespace msg
     {
       Lock lock(m_mutex);
       m_messages.push(msgData);
+      m_cond.notify_all();
     }
 
     DataType Dequeue()
@@ -54,9 +55,19 @@ namespace msg
       }
     }
 
+    DataType DequeueWait()
+    {
+      Lock lock(m_mutex);
+      m_cond.wait(lock, [this]()->bool { return !m_messages.empty(); });
+      DataType data(m_messages.front());
+      m_messages.pop();
+      return data;
+    }
+
   private:
     std::queue<DataType> m_messages;
     Mutex m_mutex;
+    ConditionVariable m_cond;
   };
 
   typedef std::shared_ptr<StateMessageData> StateMessageDataPtr;

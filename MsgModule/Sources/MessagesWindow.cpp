@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "MessagesWindow.h"
 #include "MessagesReceiver.h"
 

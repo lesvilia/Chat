@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "CreateTableDBHandler.h"
 #include "StringHelpers.h"
 #include "boost/format.hpp"

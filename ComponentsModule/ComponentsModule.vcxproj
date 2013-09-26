@@ -40,30 +40,30 @@
   <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(BOOST_ROOT);$(ACE_ROOT);..\HelpersModule\Sources;..\MsgModule\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(BOOST_ROOT);$(ACE_ROOT);..\HelpersModule\Sources;..\MsgModule\Sources;$(SQLITE_ROOT);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>HelpersModule.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(SQLITE_ROOT)Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>HelpersModule.lib;SQLited.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(BOOST_ROOT);$(ACE_ROOT);..\HelpersModule\Sources;..\MsgModule\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(BOOST_ROOT);$(ACE_ROOT);..\HelpersModule\Sources;..\MsgModule\Sources;$(SQLITE_ROOT);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
@@ -73,8 +73,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>HelpersModule.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);$(SQLITE_ROOT)Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>HelpersModule.lib;SQLite.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -83,6 +83,7 @@
   <ItemGroup>
     <ClCompile Include="Sources\AdaptersAddressHolder.cpp" />
     <ClCompile Include="Sources\CreateTableDBHandler.cpp" />
+    <ClCompile Include="Sources\DataBaseHolder.cpp" />
     <ClCompile Include="Sources\DataBaseManager.cpp" />
     <ClCompile Include="Sources\DataBaseService.cpp" />
     <ClCompile Include="Sources\GetTableContentsDBHandler.cpp" />
@@ -91,12 +92,12 @@
     <ClCompile Include="Sources\LoginManagerImpl.cpp" />
     <ClCompile Include="Sources\NetUsersManager.cpp" />
     <ClCompile Include="Sources\SettingsManager.cpp" />
-    <ClCompile Include="Sources\stdafx.cpp" />
     <ClCompile Include="Sources\WSAStartupHolder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\AdaptersAddressHolder.h" />
     <ClInclude Include="Sources\CreateTableDBHandler.h" />
+    <ClInclude Include="Sources\DataBaseHolder.h" />
     <ClInclude Include="Sources\DataBaseManager.h" />
     <ClInclude Include="Sources\DataBaseService.h" />
     <ClInclude Include="Sources\DataBaseUIHandler.h" />
@@ -111,8 +112,6 @@
     <ClInclude Include="Sources\LoginManagerImpl.h" />
     <ClInclude Include="Sources\NetUsersManager.h" />
     <ClInclude Include="Sources\SettingsManager.h" />
-    <ClInclude Include="Sources\stdafx.h" />
-    <ClInclude Include="Sources\targetver.h" />
     <ClInclude Include="Sources\WSAStartupHolder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

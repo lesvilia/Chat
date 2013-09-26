@@ -15,5 +15,5 @@ namespace db
     virtual ~DBResponseHandler() { }
   };
 
-  typedef std::shared_ptr<DBResponseHandler> DBHandler;
+  typedef std::shared_ptr<DBResponseHandler> DBRequestHolder;
 }

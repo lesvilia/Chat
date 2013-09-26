@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "StateServerSettingsHolder.h"
 #include "SettingsManager.h"
 

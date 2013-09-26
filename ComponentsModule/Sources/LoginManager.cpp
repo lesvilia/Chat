@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "LoginManager.h"
 #include "LoginManagerImpl.h"
 

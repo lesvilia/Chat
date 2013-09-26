@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "WSAStartupHolder.h"
 
 namespace net

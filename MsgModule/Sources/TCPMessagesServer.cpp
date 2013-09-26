@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "TCPMessagesServer.h"
 
 #include "ace/INET_Addr.h"

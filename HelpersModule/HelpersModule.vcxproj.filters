@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="stdafx">
-      <UniqueIdentifier>{aaecb644-c5ea-460a-9a3d-ae20f639c71b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="QtHelpers">
       <UniqueIdentifier>{c320b6cf-1e60-4b16-bcd5-444e3254fb5f}</UniqueIdentifier>
     </Filter>
@@ -27,9 +24,6 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\stdafx.cpp">
-      <Filter>stdafx</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\RegistryHelpers.cpp">
       <Filter>RegistryHelpers\src</Filter>
     </ClCompile>
@@ -41,12 +35,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sources\stdafx.h">
-      <Filter>stdafx</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\targetver.h">
-      <Filter>stdafx</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\RegistryHelpers.h">
       <Filter>RegistryHelpers</Filter>
     </ClInclude>

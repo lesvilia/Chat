@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "ChatMessagesManager.h"
 #include "ChatMessagesHandler.h"
 #include "UDPMessagesServer.h"

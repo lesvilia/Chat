@@ -112,7 +112,7 @@ namespace ui
     {
       QFileInfo file(WStrToQStr(path));
       MessageInfo msg(loginManager->GetCurrentUser()->name, file.fileName().toStdWString(),
-                      CurrentTimeToStr("hh:mm"));
+                      CurrentTimeToStr("hh:mm"), false);
       UsersMessageView* msgView = static_cast<UsersMessageView*>(
         m_msgBoxStackedWidget->currentWidget());
       IProgressUIObserver* observer = msgView->AppendFileMessage(msg);
@@ -246,7 +246,7 @@ namespace ui
       std::wstring text;
       if (msgView->GetTextFromEdit(&text))
       {
-        MessageInfo msg(loginManager->GetCurrentUser()->name, text, CurrentTimeToStr("hh:mm"));
+        MessageInfo msg(loginManager->GetCurrentUser()->name, text, CurrentTimeToStr("hh:mm"), false);
         msgView->AppendTxtMessage(msg);
         controls::UserListItem* currentItem = static_cast<controls::UserListItem*>(
           m_userListWidget->currentItem());

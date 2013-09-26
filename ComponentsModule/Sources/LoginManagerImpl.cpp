@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "LoginManagerImpl.h"
 #include "LoginManager.h"
 #include "RegistryHelpers.h"

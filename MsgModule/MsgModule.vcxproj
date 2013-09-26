@@ -45,7 +45,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ACE_ROOT);$(ProjectDir)Include;$(BOOST_ROOT);..\HelpersModule\Sources;..\ComponentsModule\Sources;$(PUGIXML_ROOT)src;..\UIModule\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -53,7 +53,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(ACE_ROOT)lib;$(OutDir);$(PUGIXML_ROOT)scripts\vs2010\x32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ACEd.lib;ComponentsModule.lib;pugixmld.lib</AdditionalDependencies>
+      <AdditionalDependencies>pugixmld.lib;ComponentsModule.lib;ACEd.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -64,7 +64,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ACE_ROOT);$(ProjectDir)Include;$(BOOST_ROOT);..\HelpersModule\Sources;..\ComponentsModule\Sources;$(PUGIXML_ROOT)src;..\UIModule\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
@@ -75,7 +75,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(ACE_ROOT)lib;$(OutDir);$(PUGIXML_ROOT)scripts\vs2010\x32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ACE.lib;ComponentsModule.lib;pugixml.lib</AdditionalDependencies>
+      <AdditionalDependencies>ComponentsModule.lib;ACE.lib;pugixml.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -100,10 +100,6 @@
     <ClCompile Include="Sources\StateMessagesHandler.cpp" />
     <ClCompile Include="Sources\StateMessagesManager.cpp" />
     <ClCompile Include="Sources\StateServerSettingsHolder.cpp" />
-    <ClCompile Include="Sources\stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="Sources\TCPMessagesServer.cpp" />
     <ClCompile Include="Sources\UDPMessagesServer.cpp" />
   </ItemGroup>
@@ -129,8 +125,6 @@
     <ClInclude Include="Sources\StateMessagesHandler.h" />
     <ClInclude Include="Sources\StateMessagesManager.h" />
     <ClInclude Include="Sources\StateServerSettingsHolder.h" />
-    <ClInclude Include="Sources\stdafx.h" />
-    <ClInclude Include="Sources\targetver.h" />
     <ClInclude Include="Sources\TCPMessagesServer.h" />
     <ClInclude Include="Sources\Typedefs.h" />
     <ClInclude Include="Sources\UDPMessagesServer.h" />

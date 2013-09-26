@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include <algorithm>
 #include "NetUsersManager.h"
 #include "INetUsersObserver.h"

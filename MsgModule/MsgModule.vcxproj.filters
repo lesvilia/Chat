@@ -4,10 +4,6 @@
     <Filter Include="Messages">
       <UniqueIdentifier>{4d9b1106-4342-4260-869e-a9c90fcf474a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="stdafx">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="MessagesQueue">
       <UniqueIdentifier>{2b7846ba-9e89-443e-a089-d0729fb06619}</UniqueIdentifier>
     </Filter>
@@ -54,9 +50,6 @@
   <ItemGroup>
     <ClCompile Include="Sources\Messages.cpp">
       <Filter>Messages</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\stdafx.cpp">
-      <Filter>stdafx</Filter>
     </ClCompile>
     <ClCompile Include="Sources\MessagesQueue.cpp">
       <Filter>MessagesQueue\src</Filter>
@@ -119,12 +112,6 @@
   <ItemGroup>
     <ClInclude Include="Sources\Messages.h">
       <Filter>Messages</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\stdafx.h">
-      <Filter>stdafx</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\targetver.h">
-      <Filter>stdafx</Filter>
     </ClInclude>
     <ClInclude Include="Sources\MessagesQueue.h">
       <Filter>MessagesQueue</Filter>

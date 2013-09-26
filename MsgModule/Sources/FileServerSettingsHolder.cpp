@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "FileServerSettingsHolder.h"
 
 #include "SettingsManager.h"

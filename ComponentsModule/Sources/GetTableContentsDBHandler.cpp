@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "GetTableContentsDBHandler.h"
 #include "StringHelpers.h"
 #include "boost/format.hpp"
@@ -55,5 +55,6 @@ namespace db
       MessageType type = std::stoi(colContent[0]) ? FILE_MSG : TEXT_MSG;
       contentHandler->AddMessage(std::make_pair(type, messageInfo));
     }
+    return 0;
   }
 }

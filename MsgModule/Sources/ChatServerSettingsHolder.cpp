@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "ChatServerSettingsHolder.h"
 #include "SettingsManager.h"
 

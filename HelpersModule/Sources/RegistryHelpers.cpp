@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "RegistryHelpers.h"
 #include <vector>
 

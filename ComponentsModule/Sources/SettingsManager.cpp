@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include <algorithm>
 #include "SettingsManager.h"
 #include "RegistryHelpers.h"

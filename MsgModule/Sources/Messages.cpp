@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "Messages.h"
 #include <vector>
 
