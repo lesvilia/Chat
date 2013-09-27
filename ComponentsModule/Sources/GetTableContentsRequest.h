@@ -1,15 +1,15 @@
 #pragma once
-#include "DBResponseHandler.h"
+#include "DBRequest.h"
 #include "DataBaseUIHandler.h"
 
 namespace db
 {
-  class GetTableContentsDBHandler
-    : public DBResponseHandler
+  class GetTableContentsRequest
+    : public DBRequest
   {
   public:
-    GetTableContentsDBHandler(const std::wstring& uuid, DataBaseUIHandler* handler);
-    virtual ~GetTableContentsDBHandler();
+    GetTableContentsRequest(const std::wstring& uuid, DataBaseUIHandler* handler);
+    virtual ~GetTableContentsRequest();
     virtual void RequestFinished(bool succeeded);
     virtual std::string SqlRequest() const;
     virtual ResponseCallback Callback() const;

@@ -60,16 +60,16 @@
     <ClCompile Include="Sources\DataBaseService.cpp">
       <Filter>DataBaseManager\src</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\CreateTableDBHandler.cpp">
-      <Filter>DataBaseManager\src</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\GetTableContentsDBHandler.cpp">
-      <Filter>DataBaseManager\src</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\InsertMessageDBHandler.cpp">
-      <Filter>DataBaseManager\src</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\DataBaseHolder.cpp">
+      <Filter>DataBaseManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\CreateTableRequest.cpp">
+      <Filter>DataBaseManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GetTableContentsRequest.cpp">
+      <Filter>DataBaseManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\SaveMessageRequest.cpp">
       <Filter>DataBaseManager\src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -110,22 +110,22 @@
     <ClInclude Include="Sources\DataBaseService.h">
       <Filter>DataBaseManager</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\DBResponseHandler.h">
-      <Filter>DataBaseManager\src</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\CreateTableDBHandler.h">
-      <Filter>DataBaseManager\src</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\GetTableContentsDBHandler.h">
-      <Filter>DataBaseManager\src</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\InsertMessageDBHandler.h">
-      <Filter>DataBaseManager\src</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\DataBaseUIHandler.h">
       <Filter>DataBaseManager</Filter>
     </ClInclude>
     <ClInclude Include="Sources\DataBaseHolder.h">
+      <Filter>DataBaseManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\CreateTableRequest.h">
+      <Filter>DataBaseManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GetTableContentsRequest.h">
+      <Filter>DataBaseManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\DBRequest.h">
+      <Filter>DataBaseManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\SaveMessageRequest.h">
       <Filter>DataBaseManager\src</Filter>
     </ClInclude>
   </ItemGroup>

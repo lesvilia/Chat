@@ -5,7 +5,7 @@
 #include "boost/thread/condition_variable.hpp"
 #include "boost/thread/mutex.hpp"
 #include "MessagesQueue.h"
-#include "DBResponseHandler.h"
+#include "DBRequest.h"
 
 
 namespace db
@@ -20,7 +20,7 @@ namespace db
     ~DataBaseService();
     void Start();
     void Stop();
-    void PostRequest(const DBRequestHolder& holder);
+    void PostRequest(const DBRequestPtr& holder);
 
   private:
     void ProcessRequest();
@@ -30,6 +30,6 @@ namespace db
     bool m_shouldShutdown;
     ThreadPtr m_thread;
     mutable boost::mutex m_mutex;
-    msg::MessagesQueue<DBRequestHolder> m_requestQueue;
+    msg::MessagesQueue<DBRequestPtr> m_requestQueue;
   };
 }

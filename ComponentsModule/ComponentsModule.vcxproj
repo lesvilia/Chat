@@ -82,35 +82,35 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\AdaptersAddressHolder.cpp" />
-    <ClCompile Include="Sources\CreateTableDBHandler.cpp" />
+    <ClCompile Include="Sources\CreateTableRequest.cpp" />
     <ClCompile Include="Sources\DataBaseHolder.cpp" />
     <ClCompile Include="Sources\DataBaseManager.cpp" />
     <ClCompile Include="Sources\DataBaseService.cpp" />
-    <ClCompile Include="Sources\GetTableContentsDBHandler.cpp" />
-    <ClCompile Include="Sources\InsertMessageDBHandler.cpp" />
+    <ClCompile Include="Sources\GetTableContentsRequest.cpp" />
     <ClCompile Include="Sources\LoginManager.cpp" />
     <ClCompile Include="Sources\LoginManagerImpl.cpp" />
     <ClCompile Include="Sources\NetUsersManager.cpp" />
+    <ClCompile Include="Sources\SaveMessageRequest.cpp" />
     <ClCompile Include="Sources\SettingsManager.cpp" />
     <ClCompile Include="Sources\WSAStartupHolder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\AdaptersAddressHolder.h" />
-    <ClInclude Include="Sources\CreateTableDBHandler.h" />
+    <ClInclude Include="Sources\CreateTableRequest.h" />
     <ClInclude Include="Sources\DataBaseHolder.h" />
     <ClInclude Include="Sources\DataBaseManager.h" />
     <ClInclude Include="Sources\DataBaseService.h" />
     <ClInclude Include="Sources\DataBaseUIHandler.h" />
-    <ClInclude Include="Sources\DBResponseHandler.h" />
+    <ClInclude Include="Sources\DBRequest.h" />
     <ClInclude Include="Sources\DefaultSettings.h" />
-    <ClInclude Include="Sources\GetTableContentsDBHandler.h" />
+    <ClInclude Include="Sources\GetTableContentsRequest.h" />
     <ClInclude Include="Sources\ILoginManager.h" />
     <ClInclude Include="Sources\INetUsersObserver.h" />
-    <ClInclude Include="Sources\InsertMessageDBHandler.h" />
     <ClInclude Include="Sources\LoginHandlers.h" />
     <ClInclude Include="Sources\LoginManager.h" />
     <ClInclude Include="Sources\LoginManagerImpl.h" />
     <ClInclude Include="Sources\NetUsersManager.h" />
+    <ClInclude Include="Sources\SaveMessageRequest.h" />
     <ClInclude Include="Sources\SettingsManager.h" />
     <ClInclude Include="Sources\WSAStartupHolder.h" />
   </ItemGroup>

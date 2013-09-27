@@ -127,6 +127,12 @@
     <ClCompile Include="GeneratedFiles\Release\moc_ProgressHandler.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_UsersMessageView.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_UsersMessageView.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="chat_icon.png">
@@ -158,6 +164,9 @@
     <CustomBuild Include="Sources\ProgressHandler.h">
       <Filter>UIControls\ProgressHandler</Filter>
     </CustomBuild>
+    <CustomBuild Include="Sources\UsersMessageView.h">
+      <Filter>MainFrame</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -165,9 +174,6 @@
     </ClInclude>
     <ClInclude Include="Sources\UISettings.h">
       <Filter>Settings</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\UsersMessageView.h">
-      <Filter>MainFrame</Filter>
     </ClInclude>
     <ClInclude Include="Sources\DnDTextEdit.h">
       <Filter>UIControls\DnDTextEdit</Filter>

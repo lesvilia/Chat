@@ -10,6 +10,7 @@
 #include <QVBoxLayout>
 
 #include "DnDTextEdit.h"
+#include "StaticLink.h"
 #include "IDropResultHandler.h"
 #include "TableItemCreator.h"
 #include "UISettings.h"
@@ -38,6 +39,9 @@ namespace ui
     , m_msgEdit(nullptr)
   {
     CreateSubControls(dropHandler);
+    CreateStaticLink();
+    auto res = connect(this, SIGNAL(ConversationsRecieved(db::MessageListPtr)),
+            SLOT(SaveLastConversations(db::MessageListPtr)));
   }
 
   UsersMessageView::~UsersMessageView()
@@ -67,6 +71,17 @@ namespace ui
     addWidget(m_msgView);
     addWidget(m_msgEdit);
   }
+
+   void UsersMessageView::CreateStaticLink()
+   {
+     controls::StaticLink* link = new controls::StaticLink();
+     link->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
+     link->setText(SetLinkStyle("Last Conversation"));
+     auto res = connect(link, SIGNAL(clicked()), SLOT(ShowLastConversations()));
+
+     m_msgView->insertRow(0);
+     m_msgView->setCellWidget(0, MessageItemCreator::MESSAGE_COLUMN, link);
+   }
 
   void UsersMessageView::ClearMessageEdit()
   {
@@ -120,18 +135,32 @@ namespace ui
 
   void UsersMessageView::AddLastConversations(db::MessageListPtr messages)
   {
-    //need implement sort by time
-    for (auto iter = messages->begin(); iter != messages->end(); ++iter)
+    emit ConversationsRecieved(messages);
+  }
+
+  void UsersMessageView::SaveLastConversations(db::MessageListPtr messages)
+  {
+    m_lastMsg.swap(messages);
+  }
+
+  void UsersMessageView::ShowLastConversations()
+  {
+    m_msgView->removeRow(0);
+    
+    if (!m_lastMsg)
+      return;
+
+    for (auto iter = m_lastMsg->begin(); iter != m_lastMsg->end(); ++iter)
     {
       switch (iter->first)
       {
-        case db::TEXT_MSG:
-          InsertTxtMessageFromDB(iter->second, 0);
-          break;
+      case db::TEXT_MSG:
+        InsertTxtMessageFromDB(iter->second, 0);
+        break;
 
-        case db::FILE_MSG:
-          InsertFileMessageFromDB(iter->second, 0);
-          break;
+      case db::FILE_MSG:
+        InsertFileMessageFromDB(iter->second, 0);
+        break;
       }
     }
   }

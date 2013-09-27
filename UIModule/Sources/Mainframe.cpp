@@ -9,10 +9,11 @@
 #include <QMessageBox>
 #include <QTableWidget>
 #include <QHeaderView>
-#include <QTime>
+#include <QDateTime>
 
 #include "UsersMessageView.h"
 #include "NetUsersManager.h"
+#include "DataBaseManager.h"
 #include "LoginDialog.h"
 #include "SettingsDialog.h"
 #include "SettingsManager.h"
@@ -26,9 +27,17 @@
 
 namespace
 {
-  std::wstring CurrentTimeToStr(const char* format)
+  const QString DATE_FORMAT("yyyy MM dd hh:mm:ss");
+
+  std::wstring CurrentTimeToStr()
   {
-    return QTime::currentTime().toString(format).toStdWString();
+    return QDateTime::currentDateTime().toString(DATE_FORMAT).toStdWString();
+  }
+
+  std::wstring ConvertTimeForMsgView(const QString& timeStr)
+  {
+    QDateTime dateTime(QDateTime::fromString(timeStr, DATE_FORMAT));
+    return dateTime.toString("hh:mm").toStdWString();
   }
 }
 
@@ -57,8 +66,11 @@ namespace ui
     SetupUI();
     login::LoginManager::Instance()->Subscribe(this);
     net::NetUsersManager::Instance()->Subscribe(this);
+    db::DataBaseManager::Instance();
+
     connect(this, SIGNAL(FileMessageReceived(const std::wstring&, const std::wstring&, const msg::CompletionCallback&)),
             this, SLOT(AddNewFileMessage(const std::wstring&, const std::wstring&, const msg::CompletionCallback&)));
+    db::DataBaseManager::Instance()->OnNetUserConnected(L"123");
     AddNewUser(L"123");
   }
 
@@ -112,14 +124,14 @@ namespace ui
     {
       QFileInfo file(WStrToQStr(path));
       MessageInfo msg(loginManager->GetCurrentUser()->name, file.fileName().toStdWString(),
-                      CurrentTimeToStr("hh:mm"), false);
+                      CurrentTimeToStr(), false);
       UsersMessageView* msgView = static_cast<UsersMessageView*>(
         m_msgBoxStackedWidget->currentWidget());
       IProgressUIObserver* observer = msgView->AppendFileMessage(msg);
-
       controls::UserListItem* currentItem = static_cast<controls::UserListItem*>(
         m_userListWidget->currentItem());
 
+      db::DataBaseManager::Instance()->SaveMessageToDB(currentItem->GetUserID(), db::FILE_MSG, msg);
       msg::FileTransferManager::Instance()->SendFile(currentItem->GetUserID(), path, observer);
     }
   }
@@ -131,6 +143,8 @@ namespace ui
     int viewID = CreateUserMsgView();
     m_userItems.insert(std::make_pair(uuid, UserItem(userItem, viewID)));
     m_userListWidget->setCurrentItem(userItem);
+    db::DataBaseManager::Instance()->GetLastConversation(uuid, static_cast<UsersMessageView*>(
+                                                         m_msgBoxStackedWidget->widget(viewID)));
   }
 
   void MainFrame::RemoveUser(const std::wstring& uuid)
@@ -202,8 +216,9 @@ namespace ui
     if (msgView)
     {
       std::wstring name(net::NetUsersManager::Instance()->GetNetUserName(uuid));
-      MessageInfo msg(name, message, CurrentTimeToStr("hh:mm"), true);
+      MessageInfo msg(name, message, CurrentTimeToStr(), true);
       msgView->AppendTxtMessage(msg);
+      db::DataBaseManager::Instance()->SaveMessageToDB(uuid, db::TEXT_MSG, msg);
     }
   }
 
@@ -220,8 +235,9 @@ namespace ui
     if (msgView)
     {
       std::wstring name(net::NetUsersManager::Instance()->GetNetUserName(uuid));
-      MessageInfo msg(name, fileName, CurrentTimeToStr("hh:mm"), true);
+      MessageInfo msg(name, fileName, CurrentTimeToStr(), true);
       IProgressUIObserver* observer = msgView->AppendFileMessage(msg);
+      db::DataBaseManager::Instance()->SaveMessageToDB(uuid, db::FILE_MSG, msg);
       callback(observer);
     }
   }
@@ -246,11 +262,12 @@ namespace ui
       std::wstring text;
       if (msgView->GetTextFromEdit(&text))
       {
-        MessageInfo msg(loginManager->GetCurrentUser()->name, text, CurrentTimeToStr("hh:mm"), false);
+        MessageInfo msg(loginManager->GetCurrentUser()->name, text, CurrentTimeToStr(), false);
         msgView->AppendTxtMessage(msg);
         controls::UserListItem* currentItem = static_cast<controls::UserListItem*>(
           m_userListWidget->currentItem());
         msg::ChatMessagesManager::Instance()->Send(currentItem->GetUserID(), text);
+        db::DataBaseManager::Instance()->SaveMessageToDB(currentItem->GetUserID(), db::TEXT_MSG, msg);
       }
     }
   }

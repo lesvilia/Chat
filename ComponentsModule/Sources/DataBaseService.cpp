@@ -13,8 +13,8 @@ namespace db
   DataBaseService::DataBaseService()
     : m_shouldShutdown(false)
   {
-
   }
+
   DataBaseService::~DataBaseService()
   {
     if (m_thread->joinable())
@@ -26,7 +26,7 @@ namespace db
 
   void DataBaseService::Start()
   {
-    m_thread.reset(new boost::thread());
+    m_thread.reset(new boost::thread(&DataBaseService::ProcessRequest, this));
   }
 
   void DataBaseService::Stop()
@@ -35,7 +35,7 @@ namespace db
     m_shouldShutdown = true;
   }
 
-  void DataBaseService::PostRequest(const DBRequestHolder& holder)
+  void DataBaseService::PostRequest(const DBRequestPtr& holder)
   {
     m_requestQueue.Enqueue(holder);
   }
@@ -47,12 +47,14 @@ namespace db
     {
       while (!ShouldShutdown())
       {
-        DBRequestHolder reqHolder(m_requestQueue.DequeueWait());
+        DBRequestPtr reqHolder(m_requestQueue.DequeueWait(boost::posix_time::milliseconds(500)));
         if (reqHolder)
         {
+          char* errMsg = nullptr;
           int result = sqlite3_exec(dbHolder.GetHandle(), reqHolder->SqlRequest().c_str(),
-                                    reqHolder->Callback(), reqHolder.get(), nullptr);
+                                    reqHolder->Callback(), reqHolder.get(), &errMsg);
           reqHolder->RequestFinished(result == SQLITE_OK);
+          sqlite3_free(errMsg);
         }
       }
     }

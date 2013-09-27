@@ -6,14 +6,14 @@ namespace db
 {
   typedef int (*ResponseCallback) (void*, int, char**, char**);
 
-  class DBResponseHandler
+  class DBRequest
   {
   public:
     virtual void RequestFinished(bool succeeded) = 0;
     virtual std::string SqlRequest() const = 0;
     virtual ResponseCallback Callback() const = 0;
-    virtual ~DBResponseHandler() { }
+    virtual ~DBRequest() { }
   };
 
-  typedef std::shared_ptr<DBResponseHandler> DBRequestHolder;
+  typedef std::shared_ptr<DBRequest> DBRequestPtr;
 }

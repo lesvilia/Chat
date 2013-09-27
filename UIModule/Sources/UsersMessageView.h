@@ -22,6 +22,7 @@ namespace ui
     : public QSplitter
     , public db::DataBaseUIHandler
   {
+    Q_OBJECT
   public:
     explicit UsersMessageView(IDropResultHandler* dropHandler);
     virtual ~UsersMessageView();
@@ -38,9 +39,16 @@ namespace ui
     void InsertMessageImpl(const MessageInfo& msg, int rowNum, MessageItemCreator& creator);
     void CreateSubControls(IDropResultHandler* dropHandler);
     void ClearMessageEdit();
+    void CreateStaticLink();
+   private slots:
+     void SaveLastConversations(db::MessageListPtr messages);
+     void ShowLastConversations();
+  signals:
+    void ConversationsRecieved(db::MessageListPtr messages);
 
   private:
     QTableWidget* m_msgView;
     controls::DnDTextEdit* m_msgEdit;
+    db::MessageListPtr m_lastMsg;
   };
 }

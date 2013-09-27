@@ -9,6 +9,7 @@
 #include <QTableWidgetItem>
 #include <QTextEdit>
 #include <QWidget>
+#include <QDateTime>
 
 #include "ProgressHandler.h"
 #include "UsersMessageView.h"
@@ -16,6 +17,11 @@
 #include "UISettings.h"
 
 using namespace settings::MessageView;
+
+namespace
+{
+
+}
 
 namespace
 {
@@ -30,6 +36,13 @@ namespace
   }
 
   const QString IMAGE_TEMPLATE("QWidget {background-image: url(%1); }");
+  
+  const QString DATE_FORMAT("yyyy MM dd hh:mm:ss");
+  std::wstring ConvertTimeForMsgView(const std::wstring& timeStr)
+  {
+    QDateTime dateTime(QDateTime::fromString(WStrToQStr(timeStr), DATE_FORMAT));
+    return dateTime.toString("hh:mm").toStdWString();
+  }
 }
 
 namespace ui
@@ -66,7 +79,7 @@ namespace ui
   void MessageItemCreator::CreateTimeItem(const MessageInfo& msg, Columns column)
   {
     m_msgView->setItem(m_rowNum, column,
-      CreateTableItem(msg.m_time, Qt::gray, Qt::AlignTop | Qt::AlignHCenter));
+      CreateTableItem(ConvertTimeForMsgView(msg.m_time), Qt::gray, Qt::AlignTop | Qt::AlignHCenter));
   }
 
   FileMessageItemCreator::FileMessageItemCreator(QTableWidget* msgView, int rowNum)

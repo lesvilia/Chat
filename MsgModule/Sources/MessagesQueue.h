@@ -55,13 +55,22 @@ namespace msg
       }
     }
 
-    DataType DequeueWait()
+    template<typename Duration>
+    DataType DequeueWait(const Duration& duration)
     {
       Lock lock(m_mutex);
-      m_cond.wait(lock, [this]()->bool { return !m_messages.empty(); });
-      DataType data(m_messages.front());
-      m_messages.pop();
-      return data;
+      const boost::system_time timeout = boost::get_system_time() + duration;
+      if (m_cond.timed_wait(lock, timeout,
+          [this]()->bool { return !m_messages.empty(); }))
+      {
+        DataType data(m_messages.front());
+        m_messages.pop();
+        return data;
+      }
+      else
+      {
+        return DataType();
+      }
     }
 
   private:
