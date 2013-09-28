@@ -36,7 +36,7 @@ namespace db
   class DataBaseUIHandler
   {
   public:
-    virtual void AddLastConversations(MessageListPtr messages) = 0;
+    virtual void AddLastConversations(const MessageListPtr& messages) = 0;
   protected:
     ~DataBaseUIHandler() {}
   };

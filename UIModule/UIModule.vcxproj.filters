@@ -67,6 +67,12 @@
     <Filter Include="UIControls\ProgressHandler\src">
       <UniqueIdentifier>{0c1c9ff5-9822-4564-a7dd-080230bca4b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{834758c6-16f9-4371-b908-7794afe500e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events\src">
+      <UniqueIdentifier>{c6156aaa-a3bd-4f80-921f-522e5b7bdf68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_Mainframe.cpp">
@@ -133,6 +139,21 @@
     <ClCompile Include="GeneratedFiles\Release\moc_UsersMessageView.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\AddConversationFromDBEvent.cpp">
+      <Filter>Events\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\ErrorProgressEvent.cpp">
+      <Filter>Events\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\FileMessageEvent.cpp">
+      <Filter>Events\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\FinishedProgressEvent.cpp">
+      <Filter>Events\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\UpdateProgressEvent.cpp">
+      <Filter>Events\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="chat_icon.png">
@@ -186,6 +207,21 @@
     </ClInclude>
     <ClInclude Include="Sources\IProgressUIObserver.h">
       <Filter>MainFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\AddConversationFromDBEvent.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\ErrorProgressEvent.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\FileMessageEvent.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\FinishedProgressEvent.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\UpdateProgressEvent.h">
+      <Filter>Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

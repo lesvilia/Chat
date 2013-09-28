@@ -31,7 +31,8 @@ namespace ui
     IProgressUIObserver* AppendFileMessage(const MessageInfo& msg);
 
     //DataBaseUIHandler interface
-    virtual void AddLastConversations(db::MessageListPtr messages);
+    virtual void AddLastConversations(const db::MessageListPtr& messages);
+    virtual bool event(QEvent* ev);
 
   private:
     void InsertTxtMessageFromDB(const MessageInfo& msg, int rowNum);
@@ -40,11 +41,10 @@ namespace ui
     void CreateSubControls(IDropResultHandler* dropHandler);
     void ClearMessageEdit();
     void CreateStaticLink();
-   private slots:
-     void SaveLastConversations(db::MessageListPtr messages);
+    void SaveLastConversations(const db::MessageListPtr& messages);
+  
+  private slots:
      void ShowLastConversations();
-  signals:
-    void ConversationsRecieved(db::MessageListPtr messages);
 
   private:
     QTableWidget* m_msgView;

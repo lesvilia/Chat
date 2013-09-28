@@ -13,6 +13,7 @@
 #include "LoginHandlers.h"
 #include "INetUsersObserver.h"
 #include "IDropResultHandler.h"
+#include "FileMessageEvent.h"
 
 class QTableWidget;
 
@@ -63,10 +64,10 @@ namespace ui
     virtual void HandleDropFileResult(const std::wstring& path);
 
     //UIMessageHandler interface
-    virtual void OnTextMessageReceived(const std::wstring& uuid, const std::wstring& message);
-    virtual void OnFileMessageReceived(const std::wstring& uuid, const std::wstring& fileName,
+    virtual void OnTextMessageReceived(const std::wstring& uuid, const std::wstring& message); //not thread safe
+    virtual void OnFileMessageReceived(const std::wstring& uuid, const std::wstring& fileName, //thread safe
                                        const msg::CompletionCallback& callback);
-
+    virtual bool event(QEvent* ev);
   protected:
     void closeEvent(QCloseEvent* event);
 
@@ -77,6 +78,8 @@ namespace ui
     controls::UserListItem* AddUserListItem(const std::wstring& userName, const std::wstring& uuid);
     void AddNewUser(const std::wstring& uuid);
     void RemoveUser(const std::wstring& uuid);
+    void AddNewFileMessage(const std::wstring& uuid, const std::wstring& fileName,
+                           const msg::CompletionCallback& callback);
 
     void SetupUI();
     void CreateMenuBar();
@@ -86,8 +89,6 @@ namespace ui
   
   private slots:
     void ListItemChanged(QListWidgetItem* currentItem, QListWidgetItem* prevItem);
-    void AddNewFileMessage(const std::wstring& uuid, const std::wstring& fileName,
-                           const msg::CompletionCallback& callback);
     void ResizeMessagesView();
     void SendMessageToUser();
     void LogIn();
@@ -95,9 +96,6 @@ namespace ui
     void LogOut();
     void About();
     void OpenSettingsDlg();
-
-  signals:
-    void FileMessageReceived(const std::wstring&, const std::wstring&, const msg::CompletionCallback&);
 
   private:
     QListWidget*        m_userListWidget;

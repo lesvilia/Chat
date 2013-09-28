@@ -1,6 +1,11 @@
 #include "ProgressHandler.h"
 
+#include <QCoreApplication>
 #include <QMessageBox>
+#include "ErrorProgressEvent.h"
+#include "FinishedProgressEvent.h"
+#include "UpdateProgressEvent.h"
+
 
 namespace ui
 {
@@ -8,9 +13,6 @@ namespace ui
   {
     ProgressUIHandler::ProgressUIHandler()
     {
-      connect(this, SIGNAL(IncrementProgress(int)), this, SLOT(setValue(int)));
-      connect(this, SIGNAL(TransferFinished()), this, SLOT(HideProgressBar()));
-      connect(this, SIGNAL(TransferError()), this, SLOT(ShowMessageBox()));
     }
 
     ProgressUIHandler::~ProgressUIHandler()
@@ -19,18 +21,42 @@ namespace ui
 
     void ProgressUIHandler::UpdateProgress(int count)
     {
-      emit IncrementProgress(count);
+      QCoreApplication::postEvent(this, new UpdateProgressEvent(count));
     }
 
     void ProgressUIHandler::OnFinished()
     {
-      emit TransferFinished();
+      QCoreApplication::postEvent(this, new FinishedProgressEvent());
     }
 
-     void ProgressUIHandler::OnError()
-     {
-       emit TransferError();
-     }
+    void ProgressUIHandler::OnError()
+    {
+      QCoreApplication::postEvent(this, new ErrorProgressEvent());
+    }
+
+    bool ProgressUIHandler::event(QEvent* ev)
+    {
+      if (ev->type() == UpdateProgressEvent::type)
+      {
+        UpdateProgressEvent* event = static_cast<UpdateProgressEvent*>(ev);
+        setValue(event->m_value);
+        return true;
+      }
+
+      if (ev->type() == FinishedProgressEvent::type)
+      {
+        HideProgressBar();
+        return true;
+      }
+
+      if (ev->type() == ErrorProgressEvent::type)
+      {
+        ShowMessageBox();
+        return true;
+      }
+
+      return QWidget::event(ev);
+    }
 
     void ProgressUIHandler::HideProgressBar()
     {

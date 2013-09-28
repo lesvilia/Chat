@@ -2,6 +2,7 @@
 
 #include <cassert>
 
+#include <QCoreApplication>
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QLabel>
@@ -13,6 +14,7 @@
 #include "StaticLink.h"
 #include "IDropResultHandler.h"
 #include "TableItemCreator.h"
+#include "AddConversationFromDBEvent.h"
 #include "UISettings.h"
 #include "QtHelpers.h"
 
@@ -37,11 +39,10 @@ namespace ui
     : QSplitter(Qt::Vertical)
     , m_msgView(nullptr)
     , m_msgEdit(nullptr)
+    , m_lastMsg(new db::MessageList())
   {
     CreateSubControls(dropHandler);
     CreateStaticLink();
-    auto res = connect(this, SIGNAL(ConversationsRecieved(db::MessageListPtr)),
-            SLOT(SaveLastConversations(db::MessageListPtr)));
   }
 
   UsersMessageView::~UsersMessageView()
@@ -77,7 +78,8 @@ namespace ui
      controls::StaticLink* link = new controls::StaticLink();
      link->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
      link->setText(SetLinkStyle("Last Conversation"));
-     auto res = connect(link, SIGNAL(clicked()), SLOT(ShowLastConversations()));
+     link->setAlignment(Qt::AlignHCenter);
+     connect(link, SIGNAL(clicked()), SLOT(ShowLastConversations()));
 
      m_msgView->insertRow(0);
      m_msgView->setCellWidget(0, MessageItemCreator::MESSAGE_COLUMN, link);
@@ -133,24 +135,32 @@ namespace ui
     creator.CreateItems(msg);
   }
 
-  void UsersMessageView::AddLastConversations(db::MessageListPtr messages)
+  void UsersMessageView::AddLastConversations(const db::MessageListPtr& messages)
   {
-    emit ConversationsRecieved(messages);
+    QCoreApplication::postEvent(this, new AddConversationFromDBEvent(messages));
   }
 
-  void UsersMessageView::SaveLastConversations(db::MessageListPtr messages)
+  bool UsersMessageView::event(QEvent* ev)
   {
-    m_lastMsg.swap(messages);
+    if (ev->type() == AddConversationFromDBEvent::type)
+    {
+      AddConversationFromDBEvent* event = static_cast<AddConversationFromDBEvent*>(ev);
+      SaveLastConversations(event->m_messages);
+      return true;
+    }
+    return QWidget::event(ev);
+  }
+
+  void UsersMessageView::SaveLastConversations(const db::MessageListPtr& messages)
+  {
+    m_lastMsg = messages;
   }
 
   void UsersMessageView::ShowLastConversations()
   {
     m_msgView->removeRow(0);
-    
-    if (!m_lastMsg)
-      return;
 
-    for (auto iter = m_lastMsg->begin(); iter != m_lastMsg->end(); ++iter)
+    for (auto iter = m_lastMsg->rbegin(); iter != m_lastMsg->rend(); ++iter)
     {
       switch (iter->first)
       {

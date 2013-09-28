@@ -119,13 +119,18 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Sources\AddConversationFromDBEvent.cpp" />
     <ClCompile Include="Sources\DnDTextEdit.cpp" />
+    <ClCompile Include="Sources\ErrorProgressEvent.cpp" />
+    <ClCompile Include="Sources\FileMessageEvent.cpp" />
+    <ClCompile Include="Sources\FinishedProgressEvent.cpp" />
     <ClCompile Include="Sources\LoginDialog.cpp" />
     <ClCompile Include="Sources\Mainframe.cpp" />
     <ClCompile Include="Sources\ProgressHandler.cpp" />
     <ClCompile Include="Sources\SettingsDialog.cpp" />
     <ClCompile Include="Sources\StaticLink.cpp" />
     <ClCompile Include="Sources\TableItemCreator.cpp" />
+    <ClCompile Include="Sources\UpdateProgressEvent.cpp" />
     <ClCompile Include="Sources\UserListItem.cpp" />
     <ClCompile Include="Sources\UsersMessageView.cpp" />
   </ItemGroup>
@@ -147,8 +152,13 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Sources\AddConversationFromDBEvent.h" />
     <ClInclude Include="Sources\DnDTextEdit.h" />
+    <ClInclude Include="Sources\ErrorProgressEvent.h" />
+    <ClInclude Include="Sources\FileMessageEvent.h" />
+    <ClInclude Include="Sources\FinishedProgressEvent.h" />
     <ClInclude Include="Sources\IDropResultHandler.h" />
+    <ClInclude Include="Sources\UpdateProgressEvent.h" />
     <CustomBuild Include="Sources\ProgressHandler.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing ProgressHandler.h...</Message>

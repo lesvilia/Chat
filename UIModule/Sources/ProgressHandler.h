@@ -12,7 +12,6 @@ namespace ui
       , public IProgressUIObserver
     {
       Q_OBJECT
-
     public:
       ProgressUIHandler();
       ~ProgressUIHandler();
@@ -21,15 +20,11 @@ namespace ui
       virtual void UpdateProgress(int count);
       virtual void OnFinished();
       virtual void OnError();
+      virtual bool event(QEvent* ev);
 
-    private slots:
+    private:
       void HideProgressBar();
       void ShowMessageBox();
-
-    signals:
-      void IncrementProgress(int);
-      void TransferFinished();
-      void TransferError();
     };
   }
 }

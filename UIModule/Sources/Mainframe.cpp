@@ -1,5 +1,6 @@
 #include "Mainframe.h"
 
+#include <QCoreApplication>
 #include <QSplitter>
 #include <QLabel>
 #include <QFileInfo>
@@ -66,10 +67,6 @@ namespace ui
     SetupUI();
     login::LoginManager::Instance()->Subscribe(this);
     net::NetUsersManager::Instance()->Subscribe(this);
-    db::DataBaseManager::Instance();
-
-    connect(this, SIGNAL(FileMessageReceived(const std::wstring&, const std::wstring&, const msg::CompletionCallback&)),
-            this, SLOT(AddNewFileMessage(const std::wstring&, const std::wstring&, const msg::CompletionCallback&)));
     db::DataBaseManager::Instance()->OnNetUserConnected(L"123");
     AddNewUser(L"123");
   }
@@ -225,7 +222,18 @@ namespace ui
   void MainFrame::OnFileMessageReceived(const std::wstring& uuid, const std::wstring& fileName,
                                         const msg::CompletionCallback& callback)
   {
-    emit FileMessageReceived(uuid, fileName, callback);
+    QCoreApplication::postEvent(this, new FileMessageEvent(uuid, fileName, callback));
+  }
+
+  bool MainFrame::event(QEvent* ev)
+  {
+    if (ev->type() == FileMessageEvent::type)
+    {
+      FileMessageEvent* event = static_cast<FileMessageEvent*>(ev);
+      AddNewFileMessage(event->m_uuid, event->m_fileName, event->m_callback);
+      return true;
+    }
+    return QWidget::event(ev);
   }
 
   void MainFrame::AddNewFileMessage(const std::wstring& uuid, const std::wstring& fileName,
