@@ -1,6 +1,8 @@
-
 #include "DataBaseService.h"
+
 #include "DataBaseHolder.h"
+#include "LoginManager.h"
+#include "StringHelpers.h"
 #include "SQLite/sqlite3.h"
 
 namespace 
@@ -17,15 +19,12 @@ namespace db
 
   DataBaseService::~DataBaseService()
   {
-    if (m_thread->joinable())
-    {
-      Stop();
-      m_thread->join();
-    }
+    StopJoinableThread();
   }
 
   void DataBaseService::Start()
   {
+    StopJoinableThread();
     m_thread.reset(new boost::thread(&DataBaseService::ProcessRequest, this));
   }
 
@@ -42,7 +41,8 @@ namespace db
 
   void DataBaseService::ProcessRequest()
   {
-    DataBaseHolder dbHolder(DB_FILE_NAME);
+    std::string userName(strhlp::WstrToStr(login::LoginManager::Instance()->GetCurrentUser()->name));
+    DataBaseHolder dbHolder(userName.c_str());
     if (dbHolder.Open())
     {
       while (!ShouldShutdown())
@@ -64,5 +64,15 @@ namespace db
   {
     Lock lock;
     return m_shouldShutdown;
+  }
+
+  void DataBaseService::StopJoinableThread()
+  {
+    if (m_thread && m_thread->joinable())
+    {
+      Stop();
+      m_thread->join();
+      m_thread.reset();
+    }
   }
 }

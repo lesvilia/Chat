@@ -25,6 +25,7 @@ namespace db
   private:
     void ProcessRequest();
     bool ShouldShutdown();
+    void StopJoinableThread();
 
   private:
     bool m_shouldShutdown;

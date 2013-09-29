@@ -3,6 +3,7 @@
 #include "DataBaseService.h"
 #include "CreateTableRequest.h"
 #include "GetTableContentsRequest.h"
+#include "LoginManager.h"
 #include "SaveMessageRequest.h"
 #include "NetUsersManager.h"
 
@@ -17,13 +18,12 @@ namespace db
   DataBaseManager::DataBaseManager()
     : m_service(new DataBaseService())
   {
-    m_service->Start();
     net::NetUsersManager::Instance()->Subscribe(this);
+    login::LoginManager::Instance()->Subscribe(this);
   }
 
   DataBaseManager::~DataBaseManager()
   {
-    m_service->Stop();
   }
 
   void DataBaseManager::OnNetUserConnected(const std::wstring& uuid)
@@ -33,7 +33,19 @@ namespace db
 
   void DataBaseManager::OnNetUserDisconnected(const std::wstring& uuid)
   {
+  }
 
+  void DataBaseManager::OnlineStateChanged()
+  {
+    if (login::LoginManager::Instance()->IsOnline())
+    {
+      m_service->Start();
+    }
+    else
+    {
+      m_service->Stop();
+    }
+    
   }
 
   void DataBaseManager::SaveMessageToDB(const std::wstring& uuid, MessageType type, const ui::MessageInfo& msgInfo)

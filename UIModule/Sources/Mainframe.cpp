@@ -67,7 +67,7 @@ namespace ui
     SetupUI();
     login::LoginManager::Instance()->Subscribe(this);
     net::NetUsersManager::Instance()->Subscribe(this);
-    db::DataBaseManager::Instance()->OnNetUserConnected(L"123");
+    db::DataBaseManager::Instance();
     AddNewUser(L"123");
   }
 
