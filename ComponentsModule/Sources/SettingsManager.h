@@ -26,14 +26,17 @@ namespace sm
     void SetCurrentStatesPort(unsigned short statePort);
     void SetCurrentMessagesPort(unsigned short chatPort);
     void SetCurrentFileMessagesPort(unsigned short filePort);
+    std::wstring GetCurrentSaveDir() const;
+    std::wstring GetDefaultSaveDir() const;
+    void SetCurrentSaveDir(const std::wstring& dir);
     std::vector<std::wstring> GetActiveAddresses() const;
 
   private:
     SettingsManager();
     ~SettingsManager();
     void Initialize();
-    void SetDefaultValue();
     void SaveSettings();
+    void SetDefaultValue();
 
   private:
     std::unique_ptr<impl::AdaptersAddressHolder> m_addressHolder;
@@ -41,6 +44,7 @@ namespace sm
     unsigned short m_stateMsgPort;
     unsigned short m_chatMsgPort;
     unsigned short m_fileMsgPort;
+    std::wstring m_saveDir;
     mutable Mutex m_mutex;
   };
 }

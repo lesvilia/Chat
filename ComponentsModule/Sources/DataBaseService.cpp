@@ -36,8 +36,8 @@ namespace db
 
   void DataBaseService::ProcessRequest()
   {
-    std::string userName(strhlp::WstrToStr(login::LoginManager::Instance()->GetCurrentUser()->name));
-    DataBaseHolder dbHolder(userName.c_str());
+    std::string uuid(strhlp::WstrToStr(login::LoginManager::Instance()->GetCurrentUser()->uuid) += ".db");
+    DataBaseHolder dbHolder(uuid.c_str());
     if (dbHolder.Open())
     {
       while (!ShouldShutdown())

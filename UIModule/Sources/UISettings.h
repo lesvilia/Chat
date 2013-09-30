@@ -102,5 +102,6 @@ namespace settings
     const QString LABEL_STATE_PORT("State message port:");
     const QString LABEL_CHAT_PORT("Chat message port:");
     const QString LABEL_FILE_PORT("File message port:");
+    const QString LABEL_SAVE_DIR("Save files to dir:");
   }
 }

@@ -93,7 +93,7 @@ namespace msg
     for (auto block = message; block != nullptr; block = block->cont(), ++count)
     {
       size_t messageSize = block->length();
-      size_t isSended = socket->send_n(block->rd_ptr(), messageSize/*, &TIMEOUT*/);
+      size_t isSended = socket->send_n(block->rd_ptr(), messageSize);
       int eror = errno;
       if (isSended == messageSize)
       {

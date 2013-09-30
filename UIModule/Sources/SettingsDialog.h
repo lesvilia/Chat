@@ -25,6 +25,7 @@ namespace ui
       void SaveSettings();
       void RestoreDefaultSettings();
       void EnableOkButton();
+      void ShowFolderOpenDlg();
 
     private:
       void InitDialog();
@@ -39,6 +40,7 @@ namespace ui
       QLineEdit* m_statePortEdit;
       QLineEdit* m_chatPortEdit;
       QLineEdit* m_filePortEdit;
+      QLineEdit* m_saveDirEdit;
       QPushButton* m_buttonOK;
     };
   }

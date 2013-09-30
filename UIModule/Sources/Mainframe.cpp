@@ -29,6 +29,7 @@
 namespace
 {
   const QString DATE_FORMAT("yyyy MM dd hh:mm:ss");
+  const long long MAX_FILE_SIZE = 536870912; //512 MB
 
   std::wstring CurrentTimeToStr()
   {
@@ -119,14 +120,27 @@ namespace ui
     if (loginManager->IsOnline() && !m_userItems.empty())
     {
       QFileInfo file(WStrToQStr(path));
-      MessageInfo msg(loginManager->GetCurrentUser()->name, file.fileName().toStdWString(),
-                      CurrentTimeToStr(), false);
-      UsersMessageView* msgView = static_cast<UsersMessageView*>(m_msgBoxStackedWidget->currentWidget());
-      IProgressUIObserver* observer = msgView->AppendFileMessage(msg);
-      controls::UserListItem* currentItem = static_cast<controls::UserListItem*>(m_userListWidget->currentItem());
+      __int64 s = file.size();
+      if (file.size() <= MAX_FILE_SIZE)
+      {
+        MessageInfo msg(loginManager->GetCurrentUser()->name, file.fileName().toStdWString(),
+          CurrentTimeToStr(), false);
+        UsersMessageView* msgView = static_cast<UsersMessageView*>(m_msgBoxStackedWidget->currentWidget());
+        IProgressUIObserver* observer = msgView->AppendFileMessage(msg);
+        controls::UserListItem* currentItem = static_cast<controls::UserListItem*>(m_userListWidget->currentItem());
 
-      db::DataBaseManager::Instance()->SaveMessageToDB(currentItem->GetUserID(), db::FILE_MSG, msg);
-      msg::FileTransferManager::Instance()->SendFile(currentItem->GetUserID(), path, observer);
+        db::DataBaseManager::Instance()->SaveMessageToDB(currentItem->GetUserID(), db::FILE_MSG, msg);
+        msg::FileTransferManager::Instance()->SendFile(currentItem->GetUserID(), path, observer);
+      }
+      else
+      {
+        QMessageBox messageBox(this);
+        messageBox.setWindowTitle("Transfer file info.");
+        messageBox.setText("This file is too large. Possible to transfer only files smaller than 512 MB.");
+        messageBox.setMaximumHeight(150);
+        messageBox.setMaximumWidth(200);
+        messageBox.exec();
+      }
     }
   }
 

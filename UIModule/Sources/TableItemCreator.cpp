@@ -148,7 +148,7 @@ namespace ui
     picture->setFixedHeight(24);
     picture->setFixedWidth(24);
     picture->setStyleSheet(IMAGE_TEMPLATE.arg(FILE_ICON_PATH));
-    cellLayout->setContentsMargins(0, 0, 0, 0);
+    cellLayout->setContentsMargins(0, 0, 0, 5);
     cellLayout->addWidget(picture);
     cellLayout->addWidget(infoWidget, 3);
 

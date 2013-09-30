@@ -1,3 +1,4 @@
+#include "Shlobj.h"
 #include <algorithm>
 #include "SettingsManager.h"
 #include "RegistryHelpers.h"
@@ -13,6 +14,19 @@ namespace sm
     const wchar_t CURRENT_STATE_MSG_PORT[] = L"SPort";
     const wchar_t CURRENT_CHAT_MSG_PORT[] = L"MPort";
     const wchar_t CURRENT_FILE_MSG_PORT[] = L"FPort";
+    const wchar_t CURRENT_SAVE_DIR[] = L"SaveDir";
+
+    std::wstring GetDefaultDir()
+    {
+      std::vector<wchar_t> buff(MAX_PATH + 1, '\0');
+      if (::SHGetFolderPath(NULL, CSIDL_COMMON_APPDATA, NULL, SHGFP_TYPE_CURRENT, &buff[0]) == S_OK)
+      {
+        std::wstring dir(&buff[0]);
+        dir.append(L"\\LChat\\Downloads");
+        return dir;
+      }
+      return std::wstring();
+    }
   }
 
   SettingsManager* SettingsManager::Instance()
@@ -69,6 +83,7 @@ namespace sm
       SetCurrentStatesPort((unsigned short)reghlp::GetDWORDValue(key, CURRENT_STATE_MSG_PORT));
       SetCurrentMessagesPort((unsigned short)reghlp::GetDWORDValue(key, CURRENT_CHAT_MSG_PORT));
       SetCurrentFileMessagesPort((unsigned short)reghlp::GetDWORDValue(key, CURRENT_FILE_MSG_PORT));
+      SetCurrentSaveDir(reghlp::GetStringValue(key, CURRENT_SAVE_DIR));
     }
     else
     {
@@ -121,6 +136,22 @@ namespace sm
     m_stateMsgPort = DEFAULT_STATE_MSG_PORT;
     m_chatMsgPort =  DEFAULT_CHAT_MSG_PORT;
     m_fileMsgPort = DEFAULT_FILE_MSG_PORT;
+    m_saveDir = GetDefaultSaveDir();
+  }
+
+  std::wstring SettingsManager::GetCurrentSaveDir() const
+  {
+    return m_saveDir;
+  }
+
+  std::wstring SettingsManager::GetDefaultSaveDir() const
+  {
+    return GetDefaultDir();
+  }
+
+  void SettingsManager::SetCurrentSaveDir(const std::wstring& dir)
+  {
+    !dir.empty() ? m_saveDir.assign(dir) : m_saveDir.assign(GetDefaultSaveDir());
   }
 
   void SettingsManager::SaveSettings()
@@ -132,6 +163,7 @@ namespace sm
       key.SetDWORDValue(CURRENT_STATE_MSG_PORT, m_stateMsgPort);
       key.SetDWORDValue(CURRENT_CHAT_MSG_PORT, m_chatMsgPort);
       key.SetDWORDValue(CURRENT_FILE_MSG_PORT, m_fileMsgPort);
+      key.SetStringValue(CURRENT_SAVE_DIR, m_saveDir.c_str());
     }
   }
 }

@@ -6,6 +6,7 @@
 #include "ace/Time_Value.h"
 #include "IProgressUIObserver.h"
 #include "MessagesTemplates.h"
+#include "SettingsManager.h"
 #include "FileTransferHelpers.h"
 #include "pugixml.hpp"
 #include "UIMessageHandler.h"
@@ -14,7 +15,6 @@
 namespace
 {
   const size_t MTU_SIZE = 1400;
-  const ACE_Time_Value TIMEOUT(2);
 
   typedef void (*FileCloser)(std::ofstream*);
   typedef std::unique_ptr<std::ofstream, FileCloser> FileHolder;
@@ -92,7 +92,7 @@ namespace msg
     for (size_t count = 0; count != MTUChunkCount; ++count)
     {
       MessageBlockPtr MTUBlock(new ACE_Message_Block(MTU_SIZE));
-      size_t isTransfered = sockStream->recv_n(MTUBlock->wr_ptr(), MTU_SIZE/*, &TIMEOUT*/);
+      size_t isTransfered = sockStream->recv_n(MTUBlock->wr_ptr(), MTU_SIZE);
       int error = errno;
       if (isTransfered == MTU_SIZE)
       {
@@ -109,7 +109,7 @@ namespace msg
     if (residualSize > 0)
     {
       MessageBlockPtr residualBlock(new ACE_Message_Block(residualSize));
-      if (sockStream->recv_n(residualBlock->wr_ptr(), residualSize/*, &TIMEOUT*/) == residualSize)
+      if (sockStream->recv_n(residualBlock->wr_ptr(), residualSize) == residualSize)
       {
         residualBlock->wr_ptr(residualSize);
         updater.Update(residualSize);
@@ -127,7 +127,7 @@ namespace msg
   FileInfoPtr AsyncFileReceiver::GetFileInfo(const SocketStream& sockStream)
   {
     std::vector<char> buff(MTU_SIZE + 1, '\0');
-    if (sockStream->recv_n(&buff[0], MTU_SIZE/*, &TIMEOUT*/) > 0)
+    if (sockStream->recv_n(&buff[0], MTU_SIZE) > 0)
     {
       std::string header(buff.begin(), buff.end());
       if (!header.empty())
@@ -160,7 +160,9 @@ namespace msg
 
   void AsyncFileReceiver::SaveMessageBlocksToFile(const std::wstring& fileName, ACE_Message_Block* message)
   {
-    FileHolder outputFile(new std::ofstream(fileName.c_str(), std::ios::binary), CloseFile);
+    std::wstring saveDir(sm::SettingsManager::Instance()->GetCurrentSaveDir());
+    std::wstring filePath(saveDir + L"\\" + fileName);
+    FileHolder outputFile(new std::ofstream(filePath.c_str(), std::ios::binary), CloseFile);
     if (!(*outputFile.get()))
       return;
 
