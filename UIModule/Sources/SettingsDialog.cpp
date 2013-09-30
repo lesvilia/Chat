@@ -28,12 +28,18 @@ namespace ui
       , m_chatPortEdit(nullptr)
       , m_filePortEdit(nullptr)
       , m_saveDirEdit(nullptr)
+      , m_needReset(false)
     {
       InitDialog();
     }
 
     SettingsDialog::~SettingsDialog()
     {
+    }
+
+    bool SettingsDialog::NeedReset() const
+    {
+      return m_needReset;
     }
 
     void SettingsDialog::InitDialog()
@@ -69,6 +75,7 @@ namespace ui
       m_addressWidget->setEditable(false);
       m_addressWidget->insertItems(0, m_addresses);
       m_addressWidget->setCurrentText(m_appropriateAddress);
+      connect(m_addressWidget, SIGNAL(activated(const QString&)), SLOT(SetNeedReset()));
       connect(m_addressWidget, SIGNAL(activated(const QString&)), SLOT(EnableOkButton()));
 
       m_statePortEdit = new QLineEdit();
@@ -81,8 +88,11 @@ namespace ui
       m_saveDirEdit->setReadOnly(true);
       m_saveDirEdit->setText(WStrToQStr(m_settingsMngr->GetCurrentSaveDir()));
 
+      connect(m_statePortEdit, SIGNAL(textEdited(const QString&)), SLOT(SetNeedReset()));
       connect(m_statePortEdit, SIGNAL(textEdited(const QString&)), SLOT(EnableOkButton()));
+      connect(m_chatPortEdit, SIGNAL(textEdited(const QString&)), SLOT(SetNeedReset()));
       connect(m_chatPortEdit, SIGNAL(textEdited(const QString&)), SLOT(EnableOkButton()));
+      connect(m_filePortEdit, SIGNAL(textEdited(const QString&)), SLOT(SetNeedReset()));
       connect(m_filePortEdit, SIGNAL(textEdited(const QString&)), SLOT(EnableOkButton()));
       connect(m_saveDirEdit, SIGNAL(textChanged(const QString&)), SLOT(EnableOkButton()));
 
@@ -121,6 +131,11 @@ namespace ui
       m_chatPortEdit->setText(QString::number(sm::DEFAULT_CHAT_MSG_PORT));
       m_filePortEdit->setText(QString::number(sm::DEFAULT_FILE_MSG_PORT));
       m_saveDirEdit->setText(WStrToQStr(m_settingsMngr->GetDefaultSaveDir()));
+    }
+
+    void SettingsDialog::SetNeedReset()
+    {
+      m_needReset = true;
     }
 
     void SettingsDialog::InitAddressesValues()

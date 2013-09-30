@@ -20,10 +20,12 @@ namespace ui
     public:
       SettingsDialog(QWidget* parent, sm::SettingsManager* settingsManager);
       ~SettingsDialog();
+      bool NeedReset() const;
 
     private slots:
       void SaveSettings();
       void RestoreDefaultSettings();
+      void SetNeedReset();
       void EnableOkButton();
       void ShowFolderOpenDlg();
 
@@ -42,6 +44,7 @@ namespace ui
       QLineEdit* m_filePortEdit;
       QLineEdit* m_saveDirEdit;
       QPushButton* m_buttonOK;
+      bool m_needReset;
     };
   }
 }

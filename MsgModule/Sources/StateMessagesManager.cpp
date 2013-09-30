@@ -108,8 +108,8 @@ namespace msg
   void StateMessagesManager::ResetServer()
   {
     SendMessageToUsers(DISCONNECT_STATE);
-    net::NetUsersManager::Instance()->ClearOnlineUsers();
     m_server->Reset();
+    net::NetUsersManager::Instance()->ClearOnlineUsers();
     SendBroadcastMessage(CONNECT_REQUEST_STATE);
   }
 
