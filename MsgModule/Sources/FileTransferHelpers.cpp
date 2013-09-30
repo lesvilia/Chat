@@ -115,10 +115,10 @@ namespace msg
   {
   }
 
-  void ProgressUpdater::Update(size_t size)
+  void ProgressUpdater::Update(size_t size, bool isHeader)
   {
     m_interrupter.Check();
-    if (m_progressObserver)
+    if (m_progressObserver && !isHeader)
     {
       m_transferedSize += size;
       float result = ((float)m_transferedSize / m_fileSize) * 100;

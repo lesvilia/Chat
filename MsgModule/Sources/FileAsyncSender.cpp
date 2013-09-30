@@ -11,6 +11,7 @@
 #include "MessagesTemplates.h"
 #include "WSAStartupHolder.h"
 #include "IProgressUIObserver.h"
+#include "StringHelpers.h"
 
 namespace
 {
@@ -20,8 +21,6 @@ namespace
   void MessageDeleter(ACE_Message_Block* block)
   {
     block->release();
-    if (block)
-      delete block;
   }
 
   void StreamDeleter(ACE_SOCK_Stream* stream)
@@ -89,12 +88,16 @@ namespace msg
   void AsyncFileSender::SendMessageBlock(const SocketStream& socket, ACE_Message_Block* message,
                                          ProgressUpdater& updater)
   {
-    for (auto block = message; block != nullptr; block = block->cont())
+     ACE_Message_Block* header = message;
+    int count = 0;
+    for (auto block = message; block != nullptr; block = block->cont(), ++count)
     {
       size_t messageSize = block->length();
-      if (socket->send_n(block->rd_ptr(), messageSize, &TIMEOUT) == messageSize)
+      size_t isSended = socket->send_n(block->rd_ptr(), messageSize/*, &TIMEOUT*/);
+      int eror = errno;
+      if (isSended == messageSize)
       {
-        updater.Update(messageSize);
+        updater.Update(messageSize, header == block);
       }
       else
       {
@@ -106,13 +109,13 @@ namespace msg
 
   ACE_Message_Block* AsyncFileSender::MakeMessageBlocks(const FileInfoPtr& fileInfo)
   {
-    std::wstring header(MakeMessageHeader(fileInfo));
+    std::string header(strhlp::WstrToStr(MakeMessageHeader(fileInfo)));
+    header.resize(MTU_SIZE, '\0');
     std::vector<MessageBlockPtr> blocks;
 
     MessageBlockPtr headerBlock(new ACE_Message_Block(MTU_SIZE));
-    size_t headerSize = header.size() * sizeof(wchar_t);
-    int copyResult = headerBlock->copy((const char*)header.c_str(), headerSize);
-    headerBlock->wr_ptr(copyResult);
+    size_t headerSize = header.size();
+    int copyResult = headerBlock->copy(header.c_str(), headerSize);
     blocks.push_back(std::move(headerBlock));
 
     const size_t MTUChunkCount = fileInfo->m_size / MTU_SIZE;

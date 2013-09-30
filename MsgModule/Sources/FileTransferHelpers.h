@@ -66,7 +66,7 @@ namespace msg
   public:
     ProgressUpdater(ui::IProgressUIObserver* observer, size_t fileSize, const std::wstring& uuid);
     ~ProgressUpdater();
-    void Update(size_t size);
+    void Update(size_t size, bool isHeader = false);
     void Finished();
     void TransferError();
   private:

@@ -52,6 +52,7 @@ namespace ui
       if (ev->type() == ErrorProgressEvent::type)
       {
         ShowMessageBox();
+        HideProgressBar();
         return true;
       }
 

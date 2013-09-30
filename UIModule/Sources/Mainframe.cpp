@@ -68,7 +68,6 @@ namespace ui
     login::LoginManager::Instance()->Subscribe(this);
     net::NetUsersManager::Instance()->Subscribe(this);
     db::DataBaseManager::Instance();
-    AddNewUser(L"123");
   }
 
   MainFrame::~MainFrame()
@@ -117,16 +116,14 @@ namespace ui
   void MainFrame::HandleDropFileResult(const std::wstring& path)
   {
     login::ILoginManager* loginManager = login::LoginManager::Instance();
-    if (loginManager->IsOnline())
+    if (loginManager->IsOnline() && !m_userItems.empty())
     {
       QFileInfo file(WStrToQStr(path));
       MessageInfo msg(loginManager->GetCurrentUser()->name, file.fileName().toStdWString(),
                       CurrentTimeToStr(), false);
-      UsersMessageView* msgView = static_cast<UsersMessageView*>(
-        m_msgBoxStackedWidget->currentWidget());
+      UsersMessageView* msgView = static_cast<UsersMessageView*>(m_msgBoxStackedWidget->currentWidget());
       IProgressUIObserver* observer = msgView->AppendFileMessage(msg);
-      controls::UserListItem* currentItem = static_cast<controls::UserListItem*>(
-        m_userListWidget->currentItem());
+      controls::UserListItem* currentItem = static_cast<controls::UserListItem*>(m_userListWidget->currentItem());
 
       db::DataBaseManager::Instance()->SaveMessageToDB(currentItem->GetUserID(), db::FILE_MSG, msg);
       msg::FileTransferManager::Instance()->SendFile(currentItem->GetUserID(), path, observer);
@@ -135,7 +132,7 @@ namespace ui
 
   void MainFrame::AddNewUser(const std::wstring& uuid)
   {
-    std::wstring userName(/*net::NetUsersManager::Instance()->GetNetUserName(uuid)*/L"Elena Sialiuk");
+    std::wstring userName(net::NetUsersManager::Instance()->GetNetUserName(uuid));
     controls::UserListItem* userItem = AddUserListItem(userName, uuid);
     int viewID = CreateUserMsgView();
     m_userItems.insert(std::make_pair(uuid, UserItem(userItem, viewID)));

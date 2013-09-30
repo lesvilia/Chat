@@ -28,7 +28,7 @@ namespace msg
     static void RecvFileImpl(const SocketStream& socket, UIMessageHandler* handler);
     static ACE_Message_Block* RecvMessageBlocks(const SocketStream& sockStream, const FileInfoPtr& fileInfo,
                                                 ProgressUpdater& updater);;
-    static FileInfoPtr GetFileInfo(SocketStream sockStream);
+    static FileInfoPtr GetFileInfo(const SocketStream& sockStream);
     static FileInfoPtr ParseMessageHeader(const std::wstring& msgHeader);
     static ui::IProgressUIObserver* GetObserver(const FileInfoPtr& fileInfo, UIMessageHandler* handler);
     static void SaveMessageBlocksToFile(const std::wstring& fileName, ACE_Message_Block* message);

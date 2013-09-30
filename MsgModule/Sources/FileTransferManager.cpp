@@ -33,7 +33,7 @@ namespace
     size_t position = filePath.rfind(L"\\");
     if (position != std::wstring::npos)
     {
-      return filePath.substr(position, filePath.size() - position);
+      return filePath.substr(position + 1, filePath.size() - (position + 1));
     }
     return std::wstring();
   }

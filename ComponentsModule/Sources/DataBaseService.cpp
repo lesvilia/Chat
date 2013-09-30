@@ -5,11 +5,6 @@
 #include "StringHelpers.h"
 #include "SQLite/sqlite3.h"
 
-namespace 
-{
-  const char DB_FILE_NAME[] = {"chat.db"};
-}
-
 namespace db
 {
   DataBaseService::DataBaseService()

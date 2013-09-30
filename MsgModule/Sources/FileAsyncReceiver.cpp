@@ -30,9 +30,6 @@ namespace
   void MessageDeleter(ACE_Message_Block* block)
   {
     block->release();
-
-    if (block)
-      delete block;
   }
 }
 
@@ -95,7 +92,9 @@ namespace msg
     for (size_t count = 0; count != MTUChunkCount; ++count)
     {
       MessageBlockPtr MTUBlock(new ACE_Message_Block(MTU_SIZE));
-      if (sockStream->recv_n(MTUBlock->wr_ptr(), MTU_SIZE, &TIMEOUT) == MTU_SIZE)
+      size_t isTransfered = sockStream->recv_n(MTUBlock->wr_ptr(), MTU_SIZE/*, &TIMEOUT*/);
+      int error = errno;
+      if (isTransfered == MTU_SIZE)
       {
         MTUBlock->wr_ptr(MTU_SIZE);
         updater.Update(MTU_SIZE);
@@ -110,7 +109,7 @@ namespace msg
     if (residualSize > 0)
     {
       MessageBlockPtr residualBlock(new ACE_Message_Block(residualSize));
-      if (sockStream->recv_n(residualBlock->wr_ptr(), residualSize, &TIMEOUT) == residualSize)
+      if (sockStream->recv_n(residualBlock->wr_ptr(), residualSize/*, &TIMEOUT*/) == residualSize)
       {
         residualBlock->wr_ptr(residualSize);
         updater.Update(residualSize);
@@ -125,15 +124,15 @@ namespace msg
     return LinksMessageBlocks(blocks);
   }
 
-  FileInfoPtr AsyncFileReceiver::GetFileInfo(SocketStream sockStream)
+  FileInfoPtr AsyncFileReceiver::GetFileInfo(const SocketStream& sockStream)
   {
     std::vector<char> buff(MTU_SIZE + 1, '\0');
-    if (sockStream->recv_n(&buff[0], MTU_SIZE, &TIMEOUT) > 0)
+    if (sockStream->recv_n(&buff[0], MTU_SIZE/*, &TIMEOUT*/) > 0)
     {
-      std::wstring header(buff.begin(), buff.end());
+      std::string header(buff.begin(), buff.end());
       if (!header.empty())
       {
-        return ParseMessageHeader(header);
+        return ParseMessageHeader(strhlp::StrToWstr(header));
       }
     }
     return nullptr;
