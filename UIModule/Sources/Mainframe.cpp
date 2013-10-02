@@ -459,11 +459,6 @@ namespace ui
   void MainFrame::OpenSettingsDlg()
   {
     controls::SettingsDialog dlg(this, sm::SettingsManager::Instance());
-    if(dlg.exec() == QDialog::Accepted && dlg.NeedReset())
-    {
-      msg::ChatMessagesManager::Instance()->ResetServer();
-      msg::FileTransferManager::Instance()->ResetServer();
-      msg::StateMessagesManager::Instance()->ResetServer();
-    }
+    dlg.exec();
   }
 }

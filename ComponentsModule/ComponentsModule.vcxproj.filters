@@ -128,5 +128,8 @@
     <ClInclude Include="Sources\SaveMessageRequest.h">
       <Filter>DataBaseManager\src</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\SettingsChangeObserver.h">
+      <Filter>SettingsManager</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

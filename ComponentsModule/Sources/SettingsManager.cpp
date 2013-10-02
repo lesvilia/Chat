@@ -3,6 +3,7 @@
 #include "SettingsManager.h"
 #include "RegistryHelpers.h"
 #include "AdaptersAddressHolder.h"
+#include "SettingsChangeObserver.h"
 #include "DefaultSettings.h"
 
 namespace sm
@@ -19,7 +20,7 @@ namespace sm
     std::wstring GetDefaultDir()
     {
       std::vector<wchar_t> buff(MAX_PATH + 1, '\0');
-      if (::SHGetFolderPath(NULL, CSIDL_COMMON_APPDATA, NULL, SHGFP_TYPE_CURRENT, &buff[0]) == S_OK)
+      if (::SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, &buff[0]) == S_OK)
       {
         std::wstring dir(&buff[0]);
         dir.append(L"\\LChat\\Downloads");
@@ -49,6 +50,30 @@ namespace sm
     SaveSettings();
   }
 
+  void SettingsManager::Subscribe(SettingsChangeObserver* observer)
+  {
+    m_observers.push_back(observer);
+  }
+
+  void SettingsManager::SettingsWillBeChanged(int type) const
+  {
+    std::for_each(m_observers.begin(), m_observers.end(), 
+      [type](SettingsChangeObserver* observer)
+      {
+        if (observer)
+          observer->SettingsWillBeChanged(type);
+      });
+  }
+
+  void SettingsManager::SettingsIsChanged(int type) const
+  {
+    std::for_each(m_observers.begin(), m_observers.end(), 
+      [type](SettingsChangeObserver* observer)
+    {
+      if (observer)
+        observer->SettingsChanged(type);
+    });
+  }
 
   std::wstring SettingsManager::GetCurrentNetAddres() const
   {

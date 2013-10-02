@@ -28,10 +28,23 @@ namespace msg
     , m_activated(false)
   {
     login::LoginManager::Instance()->Subscribe(this);
+    sm::SettingsManager::Instance()->Subscribe(this);
   }
 
   ChatMessagesManager::~ChatMessagesManager()
   {
+  }
+
+  void ChatMessagesManager::SettingsWillBeChanged(int type)
+  {
+  }
+
+  void ChatMessagesManager::SettingsChanged(int type)
+  {
+    if (type & sm::NET_SETTINGS)
+    {
+      ResetServer();
+    }
   }
 
   void ChatMessagesManager::Send(const std::wstring& uuid, const std::wstring& txtMessage)

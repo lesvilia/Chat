@@ -21,14 +21,14 @@ namespace msg
     TCPMessageServer(IMessagesHandler* handler, IServerSettingsHolder* settingsHolder);
     virtual ~TCPMessageServer();
     virtual void Shutdown();
-    virtual void Reset();
+    virtual void Reset(const ResetCompletionCallback& callback = ResetCompletionCallback());
 
   private:
     virtual void Run();
     void Initialize();
     void InitSocket();
     bool ShouldShutdown();
-    bool NeedReset();
+    void ResetIfNeeded();
 
   private:
     bool m_shouldShutdown;
@@ -36,5 +36,6 @@ namespace msg
     SocketAcceptor m_acceptor;
     ThreadPtr m_thread;
     Mutex m_mutex;
+    ResetCompletionCallback m_callback;
   };
 }

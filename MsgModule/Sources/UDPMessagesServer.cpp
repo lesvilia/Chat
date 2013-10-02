@@ -61,10 +61,7 @@ namespace msg
         }
       }
 
-      if (NeedReset())
-      {
-        InitSocket();
-      }
+      ResetIfNeeded();
     }
 
     m_udpSocket.reset(); // if server should shutdown need close socket
@@ -76,10 +73,11 @@ namespace msg
       m_shouldShutdown = true;
   }
 
-  void UDPMessageServer::Reset()
+  void UDPMessageServer::Reset(const ResetCompletionCallback& callback)
   {
     Lock lock(m_mutex);
     m_needReset = true;
+    m_callback = callback;
   }
 
   void UDPMessageServer::Initialize()
@@ -100,9 +98,20 @@ namespace msg
     return m_shouldShutdown;
   }
 
-  bool UDPMessageServer::NeedReset()
+  void UDPMessageServer::ResetIfNeeded()
   {
     Lock lock(m_mutex);
-    return m_needReset;
+    if (m_needReset)
+    {
+      m_needReset = false;
+      ResetCompletionCallback callback(m_callback);
+
+      lock.unlock();
+      InitSocket();
+      if (!callback.empty())
+      {
+        callback();
+      }
+    }
   }
 }

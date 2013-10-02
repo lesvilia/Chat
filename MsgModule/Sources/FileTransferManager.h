@@ -4,6 +4,7 @@
 #include "boost/noncopyable.hpp"
 #include "FileInfo.h"
 #include "LoginHandlers.h"
+#include "SettingsChangeObserver.h"
 
 class ACE_Message_Block;
 
@@ -23,6 +24,7 @@ namespace msg
   class FileTransferManager
     : private boost::noncopyable
     , public login::ILoginStateObserver
+    , public sm::SettingsChangeObserver
   {
   public:
     static FileTransferManager* Instance();
@@ -31,10 +33,12 @@ namespace msg
     virtual void OnlineStateChanged();
     void Activate(UIMessageHandler* handler);
     void Deactivate();
-    void ResetServer();
 
   private:
     FileInfoPtr GetFileInfo(const std::wstring& filePath);
+    virtual void SettingsWillBeChanged(int type);
+    virtual void SettingsChanged(int type);
+    void ResetServer();
     FileTransferManager();
     ~FileTransferManager();
 

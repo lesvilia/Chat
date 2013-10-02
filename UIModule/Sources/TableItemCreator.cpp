@@ -20,11 +20,6 @@ using namespace settings::MessageView;
 
 namespace
 {
-
-}
-
-namespace
-{
   QTableWidgetItem* CreateTableItem(const std::wstring& text, const QColor& color,
                                     QFlags<Qt::AlignmentFlag> alignment = Qt::AlignTop)
   {

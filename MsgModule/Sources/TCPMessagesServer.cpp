@@ -62,10 +62,7 @@ namespace msg
         }
       }
 
-      if (NeedReset())
-      {
-        InitSocket();
-      }
+      ResetIfNeeded();
     }
     m_acceptor.reset();
   }
@@ -76,10 +73,11 @@ namespace msg
     m_shouldShutdown = true;
   }
 
-  void TCPMessageServer::Reset()
+  void TCPMessageServer::Reset(const ResetCompletionCallback& callback)
   {
     LockGuard lock(m_mutex);
     m_needReset = true;
+    m_callback = callback;
   }
 
   void TCPMessageServer::Initialize()
@@ -100,9 +98,20 @@ namespace msg
     return m_shouldShutdown;
   }
 
-  bool TCPMessageServer::NeedReset()
+  void TCPMessageServer::ResetIfNeeded()
   {
-    LockGuard lock(m_mutex);
-    return m_needReset;
+    Lock lock(m_mutex);
+    if (m_needReset)
+    {
+      m_needReset = false;
+      ResetCompletionCallback callback(m_callback);
+
+      lock.unlock();
+      InitSocket();
+      if (!callback.empty())
+      {
+        callback();
+      }
+    }
   }
 }

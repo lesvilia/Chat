@@ -27,7 +27,7 @@ namespace msg
   {
   }
 
-  void MessageServer::Reset()
+  void MessageServer::Reset(const ResetCompletionCallback& callback)
   {
   }
 

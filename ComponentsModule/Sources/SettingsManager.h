@@ -6,6 +6,7 @@
 
 namespace sm
 {
+  class SettingsChangeObserver;
   namespace impl
   {
     class AdaptersAddressHolder;
@@ -18,6 +19,9 @@ namespace sm
 
   public:
     static SettingsManager* Instance();
+    void Subscribe(SettingsChangeObserver* observer);
+    void SettingsWillBeChanged(int type) const;
+    void SettingsIsChanged(int type) const;
     std::wstring GetCurrentNetAddres() const;
     unsigned short GetCurrentStatesPort() const;
     unsigned short GetCurrentMessagesPort() const;
@@ -46,6 +50,7 @@ namespace sm
     unsigned short m_fileMsgPort;
     std::wstring m_saveDir;
     mutable Mutex m_mutex;
+    std::vector<SettingsChangeObserver*> m_observers;
   };
 }
 

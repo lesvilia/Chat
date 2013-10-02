@@ -62,10 +62,23 @@ namespace msg
     : m_settingsHolder(new FileServerSettingsHolder(sm::SettingsManager::Instance()))
     , m_activated(false)
   {
+    sm::SettingsManager::Instance()->Subscribe(this);
   }
 
   FileTransferManager::~FileTransferManager()
   {
+  }
+
+  void FileTransferManager::SettingsWillBeChanged(int type)
+  {
+  }
+
+  void FileTransferManager::SettingsChanged(int type)
+  {
+    if (type & sm::NET_SETTINGS)
+    {
+      ResetServer();
+    }
   }
 
   void FileTransferManager::SendFile(const std::wstring& uuid, const std::wstring& filePath,

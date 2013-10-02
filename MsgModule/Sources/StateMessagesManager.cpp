@@ -30,10 +30,27 @@ namespace msg
     , m_activated(false)
   {
     login::LoginManager::Instance()->Subscribe(this);
+    sm::SettingsManager::Instance()->Subscribe(this);
   }
 
   StateMessagesManager::~StateMessagesManager()
   {
+  }
+
+  void StateMessagesManager::SettingsWillBeChanged(int type)
+  {
+    if (type & sm::NET_SETTINGS)
+    {
+      SendMessageToUsers(DISCONNECT_STATE);
+    }
+  }
+
+  void StateMessagesManager::SettingsChanged(int type)
+  {
+    if (type & sm::NET_SETTINGS)
+    {
+      ResetServer();
+    }
   }
 
   void StateMessagesManager::SendResponseToConnect(const std::wstring& addr)
@@ -107,10 +124,9 @@ namespace msg
 
   void StateMessagesManager::ResetServer()
   {
-    SendMessageToUsers(DISCONNECT_STATE);
-    m_server->Reset();
+    m_server->Reset(boost::bind(&StateMessagesManager::SendBroadcastMessage, this, CONNECT_REQUEST_STATE));
     net::NetUsersManager::Instance()->ClearOnlineUsers();
-    SendBroadcastMessage(CONNECT_REQUEST_STATE);
+    //SendBroadcastMessage(CONNECT_REQUEST_STATE);
   }
 
   std::wstring StateMessagesManager::CreateMessage(State currentState)

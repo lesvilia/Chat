@@ -111,6 +111,7 @@
     <ClInclude Include="Sources\LoginManagerImpl.h" />
     <ClInclude Include="Sources\NetUsersManager.h" />
     <ClInclude Include="Sources\SaveMessageRequest.h" />
+    <ClInclude Include="Sources\SettingsChangeObserver.h" />
     <ClInclude Include="Sources\SettingsManager.h" />
     <ClInclude Include="Sources\WSAStartupHolder.h" />
   </ItemGroup>

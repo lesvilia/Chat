@@ -12,6 +12,7 @@
 #include "UISettings.h"
 #include "QtHelpers.h"
 #include "SettingsManager.h"
+#include "StateMessagesManager.h"
 #include "DefaultSettings.h"
 
 namespace ui
@@ -35,11 +36,6 @@ namespace ui
 
     SettingsDialog::~SettingsDialog()
     {
-    }
-
-    bool SettingsDialog::NeedReset() const
-    {
-      return m_needReset;
     }
 
     void SettingsDialog::InitDialog()
@@ -116,11 +112,18 @@ namespace ui
 
     void SettingsDialog::SaveSettings()
     {
+      int type = sm::NOT_CHANGING;
+      if (m_needReset)
+      {
+        type |= sm::NET_SETTINGS;
+      }
+      m_settingsMngr->SettingsWillBeChanged(type);
       m_settingsMngr->SetCurrentAddress(QStrToWStr(m_addressWidget->currentText()));
       m_settingsMngr->SetCurrentStatesPort(m_statePortEdit->text().toULong());
       m_settingsMngr->SetCurrentMessagesPort(m_chatPortEdit->text().toULong());
       m_settingsMngr->SetCurrentFileMessagesPort(m_filePortEdit->text().toULong());
       m_settingsMngr->SetCurrentSaveDir(QStrToWStr(m_saveDirEdit->text()));
+      m_settingsMngr->SettingsIsChanged(type);
       accept();
     }
 

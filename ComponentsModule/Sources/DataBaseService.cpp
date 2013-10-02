@@ -20,6 +20,7 @@ namespace db
   void DataBaseService::Start()
   {
     StopJoinableThread();
+    m_shouldShutdown = false;
     m_thread.reset(new boost::thread(&DataBaseService::ProcessRequest, this));
   }
 

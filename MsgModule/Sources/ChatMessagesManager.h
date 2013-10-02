@@ -2,6 +2,7 @@
 #include "boost/noncopyable.hpp"
 #include "LoginHandlers.h"
 #include "MessagesQueue.h"
+#include "SettingsChangeObserver.h"
 
 namespace msg
 {
@@ -12,6 +13,7 @@ namespace msg
 
   class ChatMessagesManager
     : private boost::noncopyable
+    , public sm::SettingsChangeObserver
     , public login::ILoginStateObserver
   {
   public:
@@ -20,12 +22,14 @@ namespace msg
     void Activate(MessagesReceiver* receiver);
     void Deactivate();
     ChatMessagesQueue* GetMessagesQueue();
-    void ResetServer();
     virtual void OnlineStateChanged();
 
   private:
     ChatMessagesManager();
     ~ChatMessagesManager();
+    void ResetServer();
+    virtual void SettingsWillBeChanged(int type);
+    virtual void SettingsChanged(int type);
     std::wstring CreateMessage(const std::wstring& txtMessage);
 
   private:

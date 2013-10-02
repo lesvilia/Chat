@@ -20,7 +20,6 @@ namespace ui
     public:
       SettingsDialog(QWidget* parent, sm::SettingsManager* settingsManager);
       ~SettingsDialog();
-      bool NeedReset() const;
 
     private slots:
       void SaveSettings();
