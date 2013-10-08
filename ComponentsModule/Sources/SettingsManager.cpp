@@ -20,10 +20,13 @@ namespace sm
     std::wstring GetDefaultDir()
     {
       std::vector<wchar_t> buff(MAX_PATH + 1, '\0');
-      if (::SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, &buff[0]) == S_OK)
+      if (::SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, &buff[0]) == S_OK)
       {
         std::wstring dir(&buff[0]);
-        dir.append(L"\\LChat\\Downloads");
+        dir.append(L"\\LChat");
+        ::CreateDirectory(dir.c_str(), NULL);
+        dir.append(L"\\Downloads");
+        ::CreateDirectory(dir.c_str(), NULL);
         return dir;
       }
       return std::wstring();

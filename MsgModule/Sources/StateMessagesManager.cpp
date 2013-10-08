@@ -39,7 +39,7 @@ namespace msg
 
   void StateMessagesManager::SettingsWillBeChanged(int type)
   {
-    if (type & sm::NET_SETTINGS)
+    if (type & sm::NET_SETTINGS && login::LoginManager::Instance()->IsOnline())
     {
       SendMessageToUsers(DISCONNECT_STATE);
     }
@@ -124,9 +124,14 @@ namespace msg
 
   void StateMessagesManager::ResetServer()
   {
-    m_server->Reset(boost::bind(&StateMessagesManager::SendBroadcastMessage, this, CONNECT_REQUEST_STATE));
+    m_server->Reset([this]()
+      {
+        if (login::LoginManager::Instance()->IsOnline())
+        {
+          SendBroadcastMessage(CONNECT_REQUEST_STATE);
+        }
+      });
     net::NetUsersManager::Instance()->ClearOnlineUsers();
-    //SendBroadcastMessage(CONNECT_REQUEST_STATE);
   }
 
   std::wstring StateMessagesManager::CreateMessage(State currentState)
