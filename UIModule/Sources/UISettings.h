@@ -33,27 +33,27 @@ namespace settings
       
       const QString MAIN_MENU_BAR_STYLE
       (
-        "QMenuBar { min-height: 17px; background-color: #9ACD32; }"
-        "QMenuBar::item { background-color: #9ACD32; }"
-        "QMenuBar::item:selected { background: #ffd700; }"
-        "QMenuBar::item:pressed { background: #ffd700; }"
+        "QMenuBar { min-height: 17px; background-color: #bfcada; }"
+        "QMenuBar::item { background-color: #bfcada; }"
+        "QMenuBar::item:selected { background: #abb5c4; }"
+        "QMenuBar::item:pressed { background: #abb5c4; }"
       );
 
       const QString MENU_STYLE 
       (
-        "QMenu { background-color: #9ACD32; }"
-        "QMenu::item:selected {  background: #ffd700; color: black; }"
+        "QMenu { background-color: #bfcada; }"
+        "QMenu::item:selected {  background: #abb5c4; color: black; }"
       );
 
       const QString MAIN_WIDGET_STYLE
       (
-        "QWidget#main_widget { background: #CAFF70; }"
-        "QSplitter::handle { background: #CAFF70; }"
+        "QWidget#main_widget { background: #d8dfe8; }"
+        "QSplitter::handle { background: #d8dfe8; }"
         "QListWidget::item:selected { background: #007FFF; color: #FFFFFF; }"
       );
 
       const char STATE_LABEL_FORMAT[] = "%1 %2";
-      const QString STATE_LABEL_STYLE("QLabel { background-color: #9ACD32; }");
+      const QString STATE_LABEL_STYLE("QLabel { background-color: #bfcada; }");
       const QString USER_ICON_PATH("user_ico.png");
       const QString ONLINE_STATE("Online");
       const QString OFFLINE_STATE("Offline");

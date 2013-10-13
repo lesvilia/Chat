@@ -19,17 +19,6 @@
 #include "StringHelpers.h"
 #include "Typedefs.h"
 
-namespace
-{
-  const size_t MTU_SIZE = 1400;
-  const ACE_Time_Value TIMEOUT(2);
-
-  void MessageDeleter(ACE_Message_Block* block)
-  {
-    block->release();
-  }
-}
-
 namespace msg
 {
   FileMessagesHandler::FileMessagesHandler(UIMessageHandler* msgHandler)
@@ -46,5 +35,4 @@ namespace msg
   {
     AsyncFileReceiver fileReceiver(sockStream, m_msgHandler);
   }
-
 }
