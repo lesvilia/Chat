@@ -77,7 +77,7 @@ namespace msg
   {
     ObserverIniter initer;
     handler->OnFileMessageReceived(fileInfo->m_uuid, fileInfo->m_name,
-      boost::bind(&ObserverIniter::SetObserver, boost::ref(initer), _1));
+      boost::bind(&ObserverIniter::SetObserver, &initer, _1));
     return initer.GetObserver();
   }
 

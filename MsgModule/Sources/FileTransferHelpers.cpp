@@ -87,10 +87,8 @@ namespace msg
 
   void ObserverIniter::SetObserver(ui::IProgressUIObserver* observer)
   {
-    {
-      Lock lock(m_mutex);
-      m_observer = observer;
-    }
+    Lock lock(m_mutex);
+    m_observer = observer;
     m_cond.notify_one();
   }
 

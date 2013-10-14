@@ -8,6 +8,7 @@
 #include <QLabel>
 #include <QProgressBar>
 #include <QTableWidget>
+#include <QTimer>
 #include <QVBoxLayout>
 
 #include "DnDTextEdit.h"
@@ -66,7 +67,7 @@ namespace ui
     horizontalHeader->setSectionResizeMode(MessageItemCreator::MESSAGE_COLUMN, QHeaderView::Stretch);
     horizontalHeader->setSectionResizeMode(MessageItemCreator::TIME_COLUMN, QHeaderView::Fixed);
     horizontalHeader->setDefaultSectionSize(DEFAULT_COLUMN_WIDTH);
-    
+
     m_msgEdit = new controls::DnDTextEdit(dropHandler);
     
     addWidget(m_msgView);
@@ -133,6 +134,8 @@ namespace ui
   {
     m_msgView->insertRow(rowNum);
     creator.CreateItems(msg);
+    m_msgView->update();
+    QTimer::singleShot(200, m_msgView, SLOT(scrollToBottom()));
   }
 
   void UsersMessageView::AddLastConversations(const db::MessageListPtr& messages)

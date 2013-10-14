@@ -94,7 +94,7 @@ namespace ui
     QVBoxLayout* infoLayout = new QVBoxLayout();
     QLabel* message = new QLabel(WStrToQStr(msg.m_message));
     handler->setFixedHeight(10);
-    infoLayout->setContentsMargins(0, 0, 0, 5);
+    infoLayout->setContentsMargins(0, 5, 0, 5);
     infoLayout->addWidget(message, 1);
     infoLayout->addWidget(handler, 1);
     QWidget* infoWidget = new QWidget();
@@ -105,7 +105,7 @@ namespace ui
     picture->setFixedHeight(24);
     picture->setFixedWidth(24);
     picture->setStyleSheet(IMAGE_TEMPLATE.arg(FILE_ICON_PATH));
-    cellLayout->setContentsMargins(0, 0, 0, 5);
+    cellLayout->setContentsMargins(0, 5, 0, 5);
     cellLayout->addWidget(picture);
     cellLayout->addWidget(infoWidget, 3);
 
@@ -132,7 +132,7 @@ namespace ui
   {
     QVBoxLayout* infoLayout = new QVBoxLayout();
     QLabel* message = new QLabel(WStrToQStr(msg.m_message));
-    infoLayout->setContentsMargins(0, 0, 0, 5);
+    infoLayout->setContentsMargins(0, 5, 0, 5);
     infoLayout->addWidget(message, 1);
     infoLayout->addStretch(1);
     QWidget* infoWidget = new QWidget();
@@ -143,7 +143,7 @@ namespace ui
     picture->setFixedHeight(24);
     picture->setFixedWidth(24);
     picture->setStyleSheet(IMAGE_TEMPLATE.arg(FILE_ICON_PATH));
-    cellLayout->setContentsMargins(0, 0, 0, 5);
+    cellLayout->setContentsMargins(0, 5, 0, 5);
     cellLayout->addWidget(picture);
     cellLayout->addWidget(infoWidget, 3);
 

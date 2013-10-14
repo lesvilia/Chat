@@ -76,7 +76,7 @@ namespace settings
     (
       "QTableView { padding: 5px; }"
     );
-    const unsigned DEFAULT_COLUMN_WIDTH = 70;
+    const unsigned DEFAULT_COLUMN_WIDTH = 85;
     const QString FILE_ICON_PATH("file_icon.png");
   }
 
